@@ -1,4 +1,4 @@
-# Aplicação exemplo em Spring Boot
+# Gestor de Centros de Investigação
 
 ## Passos a seguir
 
