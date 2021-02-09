@@ -7,6 +7,6 @@ import org.springframework.boot.runApplication
 class TrabalhoApplication
 
 fun main(args: Array<String>) {
-    println("Teste commit" + "nice")
+    println("Teste commit")
     runApplication<TrabalhoApplication>(*args)
 }
