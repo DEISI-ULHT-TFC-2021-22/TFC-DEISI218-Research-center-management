@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/mystyles.css">
 </head>
 <body>
-<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
+<nav class="navbar" role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
         <a class="navbar-item">
             <img src="/images/logo.png" width="201" height="105">
@@ -81,10 +81,16 @@
         </div>
     </div>
 </nav>
-<div class="navbar navbar-default is-fixed-bottom" th:fragment="footer">
-    <span>oladpaslpsdalpsadlp</span>
-    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</div>
+<footer class="footer" th:fragment="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+        </p>
+    </div>
+</footer>
+
+
 </body>
 </html>
