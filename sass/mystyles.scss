@@ -1,3 +1,20 @@
 @charset "utf-8";
 @import "../node_modules/bulma/bulma.sass";
 
+//Brand Colors
+$red: #cc4b4b;
+$grey: #eaeaea;
+$black: #4a4a4a;
+// Update Bulma's global variables
+
+
+// Update Bulma's component variables
+
+//navbar customize
+$navbar-dropdown-arrow: $red;
+$navbar-item-img-max-height: 105px;
+$navbar-item-hover-color: $black;
+$navbar-item-hover-background-color: $grey;
+$navbar-item-active-background-color: $red;
+
+@import "../node_modules/bulma/sass/components/navbar.sass";

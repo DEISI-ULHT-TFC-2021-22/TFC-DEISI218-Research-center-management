@@ -7,80 +7,77 @@
     <link rel="stylesheet" href="/css/mystyles.css">
 </head>
 <body>
-<nav class="navbar is-light" role="navigation" aria-label="main navigation" th:fragment="header">
+<nav class="navbar " role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
-        <a class="navbar-item" >
-            <img src="/images/logo.png" width="201" style="max-height:105px">
+        <a class="navbar-item is-transparent">
+            <img src="/images/logo.png" width="201" height="105">
         </a>
 
-        <div class="navbar-menu ">
-            <div class="navbar-start has-text-weight-medium" style="font-size:20px">
-                <a class="navbar-item">
-                    <p class="px-5">
-                        Home
-                    </p>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div class="navbar-menu has-text-weight-medium" style="font-size:20px">
+        <div class="navbar-start">
+            <a class="navbar-item px-6">
+                Home
+            </a>
+
+            <a class="navbar-item px-6">
+                Pesquisas/Filtros
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link px-6">
+                    Administração
                 </a>
 
-                <a class="navbar-item">
-                    <p class="px-5">
-                        Pesquisas/Filtros
-                    </p>
-                </a>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        <p class="px-5">
-                            Administração
-                        </p>
+                <div class="navbar-dropdown" style="font-size:18px">
+                    <a class="navbar-item">
+                        Gestão de Permissões
                     </a>
-
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item">
-                            About
-                        </a>
-                        <a class="navbar-item">
-                            Jobs
-                        </a>
-                        <a class="navbar-item">
-                            Contact
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item">
-                            Report an issue
-                        </a>
-                    </div>
+                    <a class="navbar-item">
+                        Adicionar Investigador
+                    </a>
+                    <a class="navbar-item">
+                        Remover Investigador
+                    </a>
                 </div>
-
-                <a class="navbar-item">
-                    <p class="px-5">
-                        Perfil do Investigador
-                    </p>
-                </a>
-
-                <a class="navbar-item">
-                    <p class="px-5">
-                        Pedido Divulgação
-                    </p>
-                </a>
-
-                <a class="navbar-item">
-                    <p class="px-6">
-                        Relatório Anual
-                    </p>
-                </a>
-
             </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link px-6">
+                    Perfil de Investigador
+                </a>
 
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary">
-                            <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-light">
-                            Log in
-                        </a>
-                    </div>
+                <div class="navbar-dropdown" style="font-size:18px">
+                    <a class="navbar-item">
+                        Dados Pessoais
+                    </a>
+                    <a class="navbar-item">
+                        Atividades Científicas
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-item px-6">
+                Pedido Divulgação
+            </a>
+            <a class="navbar-item px-6">
+                Relatório Anual
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-primary">
+                        <strong>Sign up</strong>
+                    </a>
+                    <a class="button is-light">
+                        Log in
+                    </a>
                 </div>
             </div>
         </div>
