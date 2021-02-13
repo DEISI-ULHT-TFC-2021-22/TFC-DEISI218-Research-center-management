@@ -1,20 +1,41 @@
 @charset "utf-8";
-@import "../node_modules/bulma/bulma.sass";
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap');
 
 //Brand Colors
 $red: #cc4b4b;
-$grey: #eaeaea;
+$light: #eaeaea;
 $black: #4a4a4a;
+$white: #ffffff;
 // Update Bulma's global variables
-
-
+$family-sans-serif: "Montserrat", sans-serif;
+/*$grey-dark: $brown;
+$grey-light: $beige-light;*/
+$primary: $red;
+$link: $light;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
 // Update Bulma's component variables
 
 //navbar customize
-$navbar-dropdown-arrow: $red;
+$navbar-dropdown-arrow: $primary;
 $navbar-item-img-max-height: 105px;
 $navbar-item-hover-color: $black;
-$navbar-item-hover-background-color: $grey;
-$navbar-item-active-background-color: $red;
+$navbar-item-hover-background-color: $light;
+$navbar-item-active-background-color: $primary;
+$navbar-dropdown-item-hover-background-color: $light;
+$navbar-dropdown-item-active-background-color: $primary;
+$button-border-color: $white;
+$button-hover-border-color: $primary;
+$button-active-border-color: $primary;
 
+@import "../node_modules/bulma/sass/utilities/_all.sass";
+@import "../node_modules/bulma/sass/base/_all.sass";
+@import "../node_modules/bulma/sass/elements/button.sass";
+@import "../node_modules/bulma/sass/elements/container.sass";
+@import "../node_modules/bulma/sass/elements/title.sass";
+@import "../node_modules/bulma/sass/form/_all.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
+@import "../node_modules/bulma/sass/layout/hero.sass";
+@import "../node_modules/bulma/sass/layout/section.sass";
+

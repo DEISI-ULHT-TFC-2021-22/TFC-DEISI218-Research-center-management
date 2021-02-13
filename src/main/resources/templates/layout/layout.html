@@ -2,17 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head (pageTitle)">
     <title th:text="${pageTitle}">Trabalho</title>
-    <meta name="viewport" content="width=device-with, initial-scale=1.0"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1"/>
+    <script src="https://kit.fontawesome.com/7b2987c773.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/mystyles.css">
 </head>
 <body>
-<nav class="navbar " role="navigation" aria-label="main navigation" th:fragment="header">
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
-        <a class="navbar-item is-transparent">
+        <a class="navbar-item">
             <img src="/images/logo.png" width="201" height="105">
         </a>
-
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -20,8 +20,8 @@
         </a>
     </div>
 
-    <div class="navbar-menu has-text-weight-medium" style="font-size:20px">
-        <div class="navbar-start">
+    <div class="navbar-menu" style="font-size:20px">
+        <div class="navbar-start has-text-weight-medium">
             <a class="navbar-item px-6">
                 Home
             </a>
@@ -35,7 +35,7 @@
                     Administração
                 </a>
 
-                <div class="navbar-dropdown" style="font-size:18px">
+                <div class="navbar-dropdown" style="font-size:16px">
                     <a class="navbar-item">
                         Gestão de Permissões
                     </a>
@@ -52,7 +52,7 @@
                     Perfil de Investigador
                 </a>
 
-                <div class="navbar-dropdown" style="font-size:18px">
+                <div class="navbar-dropdown" style="font-size:16px">
                     <a class="navbar-item">
                         Dados Pessoais
                     </a>
@@ -71,19 +71,18 @@
 
         <div class="navbar-end">
             <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-primary">
-                        <strong>Sign up</strong>
-                    </a>
-                    <a class="button is-light">
-                        Log in
-                    </a>
-                </div>
+                <a class="button has-text-weight-medium" style="font-size: 20px">
+                    <span style="color: #cc4b4b">Logout</span>
+                    <span class="icon">
+                        <i class="fas fa-sign-out-alt" style="color: #cc4b4b"></i>
+                    </span>
+                </a>
             </div>
         </div>
     </div>
 </nav>
-<div class="navbar navbar-default navbar-fixed-bottom" th:fragment="footer">
+<div class="navbar navbar-default is-fixed-bottom" th:fragment="footer">
+    <span>oladpaslpsdalpsadlp</span>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </div>
