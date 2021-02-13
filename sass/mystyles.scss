@@ -29,6 +29,18 @@ $button-border-color: $white;
 $button-hover-border-color: $primary;
 $button-active-border-color: $primary;
 
+.navbar-menu {
+  font-size: 20px;
+}
+div.navbar-dropdown a.navbar-item {
+  font-size: 16px;
+}
+div.navbar-end div.navbar-item a.button {
+  font-size: 20px;
+  color: #cc4b4b;
+}
+
+
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
 @import "../node_modules/bulma/sass/elements/button.sass";
