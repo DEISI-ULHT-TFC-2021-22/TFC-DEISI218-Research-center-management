@@ -13,12 +13,16 @@
 .hero-background.is-transparent {
   opacity: 1; }
 
+.image.is-192x192 {
+  height: 192px;
+  width: 192px; }
+
 .image.is-256x256 {
   height: 256px;
   width: 256px; }
 
 .container.is-landing-page {
-  max-width: 480px; }
+  max-width: 440px; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
