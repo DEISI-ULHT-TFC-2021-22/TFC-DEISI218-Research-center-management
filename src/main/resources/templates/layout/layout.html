@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="/css/mystyles.css">
 </head>
 <body>
-<nav class="navbar" role="navigation" aria-label="main navigation" th:fragment="header">
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
-        <a class="navbar-item">
-            <img src="/images/logo.png" width="201" height="105">
+        <a class="navbar-item py-0">
+            <img src="/images/logo.png" width="201" height="105" alt="logo">
         </a>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
@@ -20,7 +20,7 @@
         </a>
     </div>
 
-    <div class="navbar-menu" style="font-size:20px">
+    <div class="navbar-menu is-size-5">
         <div class="navbar-start has-text-weight-medium">
             <a class="navbar-item px-6">
                 Home
@@ -71,7 +71,7 @@
 
         <div class="navbar-end">
             <div class="navbar-item">
-                <a class="button has-text-weight-medium" style="font-size: 20px">
+                <a class="button has-text-weight-medium is-size-5">
                     <span style="color: #cc4b4b">Logout</span>
                     <span class="icon">
                         <i class="fas fa-sign-out-alt" style="color: #cc4b4b"></i>
