@@ -20,7 +20,31 @@ $fullhd-enabled: false;
 // Update Bulma's component variables
 
 
-// Navbar component customize
+// Landing page----------
+.hero.has-background {
+  position: relative;
+  overflow: hidden;
+}
+.hero-background {
+  position: absolute;
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+  height: 100%;
+}
+.hero-background.is-transparent {
+  opacity: 1;
+}
+.image.is-256x256{
+  height: 256px;
+  width: 256px;
+}
+.container.is-landing-page{
+  max-width: 480px;
+}
+
+
+// Navbar component customize----------
 $navbar-dropdown-arrow: $primary;
 $navbar-item-img-max-height: 105px;
 $navbar-item-hover-color: $black;
@@ -33,6 +57,9 @@ $button-hover-border-color: $primary;
 $button-active-border-color: $primary;
 $navbar-padding-vertical: 0;
 
+
+
+// Imports----------
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
 @import "../node_modules/bulma/sass/elements/_all.sass";
