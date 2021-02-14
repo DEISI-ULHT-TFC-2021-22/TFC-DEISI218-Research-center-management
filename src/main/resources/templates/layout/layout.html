@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="/css/mystyles.css">
 </head>
 <body>
-<nav class="navbar" role="navigation" aria-label="main navigation" th:fragment="header">
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
-        <a class="navbar-item">
-            <img src="/images/logo.png" width="201" height="105">
+        <a class="navbar-item py-0">
+            <img src="/images/logo.png" width="201" height="105" alt="logo">
         </a>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
@@ -20,22 +20,22 @@
         </a>
     </div>
 
-    <div class="navbar-menu">
+    <div class="navbar-menu is-size-5">
         <div class="navbar-start has-text-weight-medium">
-            <a class="navbar-item">
+            <a class="navbar-item px-6">
                 Home
             </a>
 
-            <a class="navbar-item">
+            <a class="navbar-item px-6">
                 Pesquisas/Filtros
             </a>
 
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
+                <a class="navbar-link px-6">
                     Administração
                 </a>
 
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown" style="font-size:16px">
                     <a class="navbar-item">
                         Gestão de Permissões
                     </a>
@@ -48,11 +48,11 @@
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
+                <a class="navbar-link px-6">
                     Perfil de Investigador
                 </a>
 
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown" style="font-size:16px">
                     <a class="navbar-item">
                         Dados Pessoais
                     </a>
@@ -61,31 +61,34 @@
                     </a>
                 </div>
             </div>
-            <a class="navbar-item">
+            <a class="navbar-item px-6">
                 Pedido Divulgação
             </a>
-            <a class="navbar-item">
+            <a class="navbar-item px-6">
                 Relatório Anual
             </a>
         </div>
 
         <div class="navbar-end">
             <div class="navbar-item">
-                <a class="button has-text-weight-medium">
-                    <span>Logout</span>
+                <a class="button has-text-weight-medium is-size-5">
+                    <span style="color: #cc4b4b">Logout</span>
                     <span class="icon">
-                        <i class="fas fa-sign-out-alt"></i>
+                        <i class="fas fa-sign-out-alt" style="color: #cc4b4b"></i>
                     </span>
                 </a>
             </div>
         </div>
     </div>
 </nav>
-
 <footer class="footer" th:fragment="footer">
     <div class="content has-text-centered">
+        <p>
+            <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+        </p>
     </div>
 </footer>
-
 </body>
 </html>
