@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head (pageTitle='Listagem de utilizadores')">
+</head>
+<body>
+<section class="hero is-fullheight has-background">
+    <img alt="Lisboa background" class="hero-background is-transparent" src="/images/lisboa-background.jpg"/>
+    <div class="hero-body">
+        <div class="container is-landing-page">
+            <div class="box">
+                <div class="columns is-centered is-mobile pb-5 pt-4">
+                    <div class="column is-narrow is-narrow-mobile">
+                        <figure class="image is-192x192">
+                            <img src="/images/logo-completo.png" alt="Logotipo ceiED">
+                        </figure>
+                    </div>
+                </div>
+                <div class="field px-4">
+                    <label class="label">Email</label>
+                    <p class="control has-icons-left">
+                        <input class="input" type="email" placeholder="joaosilva@exemplo.com">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field px-4 py-2">
+                    <label class="label">Password </label>
+                    <p class="control has-icons-left">
+                        <input class="input" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="px-4 has-text-centered">
+                    <small>Esqueceu-se da sua password? <a href="#">Clique aqui</a></small>
+                </div>
+                <div class="field pt-6 pb-1 px-5">
+                    <p class="control">
+                        <button class="button is-primary is-medium is-fullwidth lined">
+                            Login
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

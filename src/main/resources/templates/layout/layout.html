@@ -10,7 +10,7 @@
 <body>
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
     <div class="navbar-brand">
-        <a class="navbar-item py-0">
+        <a class="navbar-item py-0 px-5">
             <img src="/images/logo.png" width="201" height="105" alt="logo">
         </a>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -22,50 +22,40 @@
     <div class="navbar-menu is-size-5">
         <div class="navbar-start has-text-weight-medium">
             <a class="navbar-item px-6">
-                Home
+                Página Inicial
             </a>
-
-            <a class="navbar-item px-6">
-                Pesquisas/Filtros
-            </a>
-
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link px-6">
                     Administração
                 </a>
-
-                <div class="navbar-dropdown is-size-6">
-                    <a class="navbar-item">
-                        Gestão de Permissões
+                <div class="navbar-dropdown  is-size-6 py-2">
+                    <a class="navbar-item py-3">
+                        Pesquisar Dados
                     </a>
-                    <a class="navbar-item">
-                        Adicionar Investigador
+                    <a class="navbar-item py-3">
+                        Gerir Investigadores
                     </a>
-                    <a class="navbar-item">
-                        Remover Investigador
+                    <a class="navbar-item py-3">
+                        Gerar Relatório Anual
                     </a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link px-6">
-                    Perfil de Investigador
+                    Investigador
                 </a>
-
-                <div class="navbar-dropdown is-size-6">
-                    <a class="navbar-item">
-                        Dados Pessoais
+                <div class="navbar-dropdown is-size-6 py-1">
+                    <a class="navbar-item py-3">
+                        Consultar Dados Pessoais
                     </a>
-                    <a class="navbar-item">
-                        Atividades Científicas
+                    <a class="navbar-item py-3">
+                        Consultar Atividades Científicas
+                    </a>
+                    <a class="navbar-item py-3">
+                        Criar Requisito de Divulgação
                     </a>
                 </div>
             </div>
-            <a class="navbar-item px-6">
-                Pedido Divulgação
-            </a>
-            <a class="navbar-item px-6">
-                Relatório Anual
-            </a>
         </div>
 
         <div class="navbar-end">
