@@ -4,6 +4,137 @@
 </head>
 <body class="has-navbar-fixed-top">
 <div th:replace="layout/layout :: header"></div>
+<section class="hero py-6">
+    <div class="hero-body">
+        <div class="container">
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Nome</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Nome">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Email</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="email" placeholder="Email">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Ciência ID</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Ciência ID">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Orcid ID</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Orcid ID">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Chave Pública FCT</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Chave Pública FCT">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Chave de Associação FCT</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Chave de Associação FCT">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Site CeiED</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Site CeiED">
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Ano Doutoramento</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="YYYY">
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Telefone</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Telefone">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-phone"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Utilizador</label>
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input" type="text" placeholder="Utilizador">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Categoria</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Categoria">
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Origem</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Origem">
+                    </p>
+                </div>
+            </div>
+            <div class="field-body pb-5">
+                <div class="field pr-6">
+                    <label class="label">Situação Profissional</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Situação Profissional">
+                    </p>
+                </div>
+                <div class="field pl-6">
+                    <label class="label">Categoria Profissional</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="Categoria Profissional">
+                    </p>
+                </div>
+            </div>
+            <div class="container has-text-centered pt-6">
+                <button class="button is-normal is-primary is-justify-content-center">Adicionar Investigador</button>
+            </div>
+    </div>
+</section>
+
 <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>

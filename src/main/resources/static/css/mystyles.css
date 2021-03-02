@@ -449,7 +449,7 @@ a.box:active {
     .button:focus:not(:active), .button.is-focused:not(:active) {
       box-shadow: 0 0 0 0.125em rgba(204, 75, 75, 0.25); }
   .button:active, .button.is-active {
-    border-color: #cc4b4b;
+    border-color: #4a4a4a;
     color: #363636; }
   .button.is-text {
     background-color: transparent;
