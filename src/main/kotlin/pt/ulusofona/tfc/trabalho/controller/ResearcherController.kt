@@ -1,4 +1,23 @@
 package pt.ulusofona.tfc.trabalho.controller
 
-class ResearcherController {
+import org.springframework.stereotype.Controller
+import org.springframework.ui.ModelMap
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+
+@Controller
+@RequestMapping("")
+class ResearcherController{
+    @GetMapping(value = ["/personal-information"])
+    fun showPersonalInformation(model: ModelMap): String{
+        return "researcher-section/personal-information"
+    }
+    @GetMapping(value = ["/scientific-activities"])
+    fun showScientificActivities(model: ModelMap): String{
+        return "researcher-section/scientific-activities"
+    }
+    @GetMapping(value = ["/disclosure-request"])
+    fun showDisclosureRequest(model: ModelMap): String{
+        return "researcher-section/disclosure-request"
+    }
 }

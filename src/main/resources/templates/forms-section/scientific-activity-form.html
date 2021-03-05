@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head (pageTitle='Editar Atividades Cientificas')">
 </head>
-<body>
-
+<body class="has-navbar-fixed-top">
+<div th:replace="layout/layout :: header"></div>
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="notification is-warning">
+                <strong> EDITAR ATIVIDADES CIENTIFICAS EM CONSTRUÇÃO</strong>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
