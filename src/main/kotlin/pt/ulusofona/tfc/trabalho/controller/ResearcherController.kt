@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/researcher")
 class ResearcherController{
     @GetMapping(value = ["/personal-information"])
     fun showPersonalInformation(model: ModelMap): String{
