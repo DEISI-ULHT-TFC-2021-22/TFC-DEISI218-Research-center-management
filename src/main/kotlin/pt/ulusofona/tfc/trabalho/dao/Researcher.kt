@@ -16,12 +16,12 @@ data class Researcher(
         var publicKeyFct: String,
         var associationKeyFct: String,
 
-        var siteCeied: String,
         var phoneNumber: String,
-        var category: String,
         var origin: String,
-        var phdYear: Date,
+        var siteCeied: String,
         var professionalStatus: String,
         var professionalCategory:String,
+        var category: String,
+        var phdYear: Date,
         var isAdmin: Boolean
         )

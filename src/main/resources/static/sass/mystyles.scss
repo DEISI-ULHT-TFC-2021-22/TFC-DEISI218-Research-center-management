@@ -75,3 +75,13 @@ $navbar-padding-vertical: 0;
 @import "../../../../../node_modules/bulma/sass/layout/_all.sass";
 //@import "../../../../../node_modules/bulma/sass/layout/hero.sass";
 //@import "../../../../../node_modules/bulma/sass/layout/section.sass";
+
+// Bulma extensions
+// Para funcionar "npm i bulma-xxxx"
+
+// bulma-switch
+//@import '~bulma-switch'; <- nao funciona
+@import '../../../../../node_modules/bulma-switch/src/sass/index.sass';
+
+// bulma-calendar
+@import '../../../../../node_modules/bulma-calendar/src/sass/index.sass';
