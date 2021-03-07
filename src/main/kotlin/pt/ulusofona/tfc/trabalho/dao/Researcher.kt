@@ -3,13 +3,18 @@ package pt.ulusofona.tfc.trabalho.dao
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.OneToOne
 
 @Entity
 data class Researcher(
+
+        /*@OneToOne
+        val user: User,*/
+
         @Id
         var orcid: String,
         var name: String,
-        var user: String,
+        var utilizador: String,
         var email: String,
 
         var cienciaId: String,

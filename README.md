@@ -1,6 +1,17 @@
 # Gestor de Centros de Investigação
+---
+### Dependências do bulma
 
-## Passos a seguir
+#### bulma-calendar
+```
+> npm i bulma-calendar
+```
+#### bulma-switch
+```
+> npm i bulma-switch
+```
+---
+### Passos a seguir para o setup da BD
 
 * Instalar MySQL e pôr a correr
 * Ligar o Intellij ao MySQL através do separador Database > New Data Source (MySQL)

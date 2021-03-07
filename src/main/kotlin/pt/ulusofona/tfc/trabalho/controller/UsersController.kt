@@ -15,12 +15,12 @@ import javax.validation.Valid
 class UsersController(val userRepository: UserRepository) {
 
     @GetMapping(value = ["/list"])
-    fun listUsers(@RequestParam("age") age: Int?, model: ModelMap): String {
-        val users = if (age == null) {
+    fun listUsers(@RequestParam("email") email: String?, model: ModelMap): String {
+        val users = if (email == null) {
             userRepository.findAll()  // get all users from DB
         } else {
-            model["age"] = age
-            userRepository.findByAge(age)
+            model["age"] = email
+            userRepository.findByEmail(email)
         }
         model["users"] = users
 
@@ -39,7 +39,7 @@ class UsersController(val userRepository: UserRepository) {
         val userOptional = userRepository.findById(id)
         if (userOptional.isPresent) {
             val user = userOptional.get()
-            model["userForm"] = UserForm(userId = user.id.toString(), name = user.name, age = user.age)
+            model["userForm"] = UserForm(userId = user.id.toString(), email = user.email, password = user.password)
         }
 
         return "new-user-form"
@@ -47,8 +47,8 @@ class UsersController(val userRepository: UserRepository) {
 
     @PostMapping(value = ["/new"])
     fun createOrUpdateUser(@Valid @ModelAttribute("userForm") userForm: UserForm,
-                   bindingResult: BindingResult,
-                   redirectAttributes: RedirectAttributes) : String {
+                           bindingResult: BindingResult,
+                           redirectAttributes: RedirectAttributes) : String {
 
         if (bindingResult.hasErrors()) {
             return "new-user-form"
@@ -56,11 +56,11 @@ class UsersController(val userRepository: UserRepository) {
 
         val user: User =
                 if (userForm.userId.isNullOrBlank()) {  // new user
-                    User(name = userForm.name!!, age = userForm.age!!)
+                    User(email = userForm.email!!, password = userForm.password!!)
                 } else { // edit user
                     val u = userRepository.findById(userForm.userId!!.toLong()).get()
-                    u.name = userForm.name!!
-                    u.age = userForm.age!!
+                    u.email = userForm.email!!
+                    u.password = userForm.password!!
                     u
                 }
 
