@@ -48,7 +48,7 @@ class UsersController(val userRepository: UserRepository) {
     @PostMapping(value = ["/new"])
     fun createOrUpdateUser(@Valid @ModelAttribute("userForm") userForm: UserForm,
                            bindingResult: BindingResult,
-                           redirectAttributes: RedirectAttributes) : String {
+                           redirectAttributes: RedirectAttributes): String {
 
         if (bindingResult.hasErrors()) {
             return "new-user-form"

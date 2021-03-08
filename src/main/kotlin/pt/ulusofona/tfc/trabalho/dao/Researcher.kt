@@ -27,6 +27,6 @@ data class Researcher(
         var professionalStatus: String,
         var professionalCategory:String,
         var category: String,
-        var phdYear: Date,
+        var phdYear: Date?,
         var isAdmin: Boolean
         )

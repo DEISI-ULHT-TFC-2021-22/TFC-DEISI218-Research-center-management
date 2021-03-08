@@ -10,20 +10,20 @@
     <h1 class="page-header" th:if="${userForm.userId != null}">Editar utilizador</h1>
 
     <form th:object="${userForm}" method="post" th:action="@{/users/new}" class="form-horizontal">
-        <div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error' : ''">
-            <label for="name" class="col-sm-3 control-label">Nome</label>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error' : ''">
+            <label for="email" class="col-sm-3 control-label">Nome</label>
             <div class="col-sm-9">
-                <input th:field="*{name}" type="text" class="form-control" id="name" maxlength="100"/>
-                <p class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
-                <p class="help-block" th:if="${!#fields.hasErrors('name')}">O nome do utilizador</p>
+                <input th:field="*{email}" type="text" class="form-control" id="email" maxlength="100"/>
+                <p class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error</p>
+                <p class="help-block" th:if="${!#fields.hasErrors('email')}">O nome do utilizador</p>
             </div>
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('age')} ? 'has-error' : ''">
-            <label for="age" class="col-sm-3 control-label">Idade</label>
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error' : ''">
+            <label for="password" class="col-sm-3 control-label">Password</label>
             <div class="col-sm-9">
-                <input th:field="*{age}" type="text" class="form-control" id="age" maxlength="3"/>
-                <p class="help-block" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Error</p>
-                <p class="help-block" th:if="${!#fields.hasErrors('age')}">O nome do utilizador</p>
+                <input th:field="*{password}" type="text" class="form-control" id="password" maxlength="3"/>
+                <p class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error</p>
+                <p class="help-block" th:if="${!#fields.hasErrors('password')}">O nome do utilizador</p>
             </div>
         </div>
         <div class="form-group">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </form>
-</form>
+</div>
 
 <div th:replace="layout/layout :: footer"></div>
 </body>
