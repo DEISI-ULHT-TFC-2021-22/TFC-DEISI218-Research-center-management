@@ -1,24 +1,24 @@
 package pt.ulusofona.tfc.trabalho.form
 
 import java.util.*
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.Email
+import javax.validation.constraints.*
 
 data class ResearcherForm(
-        @field:NotEmpty(message = "Erro: O Orcid ID tem que estar preenchido")
+        @NotEmpty(message = "Erro: O Orcid ID tem que estar preenchido")
+        @NotNull
         var orcid: String? = null,
 
-        @field:NotEmpty(message = "Erro: O nome tem que estar preenchido")
+        @NotEmpty(message = "Erro: O nome tem que estar preenchido")
         var name: String? = null,
 
-        @field:NotEmpty(message = "Erro: O utilizador tem que estar preenchido")
+        @NotEmpty(message = "Erro: O utilizador tem que estar preenchido")
         var utilizador: String? = null,
 
         @Email(message = "Email tem que ser válido")
-        @field:NotEmpty(message = "Erro: O e-mail tem que estar preenchido")
+        @NotEmpty(message = "Erro: O e-mail tem que estar preenchido")
         var email: String? = null,
 
-        @field:NotEmpty(message = "Erro: O Ciência ID tem que estar preenchido")
+        @NotEmpty(message = "Erro: O Ciência ID tem que estar preenchido")
         var cienciaId: String? = null,
 
         @field:NotEmpty(message = "Erro: A chave pública tem que estar preenchida")
@@ -46,5 +46,6 @@ data class ResearcherForm(
         var category: String? = null,
 
         var phdYear: Date? = null,
-        var isAdmin: Boolean = false
+
+        var isAdmin: Boolean? = null
 )

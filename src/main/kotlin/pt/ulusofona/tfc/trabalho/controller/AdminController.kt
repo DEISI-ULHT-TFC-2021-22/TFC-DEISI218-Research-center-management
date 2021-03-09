@@ -51,8 +51,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 professionalStatus = researcherForm.professionalStatus!!,
                 professionalCategory = researcherForm.professionalCategory!!,
                 category = researcherForm.category!!,
-                phdYear = researcherForm.phdYear!!,
-                isAdmin = researcherForm.isAdmin
+                phdYear = researcherForm.phdYear,
+                isAdmin = researcherForm.isAdmin!!
         )
 
         researcherRepository.save(researcher)

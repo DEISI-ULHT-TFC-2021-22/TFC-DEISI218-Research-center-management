@@ -13,10 +13,11 @@
                 <div class="columns">
                     <div class="column">
                         <label class="label" for="name">Nome</label>
-                        <p class="control has-icons-left">
-                            <input class="input" id="name" type="text" placeholder="Nome" th:field="*{naffdgfdgdfgdfsfsme}">
+                        <div class="control has-icons-left">
+                            <input class="input" id="name" type="text" placeholder="Nome" th:field="*{name}">
+                            <p class="help is-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
                             <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
-                        </p>
+                        </div>
                     </div>
                     <div class="column">
                         <label class="label" for="email">Email</label>
@@ -131,9 +132,9 @@
                         </div>
                     </div>
                     <div class="column">
-                        <label class="label">Administrador</label>
-                        <input id="switchAdmin" type="checkbox" name="switchExample" class="switch" th:field="*{isAdmin}">
-                        <label for="switchAdmin" class="label"></label>
+                        <!--<label for="switchAdmin" class="label">Administrador</label>-->
+                        <label for="switchAdmin" class="label">Administrador</label>
+                        <input id="switchAdmin" type="checkbox" value="0" th:field="*{isAdmin}"/>
                     </div>
                 </div>
             </div>

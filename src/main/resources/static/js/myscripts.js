@@ -16,8 +16,3 @@ window.onload = function loadCalendar(){
         select.appendChild(opt);
     }
 }
-
-//para testing
-function myFunction() {
-    alert("Page is loaded");
-}
