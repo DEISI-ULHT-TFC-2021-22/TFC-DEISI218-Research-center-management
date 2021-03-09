@@ -9,9 +9,9 @@ data class UserForm(
         var userId: String? = null,
 
         @field:NotEmpty(message = "Erro: O nome tem que estar preenchido")
-        var email: String? = null,
+        var name: String? = null,
 
         @field:NotNull(message = "Erro: A idade tem que estar preenchida")
-        //@field:Min(value=18, message = "Erro: A idade tem que ser >= 18")
-        var password: String? = null
+        @field:Min(value=18, message = "Erro: A idade tem que ser >= 18")
+        var age: Int? = null
 )

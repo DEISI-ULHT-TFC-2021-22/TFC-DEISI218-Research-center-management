@@ -17,10 +17,10 @@ class SessionController{
     fun showHomePage(model: ModelMap): String{
         return "home-page"
     }
-    @GetMapping(value = ["/personal-information-form"])
+    /*@GetMapping(value = ["/personal-information-form"])
     fun showPersonalInformationForm(model: ModelMap): String{
         return "forms-section/personal-information-form"
-    }
+    }*/
     @GetMapping(value = ["/scientific-activity-form"])
     fun showScientificActivityForm(model: ModelMap): String{
         return "forms-section/scientific-activity-form"

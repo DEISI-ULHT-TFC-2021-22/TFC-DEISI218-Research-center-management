@@ -35,6 +35,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
 
         if(bindingResult.hasErrors()){
            return "forms-section/personal-information-form"
+            //return "admin-section/researcher-management"
         }
 
         val researcher = Researcher(
@@ -52,7 +53,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 professionalCategory = researcherForm.professionalCategory!!,
                 category = researcherForm.category!!,
                 phdYear = researcherForm.phdYear,
-                isAdmin = researcherForm.isAdmin!!
+                isAdmin = researcherForm.isAdmin
         )
 
         researcherRepository.save(researcher)

@@ -5,5 +5,5 @@ import pt.ulusofona.tfc.trabalho.dao.User
 
 interface UserRepository: JpaRepository<User, Long> {
 
-    fun findByEmail(email: String): List<User>
+    fun findByAge(age: Int): List<User>
 }

@@ -4,21 +4,20 @@ import java.util.*
 import javax.validation.constraints.*
 
 data class ResearcherForm(
-        @NotEmpty(message = "Erro: O Orcid ID tem que estar preenchido")
-        @NotNull
+        @field:NotEmpty(message = "Erro: O Orcid ID tem que estar preenchido")
         var orcid: String? = null,
 
-        @NotEmpty(message = "Erro: O nome tem que estar preenchido")
+        @field:NotEmpty(message = "Erro: O nome tem que estar preenchido")
         var name: String? = null,
 
-        @NotEmpty(message = "Erro: O utilizador tem que estar preenchido")
+        @field:NotEmpty(message = "Erro: O utilizador tem que estar preenchido")
         var utilizador: String? = null,
 
-        @Email(message = "Email tem que ser válido")
-        @NotEmpty(message = "Erro: O e-mail tem que estar preenchido")
+        @field:Email(message = "Email tem que ser válido")
+        @field:NotEmpty(message = "Erro: O e-mail tem que estar preenchido")
         var email: String? = null,
 
-        @NotEmpty(message = "Erro: O Ciência ID tem que estar preenchido")
+        @field:NotEmpty(message = "Erro: O Ciência ID tem que estar preenchido")
         var cienciaId: String? = null,
 
         @field:NotEmpty(message = "Erro: A chave pública tem que estar preenchida")
@@ -45,7 +44,9 @@ data class ResearcherForm(
         @field:NotEmpty(message = "Erro: A categoria tem que estar preenchida")
         var category: String? = null,
 
+        @field:NotEmpty(message = "Erro: O ano de doutoramento tem que estar preenchida")
         var phdYear: Date? = null,
 
-        var isAdmin: Boolean? = null
+        @field:NotEmpty(message = "Erro: A categoria tem que estar preenchida")
+        var isAdmin: Boolean = false
 )

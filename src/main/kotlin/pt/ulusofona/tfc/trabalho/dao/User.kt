@@ -8,5 +8,5 @@ import javax.persistence.Id
 data class User(
         @Id @GeneratedValue
         val id: Long = 0,
-        var email: String,
-        var password: String)
+        var name: String,
+        var age: Int)
