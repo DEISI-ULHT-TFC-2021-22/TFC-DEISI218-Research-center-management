@@ -8,26 +8,38 @@
 <section class="hero is-fullheight-with-navbar">
     <div class="hero-body">
         <div class="container">
-            <div class="box">
+            <div class="box" th:object="${researcher}">
                 <div class="columns">
-                    <div class="column is-narrow ">
+                    <div class="column is-narrow">
                         <figure class="image is-128x128">
                             <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
                         </figure>
+                        <br>
                     </div>
                     <div class="column is-narrow-mobile">
-                        <h1 class="title is-4 ">João Pedro Correia <span class="tag is-primary is-small">Administrador</span></h1>
-                        <div>
-                            <strong class="has-text-primary">Orcid ID: </strong><span>XXXX-XXXX-XXXX-XXXX</span>
+                        <div class="title">
+                            <span class="" th:text="*{name}">João Pedro Correia</span> <span class="tag is-info is-small">Administrador</span>
+
                         </div>
                         <div>
-                            <strong class="has-text-primary">Ciência ID: </strong><span>XXXX-XXXX-XXXX</span>
+                            <strong class="has-text-primary">Ano Doutoramento: </strong>
+                            <span>YYYY</span>
                         </div>
                         <div>
-                            <strong class="has-text-primary">Chave Pública FCT: </strong><span>XXXX-XXXX-XXXX</span>
+                            <strong class="has-text-primary" >Orcid ID: </strong>
+                            <span th:text="*{orcid}">XXXX-XXXX-XXXX-XXXX</span>
                         </div>
                         <div>
-                            <strong class="has-text-primary">Chave Associação FCT: </strong><span>XXXX-XXXX-XXXX</span>
+                            <strong class="has-text-primary">Ciência ID: </strong>
+                            <span th:text="*{cienciaId}">XXXX-XXXX-XXXX</span>
+                        </div>
+                        <div>
+                            <strong class="has-text-primary">Chave Pública FCT: </strong>
+                            <span th:text="*{publicKeyFct}">XXXX-XXXX-XXXX</span>
+                        </div>
+                        <div>
+                            <strong class="has-text-primary">Chave Associação FCT: </strong>
+                            <span th:text="*{associationKeyFct}">XXXX-XXXX-XXXX</span>
                         </div>
                     </div>
                     <div class="column is-narrow">
@@ -39,34 +51,42 @@
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <strong class="has-text-primary">Email:</strong><br><span>exemplo@gmail.com</span>
+                        <strong class="has-text-primary">Email:</strong><br>
+                        <span th:text="*{email}">exemplo@gmail.com</span>
                     </div>
                     <div class="column">
-                        <strong class="has-text-primary">Utilizador</strong><br><span>utilizador1234</span>
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column">
-                        <strong class="has-text-primary">Origem</strong><br><span>origem</span>
-                    </div>
-                    <div class="column">
-                        <strong class="has-text-primary">Telefone</strong><br><span>91X XXX XXX</span>
+                        <strong class="has-text-primary">Utilizador</strong><br>
+                        <span th:text="*{utilizador}">utilizador1234</span>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <strong class="has-text-primary">Categoria</strong><br><span>categoria</span>
+                        <strong class="has-text-primary">Origem</strong><br>
+                        <span th:text="*{origin}">origem</span>
                     </div>
                     <div class="column">
-                        <strong class="has-text-primary">Site CeiED</strong><br><span>https://www.ceied.exemplo.pt/pt/</span>
+                        <strong class="has-text-primary">Telefone</strong><br>
+                        <span th:text="*{phoneNumber}">91X XXX XXX</span>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <strong class="has-text-primary">Situação Profissional</strong><br><span>Categorial Profissional</span>
+                        <strong class="has-text-primary">Categoria</strong><br>
+                        <span th:text="*{category}">categoria</span>
                     </div>
                     <div class="column">
-                        <strong class="has-text-primary">Ano Doutoramento</strong><br><span>YYYY</span>
+                        <strong class="has-text-primary">Site CeiED</strong><br>
+                        <span th:text="*{siteCeied}">https://www.ceied.exemplo.pt/pt/</span>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong class="has-text-primary">Categoria Profissional</strong><br>
+                        <span th:text="*{professionalCategory}">Categoria Profissional</span>
+                    </div>
+                    <div class="column">
+                        <strong class="has-text-primary">Situação Profissional</strong><br>
+                        <span th:text="*{professionalStatus}">Situação Profissional</span>
                     </div>
                 </div>
             </div>

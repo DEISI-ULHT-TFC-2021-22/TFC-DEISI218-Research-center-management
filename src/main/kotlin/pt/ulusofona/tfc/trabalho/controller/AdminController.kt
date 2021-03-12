@@ -9,6 +9,7 @@ import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.ResearcherRepository
 import javax.validation.Valid
+import java.util.Optional
 
 @Controller
 @RequestMapping("/admin")
@@ -19,7 +20,34 @@ class AdminController(val researcherRepository: ResearcherRepository){
     }
     @GetMapping(value = ["/researcher-management"])
     fun showResearcherManagement(model: ModelMap): String{
+        val researchers = researcherRepository.findAll()
+        model["researchers"] = researchers
         return "admin-section/researcher-management"
+    }
+
+    @GetMapping(value = ["/view/{orcid}"])
+    fun viewResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+
+        val researcherOptional = researcherRepository.findById(orcid)
+        if (researcherOptional.isPresent) {
+            val researcher = researcherOptional.get()
+            model["researcher"] = Researcher(
+                    orcid = researcher.orcid,
+                    name = researcher.name,
+                    utilizador = researcher.utilizador,
+                    email = researcher.email,
+                    cienciaId = researcher.cienciaId,
+                    publicKeyFct = researcher.publicKeyFct,
+                    associationKeyFct = researcher.associationKeyFct,
+                    phoneNumber = researcher.phoneNumber,
+                    origin = researcher.origin,
+                    siteCeied = researcher.siteCeied,
+                    professionalStatus = researcher.professionalStatus,
+                    professionalCategory = researcher.professionalCategory,
+                    category = researcher.category,
+            )
+        }
+        return "researcher-section/personal-information"
     }
 
     @GetMapping(value = ["/personal-information-form"])
@@ -52,8 +80,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 professionalStatus = researcherForm.professionalStatus!!,
                 professionalCategory = researcherForm.professionalCategory!!,
                 category = researcherForm.category!!,
-                phdYear = researcherForm.phdYear,
-                isAdmin = researcherForm.isAdmin
+                //phdYear = researcherForm.phdYear,
+                //isAdmin = researcherForm.isAdmin
         )
 
         researcherRepository.save(researcher)

@@ -13,8 +13,29 @@
                     <span>Novo Investigador</span>
                 </a>
             </div>
-            <div class="notification is-warning">
-                <strong> GERIR INVESTIGADORES EM CONSTRUÇÃO</strong>
+            <h1>Investigadores</h1>
+            <table class="table" th:if="${!researchers.isEmpty()}">
+               <thead>
+               <tr>
+                   <th>Nome</th>
+                   <th>Orcid</th>
+                   <th>Categoria Profissional</th>
+                   <th>Origem</th>
+               </tr>
+               </thead>
+                <tbody>
+                <tr th:each="researcher : ${researchers}">
+                    <td th:text="*{researcher.name}"></td>
+                    <td th:text="*{researcher.orcid}"></td>
+                    <td th:text="*{researcher.professionalCategory}"></td>
+                    <td th:text="*{researcher.origin}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="section">
+                <div class="notification is-warning">
+                    <strong> GERIR INVESTIGADORES EM CONSTRUÇÃO</strong>
+                </div>
             </div>
         </div>
     </div>
