@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Tiago-21901470/research-center-management#readme",
   "dependencies": {
     "bulma-calendar": "^6.0.9",
-    "bulma-switch": "^2.0.0"
+    "bulma-switch": "^2.0.0",
+    "gridjs": "^3.4.0"
   }
 }

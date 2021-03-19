@@ -18,7 +18,10 @@ $widescreen-enabled: false;
 $fullhd-enabled: false;
 
 // Update Bulma's component variables
-
+.table {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 // Landing page----------
 .hero.has-background {

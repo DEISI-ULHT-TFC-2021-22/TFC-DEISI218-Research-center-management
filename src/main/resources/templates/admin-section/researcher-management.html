@@ -6,37 +6,49 @@
 <div th:replace="layout/layout :: header"></div>
 <section class="hero is-medium">
     <div class="hero-body">
-        <div class="container">
-            <div class="section">
+        <div class="container is-fluid">
+            <div class="container mb-5">
                 <a class="button is-primary" th:href="@{/admin/personal-information-form}">
                     <span class="icon is-large"><i class="fas fa-user-plus"></i></span>
                     <span>Novo Investigador</span>
                 </a>
             </div>
-            <h1>Investigadores</h1>
             <table class="table" th:if="${!researchers.isEmpty()}">
                <thead>
                <tr>
                    <th>Nome</th>
-                   <th>Orcid</th>
-                   <th>Categoria Profissional</th>
-                   <th>Origem</th>
+                   <th>CIÊNCIA ID</th>
+                   <th>Email</th>
+                   <th>Categoria de Investigador</th>
+                   <th>Ações</th>
                </tr>
                </thead>
                 <tbody>
                 <tr th:each="researcher : ${researchers}">
-                    <td th:text="*{researcher.name}"></td>
-                    <td th:text="*{researcher.orcid}"></td>
-                    <td th:text="*{researcher.professionalCategory}"></td>
-                    <td th:text="*{researcher.origin}"></td>
+                    <td th:text="*{researcher.name}">
+                        <a th:href="@{'/admin/user/' + ${researcher.orcid}}">
+                            <span class="fas fa-eye" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td th:text="*{researcher.cienciaId}"></td>
+                    <td th:text="*{researcher.email}"></td>
+                    <td th:text="*{researcher.researcherCategory}"></td>
+                    <td>
+                        <a th:href="@{'/admin/user/' + ${researcher.orcid}}">
+                        <span class="fas fa-user" aria-hidden="true"></span>
+                        </a>
+                        &emsp;
+                        <a th:href="@{'/admin/user/' + ${researcher.orcid}}">
+                            <span class="fas fa-clipboard-list" aria-hidden="true"></span>
+                        </a>
+                        &emsp;
+                        <a th:href="@{'/admin/delete/' + ${researcher.orcid}}">
+                            <span class="fas fa-times-circle" aria-hidden="true"></span>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="section">
-                <div class="notification is-warning">
-                    <strong> GERIR INVESTIGADORES EM CONSTRUÇÃO</strong>
-                </div>
-            </div>
         </div>
     </div>
 </section>

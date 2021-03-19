@@ -15,14 +15,13 @@ data class Researcher(
         var utilizador: String,
         var email: String,
         var cienciaId: String,
-        var publicKeyFct: String,
         var associationKeyFct: String,
-        var phoneNumber: String,
+        var researcherCategory: String,
         var origin: String,
+        var phoneNumber: String,
         var siteCeied: String,
         var professionalStatus: String,
         var professionalCategory:String,
-        var category: String,
         //var phdYear: Date?,
         //var isAdmin: Boolean
         )

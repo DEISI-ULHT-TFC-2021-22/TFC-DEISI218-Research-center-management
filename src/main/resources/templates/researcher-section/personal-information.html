@@ -18,8 +18,7 @@
                     </div>
                     <div class="column is-narrow-mobile">
                         <div class="title">
-                            <span class="" th:text="*{name}">João Pedro Correia</span> <span class="tag is-info is-small">Administrador</span>
-
+                            <span class="" th:text="*{name}"></span> <span class="tag is-info is-small">Administrador</span>
                         </div>
                         <div>
                             <strong class="has-text-primary">Ano Doutoramento: </strong>
@@ -27,23 +26,19 @@
                         </div>
                         <div>
                             <strong class="has-text-primary" >Orcid ID: </strong>
-                            <span th:text="*{orcid}">XXXX-XXXX-XXXX-XXXX</span>
+                            <span th:text="*{orcid}"></span>
                         </div>
                         <div>
                             <strong class="has-text-primary">Ciência ID: </strong>
-                            <span th:text="*{cienciaId}">XXXX-XXXX-XXXX</span>
-                        </div>
-                        <div>
-                            <strong class="has-text-primary">Chave Pública FCT: </strong>
-                            <span th:text="*{publicKeyFct}">XXXX-XXXX-XXXX</span>
+                            <span th:text="*{cienciaId}"></span>
                         </div>
                         <div>
                             <strong class="has-text-primary">Chave Associação FCT: </strong>
-                            <span th:text="*{associationKeyFct}">XXXX-XXXX-XXXX</span>
+                            <span th:text="*{associationKeyFct}"></span>
                         </div>
                     </div>
                     <div class="column is-narrow">
-                        <a class="button is-primary is-outlined mt-4 mr-4" th:href="@{/personal-information-form}">
+                        <a class="button is-primary is-outlined mt-4 mr-4" th:href="@{'/admin/edit/' + *{orcid}}">
                             <span class="icon is-small"><i class="fas fa-edit"></i></span>
                             <span>Editar</span>
                         </a>
@@ -52,41 +47,41 @@
                 <div class="columns">
                     <div class="column">
                         <strong class="has-text-primary">Email:</strong><br>
-                        <span th:text="*{email}">exemplo@gmail.com</span>
+                        <span th:text="*{email}"></span>
                     </div>
                     <div class="column">
                         <strong class="has-text-primary">Utilizador</strong><br>
-                        <span th:text="*{utilizador}">utilizador1234</span>
+                        <span th:text="*{utilizador}"></span>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
                         <strong class="has-text-primary">Origem</strong><br>
-                        <span th:text="*{origin}">origem</span>
+                        <span th:text="*{origin}"></span>
                     </div>
                     <div class="column">
                         <strong class="has-text-primary">Telefone</strong><br>
-                        <span th:text="*{phoneNumber}">91X XXX XXX</span>
+                        <span th:text="*{phoneNumber}"></span>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <strong class="has-text-primary">Categoria</strong><br>
-                        <span th:text="*{category}">categoria</span>
+                        <strong class="has-text-primary">Categoria de Investigador</strong><br>
+                        <span th:text="*{researcherCategory}"></span>
                     </div>
                     <div class="column">
                         <strong class="has-text-primary">Site CeiED</strong><br>
-                        <span th:text="*{siteCeied}">https://www.ceied.exemplo.pt/pt/</span>
+                        <span th:text="*{siteCeied}"></span>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
                         <strong class="has-text-primary">Categoria Profissional</strong><br>
-                        <span th:text="*{professionalCategory}">Categoria Profissional</span>
+                        <span th:text="*{professionalCategory}"></span>
                     </div>
                     <div class="column">
                         <strong class="has-text-primary">Situação Profissional</strong><br>
-                        <span th:text="*{professionalStatus}">Situação Profissional</span>
+                        <span th:text="*{professionalStatus}"></span>
                     </div>
                 </div>
             </div>

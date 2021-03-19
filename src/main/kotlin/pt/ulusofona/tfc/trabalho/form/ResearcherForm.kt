@@ -20,17 +20,17 @@ data class ResearcherForm(
         @field:NotEmpty(message = "Erro: O Ciência ID tem que estar preenchido")
         var cienciaId: String? = null,
 
-        @field:NotEmpty(message = "Erro: A chave pública tem que estar preenchida")
-        var publicKeyFct: String? = null,
-
         @field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
         var associationKeyFct: String? = null,
 
-        @field:NotEmpty(message = "Erro: O número de telefone tem que estar preenchido")
-        var phoneNumber: String? = null,
+        @field:NotEmpty(message = "Erro: A categoria de investigador tem que estar preenchida")
+        var researcherCategory: String? = null,
 
         @field:NotEmpty(message = "Erro: A origem tem que estar preenchida")
         var origin: String? = null,
+
+        @field:NotEmpty(message = "Erro: O número de telefone tem que estar preenchido")
+        var phoneNumber: String? = null,
 
         @field:NotEmpty(message = "Erro: O site CeiED tem que estar preenchido")
         var siteCeied: String? = null,
@@ -41,8 +41,6 @@ data class ResearcherForm(
         @field:NotEmpty(message = "Erro: A categoria profissional tem que estar preenchida")
         var professionalCategory: String? = null,
 
-        @field:NotEmpty(message = "Erro: A categoria tem que estar preenchida")
-        var category: String? = null,
 
         //@field:NotEmpty(message = "Erro: O ano de doutoramento tem que estar preenchida")
         //var phdYear: Date? = null,

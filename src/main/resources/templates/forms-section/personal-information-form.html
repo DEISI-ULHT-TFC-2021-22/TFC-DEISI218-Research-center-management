@@ -68,17 +68,6 @@
            <div class="field">
                <div class="columns">
                    <div class="column">
-                       <label class="label" for="publicKeyFct">Chave Pública FCT</label>
-                       <p class="control is-expanded has-icons-left">
-                           <input class="input"
-                                  id="publicKeyFct"
-                                  type="text"
-                                  placeholder="Chave Pública FCT"
-                                  th:field="*{publicKeyFct}">
-                           <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-                       </p>
-                   </div>
-                   <div class="column">
                        <label class="label" for="assocKeyFct">Chave de Associação FCT</label>
                        <p class="control is-expanded has-icons-left">
                            <input class="input"
@@ -87,6 +76,16 @@
                                   placeholder="Chave de Associação FCT"
                                   th:field="*{associationKeyFct}">
                            <span class="icon is-small is-left"> <i class="fas fa-key"></i> </span>
+                       </p>
+                   </div>
+                   <div class="column">
+                       <label class="label" for="researcherCategory">Categoria de Investigador</label>
+                       <p class="control is-expanded">
+                           <input class="input"
+                                  id="researcherCategory"
+                                  type="text"
+                                  placeholder="Categoria de Investigador"
+                                  th:field="*{researcherCategory}">
                        </p>
                    </div>
                </div>
@@ -168,14 +167,6 @@
            <div class="field">
                <div class="columns">
                    <div class="column is-half">
-                       <label class="label" for="category">Categoria</label>
-                       <p class="control is-expanded">
-                           <input class="input"
-                                  id="category"
-                                  type="text"
-                                  placeholder="Categoria"
-                                  th:field="*{category}">
-                       </p>
                    </div>
                    <!--<div class="column">
                        <label class="label" for="calendarioAno">Ano Doutoramento</label>
@@ -196,7 +187,8 @@
                 </div>
             </div>
             <div class="container has-text-centered pt-6" >
-                <button class="button is-medium is-primary" type="submit" value="Gravar">Criar Investigador</button>
+                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null}">Criar Investigador</button>
+                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null}">Editar Investigador</button>
                 <!--<button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null}">Editar Investigador</button>
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null}">Criar Investigador</button>-->
             </div>

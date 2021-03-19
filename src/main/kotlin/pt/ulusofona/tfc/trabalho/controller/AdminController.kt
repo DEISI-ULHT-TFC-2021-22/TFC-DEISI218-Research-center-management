@@ -14,10 +14,12 @@ import java.util.Optional
 @Controller
 @RequestMapping("/admin")
 class AdminController(val researcherRepository: ResearcherRepository){
+
     @GetMapping(value = ["/searches"])
     fun showSearches(model: ModelMap): String{
         return "admin-section/searches"
     }
+
     @GetMapping(value = ["/researcher-management"])
     fun showResearcherManagement(model: ModelMap): String{
         val researchers = researcherRepository.findAll()
@@ -25,7 +27,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
         return "admin-section/researcher-management"
     }
 
-    @GetMapping(value = ["/view/{orcid}"])
+    @GetMapping(value = ["/user/{orcid}"])
     fun viewResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap): String{
 
         val researcherOptional = researcherRepository.findById(orcid)
@@ -37,17 +39,41 @@ class AdminController(val researcherRepository: ResearcherRepository){
                     utilizador = researcher.utilizador,
                     email = researcher.email,
                     cienciaId = researcher.cienciaId,
-                    publicKeyFct = researcher.publicKeyFct,
                     associationKeyFct = researcher.associationKeyFct,
-                    phoneNumber = researcher.phoneNumber,
+                    researcherCategory = researcher.researcherCategory,
                     origin = researcher.origin,
+                    phoneNumber = researcher.phoneNumber,
                     siteCeied = researcher.siteCeied,
                     professionalStatus = researcher.professionalStatus,
                     professionalCategory = researcher.professionalCategory,
-                    category = researcher.category,
+
             )
         }
         return "researcher-section/personal-information"
+    }
+
+    @GetMapping(value = ["/edit/{orcid}"])
+    fun editResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+        val researcherOptional = researcherRepository.findById(orcid)
+        if (researcherOptional.isPresent) {
+            val researcher = researcherOptional.get()
+            model["researcherForm"] = ResearcherForm(
+                    orcid = researcher.orcid,
+                    name = researcher.name,
+                    utilizador = researcher.utilizador,
+                    email = researcher.email,
+                    cienciaId = researcher.cienciaId,
+                    associationKeyFct = researcher.associationKeyFct,
+                    researcherCategory = researcher.researcherCategory,
+                    origin = researcher.origin,
+                    phoneNumber = researcher.phoneNumber,
+                    siteCeied = researcher.siteCeied,
+                    professionalStatus = researcher.professionalStatus,
+                    professionalCategory = researcher.professionalCategory,
+
+            )
+        }
+        return "forms-section/personal-information-form"
     }
 
     @GetMapping(value = ["/personal-information-form"])
@@ -72,14 +98,13 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 utilizador = researcherForm.utilizador!!,
                 email = researcherForm.email!!,
                 cienciaId = researcherForm.cienciaId!!,
-                publicKeyFct = researcherForm.publicKeyFct!!,
                 associationKeyFct = researcherForm.associationKeyFct!!,
-                phoneNumber = researcherForm.phoneNumber!!,
+                researcherCategory = researcherForm.researcherCategory!!,
                 origin = researcherForm.origin!!,
+                phoneNumber = researcherForm.phoneNumber!!,
                 siteCeied = researcherForm.siteCeied!!,
                 professionalStatus = researcherForm.professionalStatus!!,
                 professionalCategory = researcherForm.professionalCategory!!,
-                category = researcherForm.category!!,
                 //phdYear = researcherForm.phdYear,
                 //isAdmin = researcherForm.isAdmin
         )
@@ -88,6 +113,14 @@ class AdminController(val researcherRepository: ResearcherRepository){
 
         //TODO adiconar a extensao bulma-toast para receber estes alertas vvvvv
         //redirectAttributes.addFlashAttribute("message","Investigador inserido com sucesso")
+        return "redirect:/admin/researcher-management"
+    }
+
+    @GetMapping("/delete/{orcid}")
+    fun deleteResearcher(@PathVariable orcid: String): String{
+        if (researcherRepository.findById(orcid).isPresent){
+            researcherRepository.deleteById(orcid)
+        }
         return "redirect:/admin/researcher-management"
     }
 
