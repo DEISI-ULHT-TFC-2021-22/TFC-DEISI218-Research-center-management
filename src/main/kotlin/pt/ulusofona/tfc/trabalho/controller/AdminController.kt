@@ -9,6 +9,7 @@ import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.ResearcherRepository
 import javax.validation.Valid
+
 import java.util.Optional
 
 @Controller

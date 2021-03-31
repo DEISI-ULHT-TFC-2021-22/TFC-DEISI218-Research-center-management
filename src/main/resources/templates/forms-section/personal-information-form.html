@@ -22,20 +22,21 @@
                                    type="text"
                                    placeholder="Nome"
                                    th:field="*{name}">
-                            <!--<p class="help is-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>-->
+                        <p class="help is-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
                            <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
                        </div>
                    </div>
                    <div class="column">
                        <label class="label" for="email">Email</label>
-                       <p class="control has-icons-left">
+                       <div class="control has-icons-left">
                            <input class="input"
                                   id="email"
                                   type="email"
                                   placeholder="Email"
                                   th:field="*{email}">
+                       <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error</p>
                            <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
-                       </p>
+                       </div>
                    </div>
                </div>
            </div>
@@ -43,25 +44,27 @@
                <div class="columns">
                    <div class="column">
                        <label class="label" for="orcid">Orcid ID</label>
-                       <p class="control is-expanded has-icons-left">
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
                                   id="orcid"
                                   type="text"
-                                  placeholder="Orcid ID"
+                                  placeholder="XXXX-XXXX-XXXX-XXXX"
                                   th:field="*{orcid}">
+                       <p class="help is-danger" th:if="${#fields.hasErrors('orcid')}" th:errors="*{orcid}">Error</p>
                            <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-                       </p>
+                       </div>
                    </div>
                    <div class="column">
                        <label class="label" for="cienciaId">Ciência ID</label>
-                       <p class="control is-expanded has-icons-left">
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
                                   id="cienciaId"
                                   type="text"
-                                  placeholder="Ciência ID"
+                                  placeholder="XXXX-XXXX-XXXX"
                                   th:field="*{cienciaId}">
                            <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-                       </p>
+                       <p class="help is-danger" th:if="${#fields.hasErrors('cienciaId')}" th:errors="*{cienciaId}">Error</p>
+                       </div>
                    </div>
                </div>
            </div>
@@ -69,24 +72,26 @@
                <div class="columns">
                    <div class="column">
                        <label class="label" for="assocKeyFct">Chave de Associação FCT</label>
-                       <p class="control is-expanded has-icons-left">
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
                                   id="assocKeyFct"
                                   type="text"
                                   placeholder="Chave de Associação FCT"
                                   th:field="*{associationKeyFct}">
+                           <!--<p class="help is-danger" th:if="${#fields.hasErrors('associationKeyFct')}" th:errors="*{associationKeyFct}">Error</p>-->
                            <span class="icon is-small is-left"> <i class="fas fa-key"></i> </span>
-                       </p>
+                       </div>
                    </div>
                    <div class="column">
                        <label class="label" for="researcherCategory">Categoria de Investigador</label>
-                       <p class="control is-expanded">
+                       <div class="control is-expanded">
                            <input class="input"
                                   id="researcherCategory"
                                   type="text"
                                   placeholder="Categoria de Investigador"
                                   th:field="*{researcherCategory}">
-                       </p>
+                           <p class="help is-danger" th:if="${#fields.hasErrors('researcherCategory')}" th:errors="*{researcherCategory}">Error</p>
+                       </div>
                    </div>
                </div>
            </div>
@@ -94,24 +99,25 @@
                <div class="columns">
                    <div class="column">
                        <label class="label" for="phoneNumber">Telefone</label>
-                       <p class="control is-expanded has-icons-left">
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
                                   id="phoneNumber"
                                   type="text"
                                   placeholder="Telefone"
                                   th:field="*{phoneNumber}">
+                           <p class="help is-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Error</p>
                            <span class="icon is-small is-left"><i class="fas fa-phone"></i></span>
-                       </p>
+                       </div>
                    </div>
                    <div class="column">
                        <label class="label" for="origin">Origem</label>
-                       <p class="control is-expanded">
+                       <div class="control is-expanded">
                            <input class="input"
                                   id="origin"
                                   type="text"
                                   placeholder="Origem"
                                   th:field="*{origin}">
-                       </p>
+                       </div>
                    </div>
                </div>
            </div>
@@ -119,24 +125,24 @@
                <div class="columns">
                    <div class="column">
                        <label class="label" for="siteCeied">Site CeiED</label>
-                       <p class="control is-expanded">
+                       <div class="control is-expanded">
                            <input class="input"
                                   id="siteCeied"
                                   type="text"
                                   placeholder="Site CeiED"
                                   th:field="*{siteCeied}">
-                       </p>
+                       </div>
                    </div>
                    <div class="column">
                        <label class="label" for="utilizador">Utilizador</label>
-                       <p class="control is-expanded has-icons-left">
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
                                   id="utilizador"
                                   type="text"
                                   placeholder="Utilizador"
                                   th:field="*{utilizador}">
                            <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
-                       </p>
+                       </div>
                    </div>
                </div>
            </div>
@@ -144,23 +150,25 @@
                <div class="columns">
                    <div class="column">
                        <label class="label" for="profStatus">Situação Profissional</label>
-                       <p class="control is-expanded">
+                       <div class="control is-expanded">
                            <input class="input"
                                   id="profStatus"
                                   type="text"
                                   placeholder="Situação Profissional"
                                   th:field="*{professionalStatus}">
-                       </p>
+                           <p class="help is-danger" th:if="${#fields.hasErrors('professionalStatus')}" th:errors="*{professionalStatus}">Error</p>
+                       </div>
                    </div>
                    <div class="column">
                        <label class="label" for="profCategory">Categoria Profissional</label>
-                       <p class="control is-expanded">
+                       <div class="control is-expanded">
                            <input class="input"
                                   id="profCategory"
                                   type="text"
                                   placeholder="Categoria Profissional"
                                   th:field="*{professionalCategory}">
-                       </p>
+                           <p class="help is-danger" th:if="${#fields.hasErrors('professionalCategory')}" th:errors="*{professionalCategory}">Error</p>
+                       </div>
                    </div>
                </div>
            </div>
