@@ -16,8 +16,4 @@ class ResearcherController{
     fun showScientificActivities(model: ModelMap): String{
         return "researcher-section/scientific-activities"
     }
-    @GetMapping(value = ["/disclosure-request"])
-    fun showDisclosureRequest(model: ModelMap): String{
-        return "researcher-section/disclosure-request"
-    }
 }
