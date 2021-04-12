@@ -1,6 +1,6 @@
 # Gestor de Centros de Investigação
 ---
-### Setup
+### Setup do projeto
 
 #### bulma-calendar
 ```
@@ -10,15 +10,13 @@
 ```
 > npm i bulma-switch
 ```
----
-
 #### Gerar o ficheiro CSS
 Para compilar o css através do ficheiro sass(é necessário fazer uma alteração no ficheiro sass para ser gerado o css)
 ```
 > npm start
 ```
-
-### Passos a seguir para o setup da BD
+---
+### Setup da BD
 
 * Instalar MySQL e pôr a correr
 * Ligar o Intellij ao MySQL através do separador Database > New Data Source (MySQL)
