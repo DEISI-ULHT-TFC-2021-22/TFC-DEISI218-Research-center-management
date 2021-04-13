@@ -4,6 +4,7 @@
 </head>
 <body class="has-navbar-fixed-top">
 <div th:replace="layout/layout :: header"></div>
+
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container is-fluid">
@@ -12,6 +13,11 @@
                     <span class="icon is-large"><i class="fas fa-user-plus"></i></span>
                     <span>Novo Investigador</span>
                 </a>
+            </div>
+            <div class="column is-vcentered is-two-fifths">
+                <div class="notification is-success has-text-centered" th:if="${message}" th:text="${message}">
+                    Message...
+                </div>
             </div>
             <table class="table" th:if="${!researchers.isEmpty()}">
                <thead>

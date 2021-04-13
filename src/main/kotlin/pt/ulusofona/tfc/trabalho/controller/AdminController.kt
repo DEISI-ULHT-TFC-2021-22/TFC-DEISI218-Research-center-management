@@ -54,7 +54,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
     }
 
     @GetMapping(value = ["/edit/{orcid}"])
-    fun editResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+    fun editResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap, redirectAttributes: RedirectAttributes): String{
         val researcherOptional = researcherRepository.findById(orcid)
         if (researcherOptional.isPresent) {
             val researcher = researcherOptional.get()
@@ -74,6 +74,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
 
             )
         }
+        redirectAttributes.addFlashAttribute("message","Investigador editado com sucesso!")
         return "forms-section/personal-information-form"
     }
 
@@ -113,13 +114,14 @@ class AdminController(val researcherRepository: ResearcherRepository){
         researcherRepository.save(researcher)
 
         //TODO adiconar a extensao bulma-toast para receber estes alertas vvvvv
-        //redirectAttributes.addFlashAttribute("message","Investigador inserido com sucesso")
+        redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} inserido com sucesso!")
         return "redirect:/admin/researcher-management"
     }
 
     @GetMapping("/delete/{orcid}")
-    fun deleteResearcher(@PathVariable orcid: String): String{
+    fun deleteResearcher(@PathVariable orcid: String, redirectAttributes: RedirectAttributes): String{
         if (researcherRepository.findById(orcid).isPresent){
+            redirectAttributes.addFlashAttribute("message","Investigador ${researcherRepository.findById(orcid).get().name} eliminado com sucesso!")
             researcherRepository.deleteById(orcid)
         }
         return "redirect:/admin/researcher-management"
