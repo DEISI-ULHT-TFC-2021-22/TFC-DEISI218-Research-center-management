@@ -23,7 +23,7 @@ data class ResearcherForm(
         //@field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
         var associationKeyFct: String? = null,
 
-        @field:NotEmpty(message = "Campo obrigatório")
+        /*@field:NotEmpty(message = "Campo obrigatório")*/
         var researcherCategory: String? = null,
 
         //@field:NotEmpty(message = "Erro: A origem tem que estar preenchida")
@@ -38,7 +38,7 @@ data class ResearcherForm(
         @field:NotEmpty(message = "Campo obrigatório")
         var professionalStatus: String? = null,
 
-        @field:NotEmpty(message = "Campo obrigatório")
+        //@field:NotEmpty(message = "Campo obrigatório")
         var professionalCategory: String? = null,
 
 

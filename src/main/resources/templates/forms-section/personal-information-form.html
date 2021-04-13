@@ -83,14 +83,14 @@
                        </div>
                    </div>
                    <div class="column">
-                       <label class="label" for="researcherCategory">Categoria de Investigador</label>
-                       <div class="control is-expanded">
+                       <label class="label" for="utilizador">Utilizador FCT</label>
+                       <div class="control is-expanded has-icons-left">
                            <input class="input"
-                                  id="researcherCategory"
+                                  id="utilizador"
                                   type="text"
-                                  placeholder="Categoria de Investigador"
-                                  th:field="*{researcherCategory}">
-                           <p class="help is-danger" th:if="${#fields.hasErrors('researcherCategory')}" th:errors="*{researcherCategory}">Error</p>
+                                  placeholder="Utilizador FCT"
+                                  th:field="*{utilizador}">
+                           <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
                        </div>
                    </div>
                </div>
@@ -134,14 +134,17 @@
                        </div>
                    </div>
                    <div class="column">
-                       <label class="label" for="utilizador">Utilizador</label>
-                       <div class="control is-expanded has-icons-left">
-                           <input class="input"
-                                  id="utilizador"
-                                  type="text"
-                                  placeholder="Utilizador"
-                                  th:field="*{utilizador}">
-                           <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+                       <label class="label" for="researcherCategory">Categoria de Investigador</label>
+                       <div class="control is-expanded">
+                           <div class="select select-width-100" id="researcherCategory">
+                               <select class="select select-width-100" th:field="*{researcherCategory}">
+                                   <option th:value="'Integrado Doutorado'" th:text="'Integrado Doutorado'"></option>
+                                   <option th:value="'Integrado Não Doutorado'" th:text="'Integrado Não Doutorado'"></option>
+                                   <option th:value="'Colaborador'" th:text="'Colaborador'"></option>
+                                   <option th:value="'Pós-doutorando'" th:text="'Pós-doutorando'"></option>
+                                   <option th:value="'Convidado'" th:text="'Convidado'"></option>
+                               </select>
+                           </div>
                        </div>
                    </div>
                </div>
@@ -162,12 +165,13 @@
                    <div class="column">
                        <label class="label" for="profCategory">Categoria Profissional</label>
                        <div class="control is-expanded">
-                           <input class="input"
-                                  id="profCategory"
-                                  type="text"
-                                  placeholder="Categoria Profissional"
-                                  th:field="*{professionalCategory}">
-                           <p class="help is-danger" th:if="${#fields.hasErrors('professionalCategory')}" th:errors="*{professionalCategory}">Error</p>
+                           <div class="select select-width-100" id="profCategory">
+                               <select class="select-width-100" th:field="*{professionalCategory}">
+                                   <option th:value="'Investigador ou Professor Auxiliar'" th:text="'Investigador ou Professor Auxiliar'"></option>
+                                   <option th:value="'Investigador ou Professor Associado'" th:text="'Investigador ou Professor Associado'"></option>
+                                   <option th:value="'Professor Catedrático'" th:text="'Professor Catedrático'"></option>
+                               </select>
+                           </div>
                        </div>
                    </div>
                </div>
@@ -195,8 +199,8 @@
                 </div>
             </div>
             <div class="container has-text-centered pt-6" >
-                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null}">Criar Investigador</button>
-                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null}">Editar Investigador</button>
+                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null || orcid == ''}">Criar Investigador</button>
+                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null && orcid != ''}">Editar Investigador</button>
                 <!--<button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null}">Editar Investigador</button>
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null}">Criar Investigador</button>-->
             </div>
