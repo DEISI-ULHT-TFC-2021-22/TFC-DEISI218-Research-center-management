@@ -57,7 +57,6 @@ $fullhd-enabled: false;
 // Navbar component customize----------
 $navbar-dropdown-arrow: $primary;
 $navbar-item-img-max-height: 105px;
-$navbar-item-hover-color: $black;
 $navbar-item-hover-background-color: $light;
 $navbar-item-active-background-color: $primary;
 $navbar-dropdown-item-hover-background-color: $light;
@@ -86,6 +85,7 @@ $navbar-padding-vertical: 0;
 //@import "../../../../../node_modules/bulma/sass/layout/section.sass";
 
 // Bulma extensions
+@import "../../../../../node_modules/@creativebulma/bulma-divider/src/sass/index.sass";
 // Para funcionar "npm i bulma-xxxx"
 
 // bulma-switch
