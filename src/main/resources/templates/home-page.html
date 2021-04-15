@@ -6,11 +6,33 @@
 <div th:replace="layout/layout :: header"></div>
 <section class="hero is-medium">
     <div class="hero-body">
-        <div class="container">
-            <div class="notification is-warning">
-                <strong> PÁGINA INICIAL EM CONSTRUÇÃO</strong>
+            <div class="tile is-ancestor">
+                <div class="tile is-parent">
+                    <article class="tile is-child box">
+                        <p class="title has-text-primary has-text-centered">Últimas Publicações</p>
+                        <div class="content has-text-centered">
+                            <p>Aqui fica a tabela dos últimas publicações</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child box">
+                        <p class="title has-text-primary has-text-centered">Últimas Atividades</p>
+                        <div class="content has-text-centered">
+                            <p>Aqui fica a tabela dos últimas atividades</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child box">
+                        <p class="title has-text-primary has-text-centered">Últimos Eventos</p>
+                        <div class="content has-text-centered">
+                            <p>Aqui fica a tabela dos últimos eventos</p>
+                        </div>
+                    </article>
+                </div>
             </div>
-        </div>
+
     </div>
 </section>
 <div th:replace="layout/layout :: footer"></div>
