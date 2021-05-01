@@ -41,10 +41,9 @@ data class ResearcherForm(
         //@field:NotEmpty(message = "Campo obrigatório")
         var professionalCategory: String? = null,
 
-
         //@field:NotEmpty(message = "Erro: O ano de doutoramento tem que estar preenchida")
-        //var phdYear: Date? = null,
+        var phdYear: Int? = null,
 
         //@field:NotEmpty(message = "Erro: A categoria tem que estar preenchida")
-        //var isAdmin: Boolean = false
+        var isAdmin: Boolean? = null
 )

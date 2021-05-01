@@ -5,6 +5,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.dao.Dissemination
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.ResearcherRepository
@@ -47,7 +48,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                     siteCeied = researcher.siteCeied,
                     professionalStatus = researcher.professionalStatus,
                     professionalCategory = researcher.professionalCategory,
-
+                    isAdmin = researcher.isAdmin,
+                    phdYear = researcher.phdYear,
             )
         }
         return "researcher-section/personal-information"
@@ -58,6 +60,10 @@ class AdminController(val researcherRepository: ResearcherRepository){
         val researcherOptional = researcherRepository.findById(orcid)
         if (researcherOptional.isPresent) {
             val researcher = researcherOptional.get()
+            var isAdminOptional = researcher.isAdmin
+            if (isAdminOptional == null){
+                isAdminOptional = false
+            }
             model["researcherForm"] = ResearcherForm(
                     orcid = researcher.orcid,
                     name = researcher.name,
@@ -71,7 +77,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                     siteCeied = researcher.siteCeied,
                     professionalStatus = researcher.professionalStatus,
                     professionalCategory = researcher.professionalCategory,
-
+                    phdYear = researcher.phdYear,
+                    isAdmin = isAdminOptional
             )
         }
         redirectAttributes.addFlashAttribute("message","Investigador editado com sucesso!")
@@ -93,7 +100,10 @@ class AdminController(val researcherRepository: ResearcherRepository){
            return "forms-section/personal-information-form"
             //return "admin-section/researcher-management"
         }
-
+        var isAdminOptional = researcherForm.isAdmin
+        if (isAdminOptional == null){
+            isAdminOptional = false
+        }
         val researcher = Researcher(
                 orcid = researcherForm.orcid!!,
                 name = researcherForm.name!!,
@@ -107,8 +117,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 siteCeied = researcherForm.siteCeied!!,
                 professionalStatus = researcherForm.professionalStatus!!,
                 professionalCategory = researcherForm.professionalCategory!!,
-                //phdYear = researcherForm.phdYear,
-                //isAdmin = researcherForm.isAdmin
+                phdYear = researcherForm.phdYear,
+                isAdmin = researcherForm.isAdmin!!,
         )
 
         researcherRepository.save(researcher)
@@ -130,5 +140,13 @@ class AdminController(val researcherRepository: ResearcherRepository){
     @GetMapping(value = ["/annual-report"])
     fun showAnnualReport(model: ModelMap): String{
         return "admin-section/annual-report"
+    }
+
+
+    fun createDissemination(){
+        //criar Dissemination - sem ID
+        //save Dissemination - já tenho ID
+        //criar ResearcherDissemination com o ID do dissemination e com o orcid do principal
+        //save ResearcherDissemination
     }
 }

@@ -2,7 +2,7 @@
 window.onload = function loadCalendar(){
     var max = new Date().getFullYear(),
         min = max - 60,
-        select = document.getElementById('calendarioAno');
+        select = document.getElementById('calendarioAnoDropDown');
 
     var optNull = document.createElement('option');
     optNull.value = null;

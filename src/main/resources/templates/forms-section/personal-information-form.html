@@ -136,8 +136,8 @@
                    <div class="column">
                        <label class="label" for="researcherCategory">Categoria de Investigador</label>
                        <div class="control is-expanded">
-                           <div class="select select-width-100" id="researcherCategory">
-                               <select class="select select-width-100" th:field="*{researcherCategory}">
+                           <div class="select select-width-100">
+                               <select class="select select-width-100" id="researcherCategory" th:field="*{researcherCategory}">
                                    <option th:value="'Integrado Doutorado'" th:text="'Integrado Doutorado'"></option>
                                    <option th:value="'Integrado Não Doutorado'" th:text="'Integrado Não Doutorado'"></option>
                                    <option th:value="'Colaborador'" th:text="'Colaborador'"></option>
@@ -165,8 +165,8 @@
                    <div class="column">
                        <label class="label" for="profCategory">Categoria Profissional</label>
                        <div class="control is-expanded">
-                           <div class="select select-width-100" id="profCategory">
-                               <select class="select-width-100" th:field="*{professionalCategory}">
+                           <div class="select select-width-100">
+                               <select class="select-width-100" id="profCategory" th:field="*{professionalCategory}">
                                    <option th:value="'Investigador ou Professor Auxiliar'" th:text="'Investigador ou Professor Auxiliar'"></option>
                                    <option th:value="'Investigador ou Professor Associado'" th:text="'Investigador ou Professor Associado'"></option>
                                    <option th:value="'Professor Catedrático'" th:text="'Professor Catedrático'"></option>
@@ -178,15 +178,14 @@
            </div>
            <div class="field">
                <div class="columns">
-                   <div class="column is-half">
-                   </div>
-                   <!--<div class="column">
+                   <div class="column">
                        <label class="label" for="calendarioAno">Ano Doutoramento</label>
                        <div class="control has-icons-left">
-                           <div class="select">
-                               <select id="calendarioAno"
-                                       th:field="*{phdYear}"></select>
-                           </div>
+                           <input class="input"
+                                  id="calendarioAno"
+                                  type="text"
+                                  placeholder="Ano"
+                                  th:field="*{phdYear}">
                            <span class="icon is-left"><i class="fas fa-calendar"></i></span>
                        </div>
                    </div>
@@ -194,8 +193,9 @@
                         <label class="label" for="switchAdmin">Administrador</label>
                         <input id="switchAdmin"
                                type="checkbox"
+                               th:field="*{isAdmin}"
                                th:checked="*{isAdmin}"/>
-                    </div>-->
+                    </div>
                 </div>
             </div>
             <div class="container has-text-centered pt-6" >
