@@ -4,17 +4,17 @@
 </head>
 <body>
 <div th:replace="layout/layout :: header"></div>
-
-<div class="container">
-
-    <h1>Dados Ciência Vitae</h1>
-    <h3>Nome completo</h3>
-    <p th:text="${fullName}" />
-    <br/>
-    <h3>Artigo</h3>
-    <p th:text="${article}" />
-</div>
-
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <h3>Nome completo</h3>
+            <p th:text="${fullName}" />
+            <br/>
+            <h3>Artigo</h3>
+            <p th:text="${article}" />
+        </div>
+    </div>
+</section>
 <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
