@@ -40,10 +40,38 @@ class SessionController{
         val root: JsonNode = mapper.readTree(response.body)
         val fullName = root.at("/identifying-info/person-info/full-name").asText()
 
-        val article = root.at("/outputs/output/0/conference-paper/paper-title")
+        var articles_title = mutableListOf<String>()
+        var event_type = ""
+        var event_name = ""
+        var event_date = ""
+        var event_description = ""
+
+        val fundingsSize = root.at("/fundings/total").asInt()
+        val outputsSize = root.at("/outputs/total").asInt()
+        val servicesSize = root.at("/services/total").asInt()
+        val count = maxOf(fundingsSize, outputsSize, servicesSize)
+
+        for(i in 0..count) {
+            //P101 = Artigo em Revista
+            if(root.at("/outputs/output/$i/output-type/code").asText() == "P101") {
+                articles_title.add(root.at("/outputs/output/$i/journal-article/article-title").asText())
+            }
+        }
+
+        //S202 = Participação em evento
+        if(root.at("/services/service/2/service-category/code").asText() == "S202") {
+            event_name = root.at("/services/service/2/event-participation/event-name").asText()
+            event_type = root.at("/services/service/2/event-participation/event-type/value").asText()
+            event_description = root.at("/services/service/2/event-participation/event-description").asText()
+            event_date = root.at("/services/service/2/event-participation/start-date/year").asText()
+        }
 
         model["fullName"] = fullName
-        model["article"] = article
+        model["article"] = articles_title
+        model["event_name"] = event_name
+        model["event_type"] = event_type
+        model["event_date"] = event_date
+        model["event_description"] = event_description
 
         return "cv"
     }
