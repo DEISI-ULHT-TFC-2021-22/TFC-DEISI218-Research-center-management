@@ -20,7 +20,7 @@ data class ResearcherForm(
         @field:Size(min = 14, max = 14, message = "O Ciência ID é inválido")
         var cienciaId: String? = null,
 
-        //@field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
+        @field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
         var associationKeyFct: String? = null,
 
         /*@field:NotEmpty(message = "Campo obrigatório")*/
@@ -41,10 +41,9 @@ data class ResearcherForm(
         //@field:NotEmpty(message = "Campo obrigatório")
         var professionalCategory: String? = null,
 
-
         //@field:NotEmpty(message = "Erro: O ano de doutoramento tem que estar preenchida")
-        //var phdYear: Date? = null,
+        var phdYear: Int? = null,
 
         //@field:NotEmpty(message = "Erro: A categoria tem que estar preenchida")
-        //var isAdmin: Boolean = false
+        var isAdmin: Boolean? = null
 )

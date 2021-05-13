@@ -57,6 +57,7 @@ $fullhd-enabled: false;
 }
 
 // Navbar component customize----------
+$navbar-height: 105px;
 $navbar-dropdown-arrow: $primary;
 $navbar-item-img-max-height: 105px;
 $navbar-item-hover-background-color: $light;
@@ -91,7 +92,7 @@ $navbar-padding-vertical: 0;
 // Para funcionar "npm i bulma-xxxx"
 
 // bulma-switch
-//@import '~bulma-switch'; <- nao funciona
+//@import '~bulma-switch'; //<- nao funciona
 @import '../../../../../node_modules/bulma-switch/src/sass/index.sass';
 
 // bulma-calendar

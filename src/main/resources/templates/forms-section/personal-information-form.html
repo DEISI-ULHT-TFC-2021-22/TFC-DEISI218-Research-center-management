@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/layout :: head (pageTitle='Formulário de Investigador')">
 </head>
-<script src="/js/bulma-calendar.js"></script>
 <script src="/js/myscripts.js"></script>
 <body class="has-navbar-fixed-top">
 <div th:replace="layout/layout :: header"></div>
@@ -136,8 +135,8 @@
                    <div class="column">
                        <label class="label" for="researcherCategory">Categoria de Investigador</label>
                        <div class="control is-expanded">
-                           <div class="select select-width-100" id="researcherCategory">
-                               <select class="select select-width-100" th:field="*{researcherCategory}">
+                           <div class="select select-width-100">
+                               <select class="select select-width-100" id="researcherCategory" th:field="*{researcherCategory}">
                                    <option th:value="'Integrado Doutorado'" th:text="'Integrado Doutorado'"></option>
                                    <option th:value="'Integrado Não Doutorado'" th:text="'Integrado Não Doutorado'"></option>
                                    <option th:value="'Colaborador'" th:text="'Colaborador'"></option>
@@ -165,8 +164,8 @@
                    <div class="column">
                        <label class="label" for="profCategory">Categoria Profissional</label>
                        <div class="control is-expanded">
-                           <div class="select select-width-100" id="profCategory">
-                               <select class="select-width-100" th:field="*{professionalCategory}">
+                           <div class="select select-width-100">
+                               <select class="select-width-100" id="profCategory" th:field="*{professionalCategory}">
                                    <option th:value="'Investigador ou Professor Auxiliar'" th:text="'Investigador ou Professor Auxiliar'"></option>
                                    <option th:value="'Investigador ou Professor Associado'" th:text="'Investigador ou Professor Associado'"></option>
                                    <option th:value="'Professor Catedrático'" th:text="'Professor Catedrático'"></option>
@@ -178,26 +177,31 @@
            </div>
            <div class="field">
                <div class="columns">
-                   <div class="column is-half">
-                   </div>
-                   <!--<div class="column">
+                   <div class="column">
                        <label class="label" for="calendarioAno">Ano Doutoramento</label>
                        <div class="control has-icons-left">
-                           <div class="select">
-                               <select id="calendarioAno"
-                                       th:field="*{phdYear}"></select>
-                           </div>
+                           <input class="input"
+                                  id="calendarioAno"
+                                  type="text"
+                                  placeholder="Ano"
+                                  th:field="*{phdYear}">
                            <span class="icon is-left"><i class="fas fa-calendar"></i></span>
                        </div>
                    </div>
                    <div class="column">
-                        <label class="label" for="switchAdmin">Administrador</label>
-                        <input id="switchAdmin"
-                               type="checkbox"
-                               th:checked="*{isAdmin}"/>
-                    </div>-->
-                </div>
-            </div>
+                       <label class="label">Administrador</label>
+                       <input th:id="switchAdmin"
+                              type="checkbox"
+                              name="switchAdmin"
+
+                              th:field="*{isAdmin}"
+                              th:checked="*{isAdmin}">
+                       <label th:for="switchAdmin" class="label"></label>
+                       <!--class="switch is-primary is-rtl"-->
+                   </div>
+               </div>
+           </div>
+
             <div class="container has-text-centered pt-6" >
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null || orcid == ''}">Criar Investigador</button>
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null && orcid != ''}">Editar Investigador</button>

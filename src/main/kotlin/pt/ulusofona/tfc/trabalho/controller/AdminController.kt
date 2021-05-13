@@ -5,16 +5,24 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
 import pt.ulusofona.tfc.trabalho.dao.Researcher
+import pt.ulusofona.tfc.trabalho.form.DisseminationForm
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
+import pt.ulusofona.tfc.trabalho.repository.DisseminationRepository
+import pt.ulusofona.tfc.trabalho.repository.DisseminationResearcherRepository
 import pt.ulusofona.tfc.trabalho.repository.ResearcherRepository
+import java.text.SimpleDateFormat
 import javax.validation.Valid
+import kotlin.collections.ArrayList
 
-import java.util.Optional
 
 @Controller
 @RequestMapping("/admin")
-class AdminController(val researcherRepository: ResearcherRepository){
+class AdminController(val researcherRepository: ResearcherRepository,
+                      val disseminationRepository: DisseminationRepository,
+                      val disseminationResearcherRepository: DisseminationResearcherRepository){
 
     @GetMapping(value = ["/searches"])
     fun showSearches(model: ModelMap): String{
@@ -47,17 +55,26 @@ class AdminController(val researcherRepository: ResearcherRepository){
                     siteCeied = researcher.siteCeied,
                     professionalStatus = researcher.professionalStatus,
                     professionalCategory = researcher.professionalCategory,
-
+                    phdYear = researcher.phdYear,
+                    isAdmin = researcher.isAdmin,
             )
+            return "researcher-section/personal-information"
+        }else{
+            return "not-found/researcher404"
         }
-        return "researcher-section/personal-information"
     }
 
-    @GetMapping(value = ["/edit/{orcid}"])
-    fun editResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap, redirectAttributes: RedirectAttributes): String{
+    @GetMapping(value = ["/user/edit/{orcid}"])
+    fun editResearcherProfile(@PathVariable("orcid") orcid : String,
+                              model: ModelMap,
+                              redirectAttributes: RedirectAttributes): String{
         val researcherOptional = researcherRepository.findById(orcid)
         if (researcherOptional.isPresent) {
             val researcher = researcherOptional.get()
+            var isAdminOptional = researcher.isAdmin
+            if (isAdminOptional == null){
+                isAdminOptional = false
+            }
             model["researcherForm"] = ResearcherForm(
                     orcid = researcher.orcid,
                     name = researcher.name,
@@ -71,7 +88,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                     siteCeied = researcher.siteCeied,
                     professionalStatus = researcher.professionalStatus,
                     professionalCategory = researcher.professionalCategory,
-
+                    phdYear = researcher.phdYear,
+                    isAdmin = isAdminOptional
             )
         }
         redirectAttributes.addFlashAttribute("message","Investigador editado com sucesso!")
@@ -93,7 +111,10 @@ class AdminController(val researcherRepository: ResearcherRepository){
            return "forms-section/personal-information-form"
             //return "admin-section/researcher-management"
         }
-
+        var isAdminOptional = researcherForm.isAdmin
+        if (isAdminOptional == null){
+            isAdminOptional = false
+        }
         val researcher = Researcher(
                 orcid = researcherForm.orcid!!,
                 name = researcherForm.name!!,
@@ -107,8 +128,8 @@ class AdminController(val researcherRepository: ResearcherRepository){
                 siteCeied = researcherForm.siteCeied!!,
                 professionalStatus = researcherForm.professionalStatus!!,
                 professionalCategory = researcherForm.professionalCategory!!,
-                //phdYear = researcherForm.phdYear,
-                //isAdmin = researcherForm.isAdmin
+                phdYear = researcherForm.phdYear,
+                isAdmin = researcherForm.isAdmin!!,
         )
 
         researcherRepository.save(researcher)
@@ -118,7 +139,7 @@ class AdminController(val researcherRepository: ResearcherRepository){
         return "redirect:/admin/researcher-management"
     }
 
-    @GetMapping("/delete/{orcid}")
+    @GetMapping("/user/delete/{orcid}")
     fun deleteResearcher(@PathVariable orcid: String, redirectAttributes: RedirectAttributes): String{
         if (researcherRepository.findById(orcid).isPresent){
             redirectAttributes.addFlashAttribute("message","Investigador ${researcherRepository.findById(orcid).get().name} eliminado com sucesso!")
@@ -127,8 +148,94 @@ class AdminController(val researcherRepository: ResearcherRepository){
         return "redirect:/admin/researcher-management"
     }
 
+
+    @GetMapping(value = ["/scientific-activities/{orcid}"])
+    fun viewResearcherSA(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+
+        val researcherOptional = researcherRepository.findById(orcid)
+
+        if (researcherOptional.isPresent) {
+            val researcher = researcherOptional.get()
+            //Recolha de apenas alguns dados (e não do investigador completo) que queiramos usar na pagina das atividades
+            model["researcherInfo"] = mapOf(
+                    "orcid" to researcher.orcid,
+                    "name" to researcher.name,
+                    "email" to researcher.email,
+                    "cienciaId" to researcher.cienciaId,
+                    "researcherCategory" to researcher.researcherCategory,
+                    "isAdmin" to researcher.isAdmin,
+            )
+            val disseminations = ArrayList<Dissemination>()
+
+            val disseminationResearcherlist = disseminationResearcherRepository.findByResearcherId(orcid)
+            disseminationResearcherlist
+                    .map { disseminationRepository.findById(it.disseminationId) }
+                    .filter { it.isPresent }
+                    .mapTo(disseminations) { it.get() }
+
+            model["disseminations"] = disseminations
+            return "researcher-section/scientific-activities"
+        }else{
+            return "not-found/researcher404"
+        }
+    }
+
+    @GetMapping(value = ["{orcid}/dissemination-form"])
+    fun showDisseminationForm(@PathVariable orcid : String,
+                              model: ModelMap): String{
+        model["disseminationForm"] = DisseminationForm()
+        model["orcid"] = orcid
+        //model["orcid"] = orcid
+        return "forms-section/dissemination-form"
+    }
+
+    @PostMapping(value = ["{orcid}/dissemination-form"])
+    fun createDissemination(@Valid
+                            @ModelAttribute("disseminationForm") disseminationForm: DisseminationForm,
+                            @PathVariable orcid : String,
+                            bindingResult: BindingResult,
+                            redirectAttributes: RedirectAttributes):String{
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        //--criar Dissemination - sem ID
+        val dissemination = Dissemination(
+                title = disseminationForm.title!!,
+                date = dateFormat.parse(disseminationForm.date!!),
+                description = disseminationForm.description!!
+        )
+
+        //--save Dissemination - já tenho ID
+        disseminationRepository.save(dissemination)
+
+        //--criar ResearcherDissemination com o ID do dissemination e com o orcid do principal todo ver mais sobre principal
+        val disseminationResearcher = DisseminationResearcher(
+                disseminationId = dissemination.id,
+                researcherId = orcid
+        )
+
+        //--save ResearcherDissemination
+        disseminationResearcherRepository.save(disseminationResearcher)
+
+        return "redirect:/admin/user/$orcid"
+    }
+
+    @GetMapping("/dissemination/delete/{id}")
+    fun deleteDissemination(@PathVariable id: Long, redirectAttributes: RedirectAttributes): String{
+        var orcid = "ORCID"
+        if (disseminationRepository.findById(id).isPresent){
+
+            redirectAttributes.addFlashAttribute("message","Investigador ${disseminationRepository.findById(id).get().title} eliminado com sucesso!")
+            orcid = disseminationResearcherRepository.findByDisseminationId(id).get().researcherId
+            disseminationResearcherRepository.deleteByDisseminationId(id)
+            disseminationRepository.deleteById(id)
+        }
+        return "redirect:/admin/scientific-activities/$orcid"
+    }
+
     @GetMapping(value = ["/annual-report"])
     fun showAnnualReport(model: ModelMap): String{
         return "admin-section/annual-report"
     }
+
+
 }
