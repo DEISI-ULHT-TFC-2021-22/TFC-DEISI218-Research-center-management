@@ -29,7 +29,6 @@ class ResearcherController{
     fun showScientificActivities(model: ModelMap): String{
         return "researcher-section/scientific-activities"
     }
-
     @GetMapping(value = ["/showCV"])
     fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap): String {
 

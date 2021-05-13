@@ -1,4 +1,4 @@
-package pt.ulusofona.tfc.trabalho.dao
+package pt.ulusofona.tfc.trabalho.dao.scientificActivities
 
 import javax.persistence.Entity
 import javax.persistence.Id

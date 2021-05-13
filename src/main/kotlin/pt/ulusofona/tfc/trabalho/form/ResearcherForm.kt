@@ -20,7 +20,7 @@ data class ResearcherForm(
         @field:Size(min = 14, max = 14, message = "O Ciência ID é inválido")
         var cienciaId: String? = null,
 
-        //@field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
+        @field:NotEmpty(message = "Erro: A chave de associação tem que estar preenchida")
         var associationKeyFct: String? = null,
 
         /*@field:NotEmpty(message = "Campo obrigatório")*/

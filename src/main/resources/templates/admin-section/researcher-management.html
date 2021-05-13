@@ -43,11 +43,11 @@
                         <span class="fas fa-user" aria-hidden="true"></span>
                         </a>
                         &emsp;
-                        <a th:href="@{'/admin/edit/' + ${researcher.orcid}}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
+                        <a th:href="@{'/admin/scientific-activities/' + ${researcher.orcid}}">
+                            <span class="fas fa-list-alt" aria-hidden="true"></span>
                         </a>
                         &emsp;
-                        <a th:href="@{'/admin/delete/' + ${researcher.orcid}}">
+                        <a th:href="@{'/admin/user/delete/' + ${researcher.orcid}}">
                             <span class="fas fa-times-circle" aria-hidden="true"></span>
                         </a>
                     </td>

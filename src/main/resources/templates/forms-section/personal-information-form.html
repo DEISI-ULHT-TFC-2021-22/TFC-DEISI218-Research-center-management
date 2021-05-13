@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/layout :: head (pageTitle='Formulário de Investigador')">
 </head>
-<script src="/js/bulma-calendar.js"></script>
 <script src="/js/myscripts.js"></script>
 <body class="has-navbar-fixed-top">
 <div th:replace="layout/layout :: header"></div>
@@ -190,14 +189,19 @@
                        </div>
                    </div>
                    <div class="column">
-                        <label class="label" for="switchAdmin">Administrador</label>
-                        <input id="switchAdmin"
-                               type="checkbox"
-                               th:field="*{isAdmin}"
-                               th:checked="*{isAdmin}"/>
-                    </div>
-                </div>
-            </div>
+                       <label class="label">Administrador</label>
+                       <input th:id="switchAdmin"
+                              type="checkbox"
+                              name="switchAdmin"
+
+                              th:field="*{isAdmin}"
+                              th:checked="*{isAdmin}">
+                       <label th:for="switchAdmin" class="label"></label>
+                       <!--class="switch is-primary is-rtl"-->
+                   </div>
+               </div>
+           </div>
+
             <div class="container has-text-centered pt-6" >
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null || orcid == ''}">Criar Investigador</button>
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null && orcid != ''}">Editar Investigador</button>

@@ -4,24 +4,26 @@
 </head>
 <body class="has-navbar-fixed-top">
 <div th:replace="layout/layout :: header"></div>
-        <div class="container">
-            <section class="section is-medium pb-6 ">
-                <div class="columns">
-                    <div class="column has-text-centered-mobile">
-                        <div class="title is-4">João Pedro Correia</div>
-                        <div class="subtitle is-5">Investigador Doutorado</div>
-                    </div>
-                    <div class="column has-text-right-desktop has-text-centered-mobile">
-                        <button class="button is-primary is-medium">
-                            <span class="icon"><i class="fas fa-plus"></i></span>
-                            <span>Criar Uma Nova Atividade Cientifica</span>
-                        </button>
+        <div class="container pb-6">
+            <section class="section is-normal pb-6 px-1" th:object="${researcherInfo}">
+                <div>
+                    <div class="has-text-centered-mobile">
+                        <div class="level-left">
+                            <div class="level-item is-size-3" th:text="*{name}"></div>
+                            <div class="level-item tag is-info is-small" th:if="*{isAdmin}">Administrador</div>
+                        </div>
+                        <div class="px-5 has-text-grey">
+                            <div class="is-size-5" th:text="*{researcherCategory}">Investigador Doutorado</div>
+                        </div>
                     </div>
                 </div>
+                <div class="has-text-right-desktop has-text-centered-mobile">
+                    <button class="button is-primary">
+                        <span class="icon"><i class="fas fa-plus"></i></span>
+                        <span>Nova Atividade Cientifica</span>
+                    </button>
+                </div>
             </section>
-            <div>
-
-            </div>
 
             <div class="title is-4 has-text-primary">Formação Avançada</div>
             <div class="box is-size-5 has-text-grey">
@@ -148,7 +150,31 @@
             </div>
             <div class="title is-4 has-text-primary">Disseminação</div>
             <div class="box is-size-5 has-text-grey">
-                EM CONSTRUÇÃO
+                <div th:if="${#arrays.length(disseminations)} == 0">
+                    <div class="notification is-warning mx-3">
+                        Sem Disseminações!
+                    </div>
+                </div>
+                <div th:each="dissemination,disseminationStat : ${disseminations}">
+                    <div class="level">
+                        <div class="level-left" th:text="*{dissemination.title}">Artigo em Revista Científica Nacional</div>
+                        <div class="level-right">
+                            <p class="level-item" th:text="*{#dates.format(dissemination.date, 'dd/MM/yyyy')}">04/2017</p>
+                            <p class="level-item">|</p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/user/'}">
+                                    <span class="fas fa-edit" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/dissemination/delete/' + *{dissemination.id}}">
+                                    <span class="fas fa-times-circle" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="divider is-right" th:if="!*{disseminationStat.last}"></div>
+                </div>
             </div>
         </div>
 <div th:replace="layout/layout :: footer"></div>
