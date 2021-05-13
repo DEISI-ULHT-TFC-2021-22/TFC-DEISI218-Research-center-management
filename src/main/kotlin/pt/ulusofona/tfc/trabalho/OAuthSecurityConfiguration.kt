@@ -8,6 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority
+import java.io.File
+import java.io.InputStream
 import java.util.*
 
 @Configuration
@@ -18,7 +20,8 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
             .csrf().disable()
             .authorizeRequests()
             //                .antMatchers("/**").authenticated() // Block this
-            //                .antMatchers("/**", "/Intranet**").permitAll() // Allow this for all
+            //               .antMatchers("/**", "/Intranet**").permitAll() // Allow this for all
+            .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             .and().logout().logoutSuccessUrl("/").permitAll()
             .and()
@@ -40,11 +43,22 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
                     val oauth2UserAuthority = authority
                     val userAttributes = oauth2UserAuthority.attributes
 
-                    // TODO: Ir buscar a um ficheiro os id's dos admins
-                    if (userAttributes["id"] == "https://sandbox.orcid.org/0000-0003-2187-5116") {
-                        mappedAuthorities.add(SimpleGrantedAuthority("ROLE_ADMIN"))
+                    val inputStream: InputStream = File("src/main/resources/admin_list_test.txt").inputStream()
+                    val lineList = mutableListOf<String>()
+                    inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
+
+                    lineList.forEach{
+                        if(userAttributes["id"] == it) {
+                            mappedAuthorities.add(SimpleGrantedAuthority("ROLE_ADMIN"))
+                        }
                     }
                     mappedAuthorities.add(SimpleGrantedAuthority("ROLE_USER"))
+
+                    /*if (userAttributes["id"] == "https://sandbox.orcid.org/0000-0003-0258-1411") {
+                        mappedAuthorities.add(SimpleGrantedAuthority("ROLE_ADMIN"))
+                    } else {
+                        mappedAuthorities.add(SimpleGrantedAuthority("ROLE_USER"))
+                    }*/
                 }
             }
             mappedAuthorities

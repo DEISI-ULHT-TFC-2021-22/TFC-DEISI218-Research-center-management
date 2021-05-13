@@ -40,10 +40,29 @@
 
         <div class="navbar-end">
             <div class="navbar-item">
-                <a class="button has-text-primary has-text-weight-medium is-size-5" th:href="@{/}">
+                <p class="control">
+                    <a class="button is-small is-primary is-rounded" th:href="@{/showCV?id=7B17-D35E-668E}">Sincronizar CV</a>
+                </p>
+                <div class="field px-3">
+                    <div class="control has-icons-left">
+                        <input class="input is-small is-rounded" id="cv" type="text" placeholder="Introduza o seu CiênciaID">
+                        <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-item has dropdown is-hoverable">
+                <span class="icon is-left"><i class="fas fa-user"></i></span>
+                <a class="navbar-link" th:text="${username}"></a>
+                <div class="navbar-dropdown is-size-6">
+                    <a class="navbar-item py-3" th:href="@{/ceied-login}">Logout</a>
+                </div>
+
+            </div>
+            <!--<div class="navbar-item">
+                <a class="button has-text-primary has-text-weight-medium is-size-5" th:href="@{/ceied-login}">
                     <span>Logout</span><span class="icon"><i class="fas fa-sign-out-alt is-primary"></i></span>
                 </a>
-            </div>
+            </div>-->
         </div>
     </div>
 </nav>
