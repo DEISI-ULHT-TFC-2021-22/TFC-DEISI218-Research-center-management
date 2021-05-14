@@ -10,10 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
+import pt.ulusofona.tfc.trabalho.repository.DisseminationRepository
+import pt.ulusofona.tfc.trabalho.repository.DisseminationResearcherRepository
+import java.text.SimpleDateFormat
 
 @Controller
 @RequestMapping("")
-class SessionController{
+class SessionController (val disseminationRepository: DisseminationRepository,
+                         val disseminationResearcherRepository: DisseminationResearcherRepository){
 
     @Value("\${ciencia.vitae.token}")
     lateinit var token: String
@@ -40,38 +46,73 @@ class SessionController{
         val root: JsonNode = mapper.readTree(response.body)
         val fullName = root.at("/identifying-info/person-info/full-name").asText()
 
-        var articles_title = mutableListOf<String>()
-        var event_type = ""
-        var event_name = ""
-        var event_date = ""
-        var event_description = ""
+        //var articles_title = mutableListOf<String>()
 
         val fundingsSize = root.at("/fundings/total").asInt()
         val outputsSize = root.at("/outputs/total").asInt()
         val servicesSize = root.at("/services/total").asInt()
         val count = maxOf(fundingsSize, outputsSize, servicesSize)
 
+        println(root.at("/services/service//event-name").asText())
+
         for(i in 0..count) {
-            //P101 = Artigo em Revista
-            if(root.at("/outputs/output/$i/output-type/code").asText() == "P101") {
-                articles_title.add(root.at("/outputs/output/$i/journal-article/article-title").asText())
+            //fundings
+
+            //outputs
+
+            //services
+            if(root.at("/services/service/$i/service-category/value").asText() == "Participação em evento") {
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                var year = "2000"
+                var month = "01"
+                var day = "01"
+
+                //check year
+                if(!root.at("/services/service/$i/event-participation/start-date/year").isNull) {
+                    year = root.at("/services/service/$i/event-participation/start-date/year").asText()
+                }
+
+                //check month
+                if(!root.at("/services/service/$i/event-participation/start-date/month").isNull) {
+                    month = root.at("/services/service/$i/event-participation/start-date/month").asText()
+                }
+
+                //check day
+                if(!root.at("/services/service/$i/event-participation/start-date/day").isNull) {
+                    day = root.at("/services/service/$i/event-participation/start-date/day").asText()
+                }
+
+                val validatedDate = "$year-$month-$day"
+
+                val dissemination = Dissemination(
+                    title = root.at("/services/service/$i/event-participation/event-name").asText(),
+                    date = dateFormat.parse(validatedDate),
+                    description = root.at("/services/service/$i/event-description").asText()
+                )
+
+                disseminationRepository.save(dissemination)
+
+                val disseminationResearcher = DisseminationResearcher(
+                    disseminationId = dissemination.id,
+                    researcherId = "xxxx-xxxx-xxxx-xxxx"
+                )
+
+                //--save ResearcherDissemination
+                disseminationResearcherRepository.save(disseminationResearcher)
             }
         }
 
         //S202 = Participação em evento
-        if(root.at("/services/service/2/service-category/code").asText() == "S202") {
-            event_name = root.at("/services/service/2/event-participation/event-name").asText()
-            event_type = root.at("/services/service/2/event-participation/event-type/value").asText()
-            event_description = root.at("/services/service/2/event-participation/event-description").asText()
-            event_date = root.at("/services/service/2/event-participation/start-date/year").asText()
-        }
+
 
         model["fullName"] = fullName
-        model["article"] = articles_title
-        model["event_name"] = event_name
-        model["event_type"] = event_type
-        model["event_date"] = event_date
-        model["event_description"] = event_description
+        //model["article"] = articles_title
+
+        /*//P101 = Artigo em Revista
+        if(root.at("/outputs/output/$i/output-type/code").asText() == "P101") {
+
+            articles_title.add(root.at("/outputs/output/$i/journal-article/article-title").asText())
+        }*/
 
         return "cv"
     }

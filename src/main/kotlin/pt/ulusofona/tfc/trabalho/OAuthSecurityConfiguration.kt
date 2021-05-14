@@ -20,10 +20,14 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
             .csrf().disable()
             .authorizeRequests()
             //                .antMatchers("/**").authenticated() // Block this
-            //               .antMatchers("/**", "/Intranet**").permitAll() // Allow this for all
+            .antMatchers("/css/**", "/images/**", "/sass/**").permitAll()
+            .antMatchers("/ceied-login").permitAll() // Allow this for all
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
-            .and().logout().logoutSuccessUrl("/").permitAll()
+            .and().logout()
+            .logoutSuccessUrl("/ceied-login").permitAll()
+            .deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true)
             .and()
             .oauth2Login()
             .userInfoEndpoint()
@@ -53,12 +57,6 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
                         }
                     }
                     mappedAuthorities.add(SimpleGrantedAuthority("ROLE_USER"))
-
-                    /*if (userAttributes["id"] == "https://sandbox.orcid.org/0000-0003-0258-1411") {
-                        mappedAuthorities.add(SimpleGrantedAuthority("ROLE_ADMIN"))
-                    } else {
-                        mappedAuthorities.add(SimpleGrantedAuthority("ROLE_USER"))
-                    }*/
                 }
             }
             mappedAuthorities
