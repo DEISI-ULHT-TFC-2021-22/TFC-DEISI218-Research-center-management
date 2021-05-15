@@ -13,14 +13,13 @@ data class Dissemination(
         @GeneratedValue
         val id: Long = 0,
 
+        var disseminationCategory: DisseminationCategory,
         var title: String,
-
         @DateTimeFormat(iso= DateTimeFormat.ISO.DATE)
         var date: Date,
-
         var description: String,
         )
 
 enum class DisseminationCategory {
-        ORGANISING_COMMITTEE_MEMBER, SCIENTIFIC_COMMITTEE_MEMBER, KNOWLEDGE_AND_TECH_TRANSFER, PROMOTION_OF_CULTURE, ACTIONS_TO_SOCIETY, OTHER_DISSEMINATION //organização de eventos, membro de comissão,
+        ORGANISING_COMMITTEE_MEMBER, SCIENTIFIC_COMMITTEE_MEMBER, KNOWLEDGE_AND_TECH_TRANSFER, PROMOTION_OF_CULTURE, ACTIONS_TO_SOCIETY, OTHER_DISSEMINATION
 }

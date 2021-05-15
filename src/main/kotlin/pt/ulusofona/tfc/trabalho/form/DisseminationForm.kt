@@ -1,11 +1,13 @@
 package pt.ulusofona.tfc.trabalho.form
 
 import org.springframework.format.annotation.DateTimeFormat
-import java.util.Date
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationCategory
 import javax.validation.constraints.NotEmpty
 
-
 data class DisseminationForm (
+
+        var disseminationCategory: DisseminationCategory? = null,
+
         @field:NotEmpty(message = "Campo obrigatório")
         var title: String? = null,
 

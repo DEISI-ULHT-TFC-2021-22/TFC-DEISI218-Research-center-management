@@ -8,11 +8,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
 import pt.ulusofona.tfc.trabalho.dao.Researcher
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Project
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Publication
 import pt.ulusofona.tfc.trabalho.form.DisseminationForm
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
-import pt.ulusofona.tfc.trabalho.repository.DisseminationRepository
-import pt.ulusofona.tfc.trabalho.repository.DisseminationResearcherRepository
-import pt.ulusofona.tfc.trabalho.repository.ResearcherRepository
+import pt.ulusofona.tfc.trabalho.repository.*
 import java.text.SimpleDateFormat
 import javax.validation.Valid
 import kotlin.collections.ArrayList
@@ -22,7 +22,11 @@ import kotlin.collections.ArrayList
 @RequestMapping("/admin")
 class AdminController(val researcherRepository: ResearcherRepository,
                       val disseminationRepository: DisseminationRepository,
-                      val disseminationResearcherRepository: DisseminationResearcherRepository){
+                      val disseminationResearcherRepository: DisseminationResearcherRepository,
+                      val publicationRepository: PublicationRepository,
+                      val publicationResearcherRepository: PublicationResearcherRepository,
+                      val projectRepository: ProjectRepository,
+                      val projectResearcherRepository: ProjectResearcherRepository){
 
     @GetMapping(value = ["/searches"])
     fun showSearches(model: ModelMap): String{
@@ -165,15 +169,32 @@ class AdminController(val researcherRepository: ResearcherRepository,
                     "researcherCategory" to researcher.researcherCategory,
                     "isAdmin" to researcher.isAdmin,
             )
+
             val disseminations = ArrayList<Dissemination>()
+            val publications = ArrayList<Publication>()
+            val projects = ArrayList<Project>()
 
             val disseminationResearcherlist = disseminationResearcherRepository.findByResearcherId(orcid)
             disseminationResearcherlist
                     .map { disseminationRepository.findById(it.disseminationId) }
                     .filter { it.isPresent }
                     .mapTo(disseminations) { it.get() }
-
             model["disseminations"] = disseminations
+
+            val publicationResearcherlist = publicationResearcherRepository.findByResearcherId(orcid)
+            publicationResearcherlist
+                    .map { publicationRepository.findById(it.publicationId) }
+                    .filter { it.isPresent }
+                    .mapTo(publications) { it.get() }
+            model["publications"] = publications
+
+            val projectResearcherlist = projectResearcherRepository.findByResearcherId(orcid)
+            projectResearcherlist
+                    .map { projectRepository.findById(it.projectId) }
+                    .filter { it.isPresent }
+                    .mapTo(projects) { it.get() }
+            model["projects"] = projects
+
             return "researcher-section/scientific-activities"
         }else{
             return "not-found/researcher404"
@@ -199,6 +220,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
         //--criar Dissemination - sem ID
         val dissemination = Dissemination(
+                disseminationCategory = disseminationForm.disseminationCategory!!,
                 title = disseminationForm.title!!,
                 date = dateFormat.parse(disseminationForm.date!!),
                 description = disseminationForm.description!!

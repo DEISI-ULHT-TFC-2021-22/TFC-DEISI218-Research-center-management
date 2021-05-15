@@ -17,17 +17,17 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http
-            .csrf().disable()
-            .authorizeRequests()
-            //                .antMatchers("/**").authenticated() // Block this
-            //               .antMatchers("/**", "/Intranet**").permitAll() // Allow this for all
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated()
-            .and().logout().logoutSuccessUrl("/").permitAll()
-            .and()
-            .oauth2Login()
-            .userInfoEndpoint()
-            .userAuthoritiesMapper(userAuthoritiesMapper())
+                .csrf().disable()
+                .authorizeRequests()
+                //                .antMatchers("/**").authenticated() // Block this
+                //               .antMatchers("/**", "/Intranet**").permitAll() // Allow this for all
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userAuthoritiesMapper(userAuthoritiesMapper())
     }
 
     private fun userAuthoritiesMapper(): GrantedAuthoritiesMapper {
