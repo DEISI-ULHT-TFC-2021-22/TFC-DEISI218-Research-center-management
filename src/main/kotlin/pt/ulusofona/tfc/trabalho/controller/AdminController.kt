@@ -5,11 +5,8 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
 import pt.ulusofona.tfc.trabalho.dao.Researcher
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Project
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Publication
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.DisseminationForm
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
@@ -26,7 +23,9 @@ class AdminController(val researcherRepository: ResearcherRepository,
                       val publicationRepository: PublicationRepository,
                       val publicationResearcherRepository: PublicationResearcherRepository,
                       val projectRepository: ProjectRepository,
-                      val projectResearcherRepository: ProjectResearcherRepository){
+                      val projectResearcherRepository: ProjectResearcherRepository,
+                      val otherScientificActivityRepository: OtherScientificActivityRepository,
+                      val otherScientificActivityResearcherRepository: OtherScientificActivityResearcherRepository){
 
     @GetMapping(value = ["/searches"])
     fun showSearches(model: ModelMap): String{
@@ -173,6 +172,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val disseminations = ArrayList<Dissemination>()
             val publications = ArrayList<Publication>()
             val projects = ArrayList<Project>()
+            val otherScientificActivities = ArrayList<OtherScientificActivity>()
 
             val disseminationResearcherlist = disseminationResearcherRepository.findByResearcherId(orcid)
             disseminationResearcherlist
@@ -194,6 +194,18 @@ class AdminController(val researcherRepository: ResearcherRepository,
                     .filter { it.isPresent }
                     .mapTo(projects) { it.get() }
             model["projects"] = projects
+
+            val otherScientificActivityResearcherList = otherScientificActivityResearcherRepository.findByResearcherId(orcid)
+            otherScientificActivityResearcherList
+                    .map { otherScientificActivityRepository.findById(it.otherScientificActivityId) }
+                    .filter { it.isPresent }
+                    .mapTo(otherScientificActivities) { it.get() }
+
+            val advancedEducations = otherScientificActivities.filter { it.otherType == OtherType.ADVANCED_EDUCATION }
+            model["advancedEducations"] = advancedEducations
+
+            val scientificInitOfYoungStudents = otherScientificActivities.filter { it.otherType == OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS }
+            model["scientificInitOfYoungStudents"] = scientificInitOfYoungStudents
 
             return "researcher-section/scientific-activities"
         }else{

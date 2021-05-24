@@ -4,8 +4,8 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-data class DisseminationResearcher(
+data class OtherScientificActivityResearcher(
         @Id
-        val disseminationId: Long,
+        val otherScientificActivityId: Long,
         val researcherId: String //orcid
 )

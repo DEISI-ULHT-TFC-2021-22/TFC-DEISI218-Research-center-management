@@ -12,7 +12,7 @@ data class Project(
         val id: Long = 0,
         var projectCategory: ProjectCategory,
         var title: String,
-        var inicialDate: Date,
+        var initialDate: Date,
         var finalDate: Date,
         var abstract : String,
         var description : String // ou descriptor

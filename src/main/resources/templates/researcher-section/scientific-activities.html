@@ -10,10 +10,10 @@
                     <div class="has-text-centered-mobile">
                         <div class="level-left">
                             <div class="level-item is-size-3" th:text="*{name}"></div>
-                            <div class="level-item tag is-info is-small" th:if="*{isAdmin}">Administrador</div>
+                            <div class="level-item tag is-info is-small" th:if="*{isAdmin}"></div>
                         </div>
                         <div class="px-5 has-text-grey">
-                            <div class="is-size-5" th:text="*{researcherCategory}">Investigador Doutorado</div>
+                            <div class="is-size-5" th:text="*{researcherCategory}"></div>
                         </div>
                     </div>
                 </div>
@@ -27,87 +27,58 @@
 
             <div class="title is-4 has-text-primary">Formação Avançada</div>
             <div class="box is-size-5 has-text-grey">
-                <div class="level">
-                    <div class="level-left">
-                        Orientação de Doutoramento
-                    </div>
-                    <div class="level-right">
-                        <p class="level-item">06/2019</p>
-                        <p class="level-item">|</p>
-                        <p class="level-item"><a th:href="@{'/admin/user/'}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
-                        </a></p>
-                        <p class="level-item"><a th:href="@{'/scientific-activity/delete/'}">
-                            <span class="fas fa-times-circle" aria-hidden="true"></span>
-                        </a></p>
+                <div th:if="${#arrays.length(advancedEducations)} == 0">
+                    <div class="notification is-warning mx-3">
+                        Sem Formações Avançadas!
                     </div>
                 </div>
-
-                <div class="divider is-right"></div>
-                <div class="level">
-                    <div class="level-left">
-                        Realização de Pós-Doutoramento
+                <div th:each="advancedEdu,advancedEduStat : ${advancedEducations}">
+                    <div class="level">
+                        <div class="level-left" th:text="*{advancedEdu.title}"></div>
+                        <div class="level-right">
+                            <p class="level-item" th:text="*{#dates.format(advancedEdu.date, 'dd/MM/yyyy')}"></p>
+                            <p class="level-item">|</p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/user/'}">
+                                    <span class="fas fa-edit" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/advancedEducation/delete/' + *{advancedEdu.id}}">
+                                    <span class="fas fa-times-circle" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                    <div class="level-right">
-                        <p class="level-item">10/2018</p>
-                        <p class="level-item">|</p>
-                        <p class="level-item"><a th:href="@{'/admin/user/'}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
-                        </a></p>
-                        <p class="level-item"><a th:href="@{'/scientific-activity/delete/'}">
-                            <span class="fas fa-times-circle" aria-hidden="true"></span>
-                        </a></p>
-                    </div>
-                </div>
-                <div class="divider is-right"></div>
-                <div class="level">
-                    <div class="level-left">
-                        Realização de Doutoramento
-                    </div>
-                    <div class="level-right">
-                        <p class="level-item">01/2016</p>
-                        <p class="level-item">|</p>
-                        <p class="level-item"><a th:href="@{'/admin/user/'}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
-                        </a></p>
-                        <p class="level-item"><a th:href="@{'/scientific-activity/delete/'}">
-                            <span class="fas fa-times-circle" aria-hidden="true"></span>
-                        </a></p>
-                    </div>
-                </div>
-                <div class="divider is-right"></div>
-                <div class="level">
-                    <div class="level-left">
-                        Realização de Provas de Agregação
-                    </div>
-                    <div class="level-right">
-                        <p class="level-item">09/2014</p>
-                        <p class="level-item">|</p>
-                        <p class="level-item"><a th:href="@{'/admin/user/'}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
-                        </a></p>
-                        <p class="level-item"><a th:href="@{'/scientific-activity/delete/'}">
-                            <span class="fas fa-times-circle" aria-hidden="true"></span>
-                        </a></p>
-                    </div>
+                    <div class="divider is-right" th:if="!*{advancedEduStat.last}"></div>
                 </div>
             </div>
             <div class="title is-4 has-text-primary">Iniciação Científica de Jovens Estudantes</div>
             <div class="box is-size-5 has-text-grey">
-                <div class="level">
-                    <div class="level-left">
-                        Orientação de Mestrado
+                <div th:if="${#arrays.length(scientificInitOfYoungStudents)} == 0">
+                    <div class="notification is-warning mx-3">
+                        Sem Iniciações Científicas de Jovens Estudantes!
                     </div>
-                    <div class="level-right">
-                        <p class="level-item">08/2017</p>
-                        <p class="level-item">|</p>
-                        <p class="level-item"><a th:href="@{'/admin/user/'}">
-                            <span class="fas fa-edit" aria-hidden="true"></span>
-                        </a></p>
-                        <p class="level-item"><a th:href="@{'/scientific-activity/delete/'}">
-                            <span class="fas fa-times-circle" aria-hidden="true"></span>
-                        </a></p>
+                </div>
+                <div th:each="scientificInit,scientificInitStat : ${scientificInitOfYoungStudents}">
+                    <div class="level">
+                        <div class="level-left" th:text="*{scientificInit.title}"></div>
+                        <div class="level-right">
+                            <p class="level-item" th:text="*{#dates.format(scientificInit.date, 'dd/MM/yyyy')}"></p>
+                            <p class="level-item">|</p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/user/'}">
+                                    <span class="fas fa-edit" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                            <p class="level-item">
+                                <a th:href="@{'/admin/scientificInit/delete/' + *{scientificInit.id}}">
+                                    <span class="fas fa-times-circle" aria-hidden="true"></span>
+                                </a>
+                            </p>
+                        </div>
                     </div>
+                    <div class="divider is-right" th:if="!*{scientificInitStat.last}"></div>
                 </div>
             </div>
             <div class="title is-4 has-text-primary">Produção Científica</div>
@@ -119,9 +90,9 @@
                 </div>
                 <div th:each="publication,publicationStat : ${publications}">
                     <div class="level">
-                        <div class="level-left" th:text="*{publication.title}">Artigo em Revista Científica Nacional</div>
+                        <div class="level-left" th:text="*{publication.title}"></div>
                         <div class="level-right">
-                            <p class="level-item" th:text="*{#dates.format(publication.publicationDate, 'dd/MM/yyyy')}">04/2017</p>
+                            <p class="level-item" th:text="*{#dates.format(publication.publicationDate, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
@@ -147,9 +118,9 @@
                 </div>
                 <div th:each="project,projectStat : ${projects}">
                     <div class="level">
-                        <div class="level-left" th:text="*{project.title}">Artigo em Revista Científica Nacional</div>
+                        <div class="level-left" th:text="*{project.title}"></div>
                         <div class="level-right">
-                            <p class="level-item" th:text="*{#dates.format(project.date, 'dd/MM/yyyy')}">04/2017</p>
+                            <p class="level-item" th:text="*{#dates.format(project.date, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">

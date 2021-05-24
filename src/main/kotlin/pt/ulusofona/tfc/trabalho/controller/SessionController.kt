@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationCategory
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
 import pt.ulusofona.tfc.trabalho.repository.DisseminationRepository
 import pt.ulusofona.tfc.trabalho.repository.DisseminationResearcherRepository
@@ -87,7 +88,8 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                 val dissemination = Dissemination(
                     title = root.at("/services/service/$i/event-participation/event-name").asText(),
                     date = dateFormat.parse(validatedDate),
-                    description = root.at("/services/service/$i/event-description").asText()
+                    description = root.at("/services/service/$i/event-description").asText(),
+                    disseminationCategory = DisseminationCategory.KNOWLEDGE_AND_TECH_TRANSFER
                 )
 
                 disseminationRepository.save(dissemination)
