@@ -266,6 +266,105 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "redirect:/admin/scientific-activities/$orcid"
     }
 
+    @GetMapping(value = ["/scientific-activity/{type}/{id}"])
+    fun viewSingleScientificActivity(@PathVariable("type") type : String,
+                                     @PathVariable("id") id : Long,
+                                     model: ModelMap): String{
+
+        when(type){
+            "advanced-education" ->{
+                val advancedEduOptional = otherScientificActivityRepository
+                        .findByOtherTypeAndId(OtherType.ADVANCED_EDUCATION,id)
+                return if (advancedEduOptional.isPresent){
+                    val advancedEdu = advancedEduOptional.get()
+                    model["advancedEdu"] = OtherScientificActivity(
+                            id = advancedEdu.id,
+                            otherCategory = advancedEdu.otherCategory,
+                            otherType = advancedEdu.otherType,
+                            title = advancedEdu.title,
+                            date = advancedEdu.date,
+                            description = advancedEdu.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "scientific-initiation" ->{
+                val scientificInitOptional = otherScientificActivityRepository
+                        .findByOtherTypeAndId(OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,id)
+                return if (scientificInitOptional.isPresent){
+                    val scientificInit = scientificInitOptional.get()
+                    model["scientificInit"] = OtherScientificActivity(
+                            id = scientificInit.id,
+                            otherCategory = scientificInit.otherCategory,
+                            otherType = scientificInit.otherType,
+                            title = scientificInit.title,
+                            date = scientificInit.date,
+                            description = scientificInit.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "publication" ->{
+                val publicationOptional = publicationRepository.findById(id)
+                return if (publicationOptional.isPresent){
+                    val publication = publicationOptional.get()
+                    model["publication"] = Publication(
+                            id = publication.id,
+                            publicationCategory = publication.publicationCategory,
+                            title = publication.title,
+                            publicationDate = publication.publicationDate,
+                            descriptor = publication.descriptor,
+                            publisher = publication.publisher,
+                            indexation = publication.indexation,
+                            isbn = publication.indexation
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "project" ->{
+                val projectOptional = projectRepository.findById(id)
+                return if (projectOptional.isPresent){
+                    val project = projectOptional.get()
+                    model["project"] = Project(
+                            id = project.id,
+                            projectCategory = project.projectCategory,
+                            title = project.title,
+                            initialDate = project.initialDate,
+                            finalDate = project.finalDate,
+                            abstract = project.abstract,
+                            description = project.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "dissemination" ->{
+                val disseminationOptional = disseminationRepository.findById(id)
+                return if (disseminationOptional.isPresent){
+                    val dissemination = disseminationOptional.get()
+                    model["dissemination"] = Dissemination(
+                            id = dissemination.id,
+                            disseminationCategory = dissemination.disseminationCategory,
+                            title = dissemination.title,
+                            date = dissemination.date,
+                            description = dissemination.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+        }
+        return "not-found/researcher404"
+    }
+
     @GetMapping(value = ["/annual-report"])
     fun showAnnualReport(model: ModelMap): String{
         return "admin-section/annual-report"

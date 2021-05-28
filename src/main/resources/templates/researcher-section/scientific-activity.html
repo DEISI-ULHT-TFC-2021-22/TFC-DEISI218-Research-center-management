@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="layout/layout :: head (pageTitle='Atividade Científica')">
+</head>
+<body class="has-navbar-fixed-top">
+<div th:replace="layout/layout :: header"></div>
+<section class="hero py-6">
+    <div class="hero-body">
+        <div class="container">
+            <div th:if="${advancedEdu != null}">
+                Formação Avançada funciona!
+            </div>
+            <div th:if="${scientificInit != null}">
+                Iniciação de Jovens Estudantes funciona!
+            </div>
+            <div th:if="${publication != null}">
+                Publicação funciona!
+            </div>
+            <div th:if="${project != null}">
+                Projecto funciona!
+            </div>
+            <div th:if="${dissemination != null}" th:object="${dissemination}">
+                <div class="title">
+                    Disseminação
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Categoria</strong>
+                        <div th:text="*{disseminationCategory}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Título</strong>
+                        <div th:text="*{title}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="date">Data</strong>
+                        <div th:text="*{#dates.format(date, 'dd/MM/yyyy')}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="description">Descrição</strong>
+                        <div th:text="*{description}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

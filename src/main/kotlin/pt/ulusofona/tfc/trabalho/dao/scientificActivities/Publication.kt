@@ -19,8 +19,6 @@ data class Publication (
         var publisher : String,
         var indexation : String,
         var isbn : String,
-        var evaluationSJR : String,
-        var evaluationSJI : String,
 )
 
 enum class PublicationCategory {

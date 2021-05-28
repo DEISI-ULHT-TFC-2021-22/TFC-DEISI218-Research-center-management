@@ -10,6 +10,7 @@ data class Project(
         @Id
         @GeneratedValue
         val id: Long = 0,
+
         var projectCategory: ProjectCategory,
         var title: String,
         var initialDate: Date,

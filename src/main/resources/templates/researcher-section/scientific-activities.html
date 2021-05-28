@@ -34,7 +34,9 @@
                 </div>
                 <div th:each="advancedEdu,advancedEduStat : ${advancedEducations}">
                     <div class="level">
-                        <div class="level-left" th:text="*{advancedEdu.title}"></div>
+                        <a th:href="@{'/admin/scientific-activity/advanced-education/' + *{advancedEdu.id}}">
+                            <div class="level-left" th:text="*{advancedEdu.title}"></div>
+                        </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(advancedEdu.date, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
@@ -62,7 +64,9 @@
                 </div>
                 <div th:each="scientificInit,scientificInitStat : ${scientificInitOfYoungStudents}">
                     <div class="level">
-                        <div class="level-left" th:text="*{scientificInit.title}"></div>
+                        <a th:href="@{'/admin/scientific-activity/scientific-initiation/' + *{scientificInit.id}}">
+                            <div class="level-left" th:text="*{scientificInit.title}"></div>
+                        </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(scientificInit.date, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
@@ -90,7 +94,9 @@
                 </div>
                 <div th:each="publication,publicationStat : ${publications}">
                     <div class="level">
-                        <div class="level-left" th:text="*{publication.title}"></div>
+                        <a th:href="@{'/admin/scientific-activity/publication/' + *{publication.id}}">
+                            <div class="level-left" th:text="*{publication.title}"></div>
+                        </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(publication.publicationDate, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
@@ -118,7 +124,9 @@
                 </div>
                 <div th:each="project,projectStat : ${projects}">
                     <div class="level">
-                        <div class="level-left" th:text="*{project.title}"></div>
+                        <a th:href="@{'/admin/scientific-activity/project/' + *{project.id}}">
+                            <div class="level-left" th:text="*{project.title}"></div>
+                        </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(project.date, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
@@ -146,7 +154,9 @@
                 </div>
                 <div th:each="dissemination,disseminationStat : ${disseminations}">
                     <div class="level">
-                        <div class="level-left" th:text="*{dissemination.title}"></div>
+                        <a th:href="@{'/admin/scientific-activity/dissemination/' + *{dissemination.id}}">
+                            <div class="level-left " th:text="*{dissemination.title}"></div>
+                        </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(dissemination.date, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
