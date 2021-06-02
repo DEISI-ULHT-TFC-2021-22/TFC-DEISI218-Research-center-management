@@ -1,16 +1,21 @@
 package pt.ulusofona.tfc.trabalho
 
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import java.io.File
 import java.io.InputStream
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Configuration
 class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
@@ -30,9 +35,16 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
             .invalidateHttpSession(true)
             .and()
             .oauth2Login()
+            /*.defaultSuccessUrl("/home", true)
+            .successHandler(myAuthenticationSuccessHandler())*/
             .userInfoEndpoint()
             .userAuthoritiesMapper(userAuthoritiesMapper())
     }
+
+   /* @Bean
+    private fun myAuthenticationSuccessHandler(): AuthenticationSuccessHandler {
+        return UrlAuthenticationSuccessHandler()
+    }*/
 
     private fun userAuthoritiesMapper(): GrantedAuthoritiesMapper {
         return GrantedAuthoritiesMapper { authorities: Collection<GrantedAuthority?> ->
@@ -63,3 +75,17 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
         }
     }
 }
+
+/*
+class UrlAuthenticationSuccessHandler : AuthenticationSuccessHandler {
+
+    protected var logger: Log = LogFactory.getLog(this.getClass());
+
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+    override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+
+    }
+
+
+}*/

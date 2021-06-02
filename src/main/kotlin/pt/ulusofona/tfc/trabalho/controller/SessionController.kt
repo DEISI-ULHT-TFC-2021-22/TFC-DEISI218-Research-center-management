@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Dissemination
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationCategory
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.DisseminationResearcher
-import pt.ulusofona.tfc.trabalho.repository.DisseminationRepository
-import pt.ulusofona.tfc.trabalho.repository.DisseminationResearcherRepository
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
+import pt.ulusofona.tfc.trabalho.repository.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 @Controller
 @RequestMapping("")
 class SessionController (val disseminationRepository: DisseminationRepository,
-                         val disseminationResearcherRepository: DisseminationResearcherRepository){
+                         val disseminationResearcherRepository: DisseminationResearcherRepository,
+                         val projectRepository: ProjectRepository,
+                         val projectResearcherRepository: ProjectResearcherRepository,
+                         val publicationRepository: PublicationRepository,
+                         val publicationResearcherRepository: PublicationResearcherRepository){
 
     @Value("\${ciencia.vitae.token}")
     lateinit var token: String
@@ -36,7 +38,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
     fun showHomePage(model: ModelMap): String{
         return "home-page"
     }
-    @GetMapping(value = ["/showCV"])
+    @GetMapping(value = ["/sync-cv"])
     fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap): String {
 
         val restTemplate = RestTemplate()
@@ -47,24 +49,334 @@ class SessionController (val disseminationRepository: DisseminationRepository,
         val root: JsonNode = mapper.readTree(response.body)
         val fullName = root.at("/identifying-info/person-info/full-name").asText()
 
-        //var articles_title = mutableListOf<String>()
-
         val fundingsSize = root.at("/fundings/total").asInt()
         val outputsSize = root.at("/outputs/total").asInt()
         val servicesSize = root.at("/services/total").asInt()
         val count = maxOf(fundingsSize, outputsSize, servicesSize)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-        println(root.at("/services/service//event-name").asText())
 
         for(i in 0..count) {
             //fundings
+            if(i < fundingsSize) {
+                if (root.at("/fundings/funding/$i/funding-category/value").asText() == "Projeto") {
+                    var initialYear = "1999"
+                    var initialMonth = "01"
+                    var initialDay = "01"
+                    var finalYear = "1999"
+                    var finalMonth = "01"
+                    var finalDay = "01"
+
+                    //check initialYear
+                    if (!root.at("/fundings/funding/$i/start-date-participation/year").isNull) {
+                        initialYear = root.at("/fundings/funding/$i/start-date-participation/year").asText()
+                    }
+
+                    //check initialMonth
+                    if (!root.at("/fundings/funding/$i/start-date-participation/month").isNull) {
+                        initialMonth = root.at("/fundings/funding/$i/start-date-participation/month").asText()
+                    }
+
+                    //check initialDay
+                    if (!root.at("/fundings/funding/$i/start-date-participation/day").isNull) {
+                        initialDay = root.at("/fundings/funding/$i/start-date-participation/day").asText()
+                    }
+
+                    val initialValidatedDate = "$initialYear-$initialMonth-$initialDay"
+
+                    var finalValidatedDate: Date? = null
+
+                    if (!root.at("/fundings/funding/$i/end-date-participation").isNull) {
+                        //check finalYear
+                        if (!root.at("/fundings/funding/$i/end-date-participation/year").isNull) {
+                            finalYear = root.at("/fundings/funding/$i/end-date-participation/year").asText()
+                        }
+
+                        //check finalMonth
+                        if (!root.at("/fundings/funding/$i/end-date-participation/month").isNull) {
+                            finalMonth = root.at("/fundings/funding/$i/end-date-participation/month").asText()
+                        }
+
+                        //check finalDay
+                        if (!root.at("/fundings/funding/$i/end-date-participation/day").isNull) {
+                            finalDay = root.at("/fundings/funding/$i/end-date-participation/day").asText()
+                        }
+
+                        finalValidatedDate = dateFormat.parse("$finalYear-$finalMonth-$finalDay")
+                    }
+
+                    var projectCategory = ProjectCategory.NACIONAL_PROJECT
+
+                    if(root.at("/fundings/funding/$i/institutions/institution/institution-address/country/code").asText() != "PT") {
+                        projectCategory = ProjectCategory.INTERNACIONAL_PROJECT
+                    }
+
+                    val project = Project(
+                        projectCategory = projectCategory,
+                        title = root.at("/fundings/funding/$i/project-title").asText(),
+                        initialDate = dateFormat.parse(initialValidatedDate),
+                        finalDate = finalValidatedDate,
+                        abstract = "",
+                        description = root.at("/fundings/funding/$i/project-description").asText()
+                    )
+
+                    projectRepository.save(project)
+
+                    val projectResearcher = ProjectResearcher(
+                        projectId = project.id,
+                        researcherId = "xxxx-xxxx-xxxx-xxxx"
+                    )
+
+                    //--save ResearcherDissemination
+                    projectResearcherRepository.save(projectResearcher)
+                }
+            }
 
             //outputs
+            if(i < outputsSize) {
+                if(root.at("/outputs/output/$i/output-category/value").asText() == "Publicações") {
+                    var year = "1999"
+                    var month = "01"
+                    var day = "01"
+                    var identifiers = ""
+
+                    if(root.at("/outputs/output/$i/output-type/value").asText() == "Artigo em revista") {
+
+                        //check year
+                        if(!root.at("/outputs/output/$i/journal-article/publication-date/year").isNull) {
+                            year = root.at("/outputs/output/$i/journal-article/publication-date/year").asText()
+                        }
+                        //check month
+                        if(!root.at("/outputs/output/$i/journal-article/publication-date/month").isNull) {
+                            month = root.at("/outputs/output/$i/journal-article/publication-date/month").asText()
+                        }
+                        //check day
+                        if(!root.at("/outputs/output/$i/journal-article/publication-date/day").isNull) {
+                            day = root.at("/outputs/output/$i/journal-article/publication-date/day").asText()
+                        }
+
+                        val validatedDate = "$year-$month-$day"
+
+                        var publicationCategory = PublicationCategory.NATIONAL_MAGAZINE
+
+                        if(root.at("/outputs/output/$i/journal-article/publication-location/country/code").asText() != "PT") {
+                            publicationCategory = PublicationCategory.INTERNATIONAL_MAGAZINE
+                        }
+
+                        //getIdentifiersSize
+                        val identifiersSize = root.at("/outputs/output/$i/journal-article/identifiers/total").asInt()
+
+                        //getIdentifiers
+                        for(i2 in 1..identifiersSize) {
+                            identifiers = root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code").asText() +
+                            ": " + root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier") + "\n"
+                        }
+
+                        val publication = Publication(
+                            publicationCategory = publicationCategory,
+                            title = root.at("/outputs/output/$i/journal-article/article-title").asText(),
+                            publicationDate = dateFormat.parse(validatedDate),
+                            descriptor = identifiers,
+                            publisher = "",
+                            indexation = "",
+                            conferenceName = ""
+                        )
+
+                        publicationRepository.save(publication)
+
+                        val publicationResearcher = PublicationResearcher(
+                            publicationId = publication.id,
+                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                        )
+
+                        //--save ResearcherDissemination
+                        publicationResearcherRepository.save(publicationResearcher)
+                    }
+                    if(root.at("/outputs/output/$i/output-type/value").asText() == "Capítulo de livro") {
+
+                        //get year
+                        year = root.at("/outputs/output/$i/book-chapter/publication-year").asText()
+
+                        val validatedDate = "$year-$month-$day"
+
+
+                        //getIdentifiersSize
+                        val identifiersSize = root.at("/outputs/output/$i/book-chapter/identifiers/total").asInt()
+
+                        //getIdentifiers
+                        for(i2 in 1..identifiersSize) {
+                            identifiers = root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code").asText() +
+                                    ": " + root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier") + "\n"
+                        }
+
+                        val publication = Publication(
+                            publicationCategory = PublicationCategory.BOOK_CHAPTER,
+                            title = root.at("/outputs/output/$i/book-chapter/chapter-title").asText(),
+                            publicationDate = dateFormat.parse(validatedDate),
+                            descriptor = identifiers,
+                            publisher = root.at("/outputs/output/$i/book-chapter/book-publisher").asText(),
+                            indexation = "",
+                            conferenceName = ""
+                        )
+
+                        publicationRepository.save(publication)
+
+                        val publicationResearcher = PublicationResearcher(
+                            publicationId = publication.id,
+                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                        )
+
+                        //--save ResearcherDissemination
+                        publicationResearcherRepository.save(publicationResearcher)
+                    }
+                    if(root.at("/outputs/output/$i/output-type/value").asText() == "Edição de livro") {
+
+                        //get year
+                        year = root.at("/outputs/output/$i/edited-book/publication-year").asText()
+
+                        val validatedDate = "$year-$month-$day"
+
+
+                        //getIdentifiersSize
+                        val identifiersSize = root.at("/outputs/output/$i/edited-book/identifiers/total").asInt()
+
+                        //getIdentifiers
+                        for(i2 in 1..identifiersSize) {
+                            identifiers = root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText() +
+                                    ": " + root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier") + "\n"
+                        }
+
+                        val publication = Publication(
+                            publicationCategory = PublicationCategory.BOOK_EDITING_AND_ORGANISATION,
+                            title = root.at("/outputs/output/$i/edited-book/title").asText(),
+                            publicationDate = dateFormat.parse(validatedDate),
+                            descriptor = identifiers,
+                            publisher = root.at("/outputs/output/$i/edited-book/publisher").asText(),
+                            indexation = "",
+                            conferenceName = ""
+                        )
+
+                        publicationRepository.save(publication)
+
+                        val publicationResearcher = PublicationResearcher(
+                            publicationId = publication.id,
+                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                        )
+
+                        //--save ResearcherDissemination
+                        publicationResearcherRepository.save(publicationResearcher)
+                    }
+                    if(root.at("/outputs/output/$i/output-type/value").asText() == "Resumo em conferência") {
+
+                        //check year
+                        if(!root.at("/outputs/output/$i/conference-abstract/publication-date/year").isNull) {
+                            year = root.at("/outputs/output/$i/conference-abstract/publication-date/year").asText()
+                        }
+                        //check month
+                        if(!root.at("/outputs/output/$i/conference-abstract/publication-date/month").isNull) {
+                            month = root.at("/outputs/output/$i/conference-abstract/publication-date/month").asText()
+                        }
+                        //check day
+                        if(!root.at("/outputs/output/$i/conference-abstract/publication-date/day").isNull) {
+                            day = root.at("/outputs/output/$i/conference-abstract/publication-date/day").asText()
+                        }
+
+                        val validatedDate = "$year-$month-$day"
+
+                        var publicationCategory = PublicationCategory.NATIONAL_CONFERENCE
+
+                        if(root.at("/outputs/output/$i/conference-abstract/conference-location/country/code").asText() != "PT") {
+                            publicationCategory = PublicationCategory.INTERNATIONAL_CONFERENCE
+                        }
+
+                        //getIdentifiersSize
+                        val identifiersSize = root.at("/outputs/output/$i/conference-abstract/identifiers/total").asInt()
+
+                        //getIdentifiers
+                        for(i2 in 1..identifiersSize) {
+                            identifiers = root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText() +
+                                    ": " + root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier") + "\n"
+                        }
+
+                        val publication = Publication(
+                            publicationCategory = publicationCategory,
+                            title = root.at("/outputs/output/$i/conference-abstract/article-title").asText(),
+                            publicationDate = dateFormat.parse(validatedDate),
+                            descriptor = identifiers,
+                            publisher = "",
+                            indexation = "",
+                            conferenceName = root.at("/outputs/output/$i/conference-abstract/conference-name").asText()
+                        )
+
+                        publicationRepository.save(publication)
+
+                        val publicationResearcher = PublicationResearcher(
+                            publicationId = publication.id,
+                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                        )
+
+                        //--save ResearcherDissemination
+                        publicationResearcherRepository.save(publicationResearcher)
+                    }
+
+                }
+            }
 
             //services
+            if(root.at("/services/service/$i/service-category/value").asText() == "Organização de evento") {
+                var year = "1999"
+                var month = "01"
+                var day = "01"
+
+                //check year
+                if(!root.at("/services/service/$i/event-administration/activity-start-date/year").isNull) {
+                    year = root.at("/services/service/$i/event-administration/activity-start-date/year").asText()
+                }
+
+                //check month
+                if(!root.at("/services/service/$i/event-administration/activity-start-date/month").isNull) {
+                    month = root.at("/services/service/$i/event-administration/activity-start-date/month").asText()
+                }
+
+                //check day
+                if(!root.at("/services/service/$i/event-administration/activity-start-date/day").isNull) {
+                    day = root.at("/services/service/$i/event-administration/activity-start-date/day").asText()
+                }
+
+                val validatedDate = "$year-$month-$day"
+
+                var disseminationCategory = DisseminationCategory.OTHER_DISSEMINATION
+
+                //check Membro da Comissão Organizadora
+                if(root.at("/services/service/$i/event-administration/administrative-role/code").asText() == "MCO") {
+                    disseminationCategory = DisseminationCategory.ORGANISING_COMMITTEE_MEMBER
+                }
+
+                //check Membro da Comissão Científica
+                if(root.at("/services/service/$i/event-administration/administrative-role/code").asText() == "MCC") {
+                    disseminationCategory = DisseminationCategory.SCIENTIFIC_COMMITTEE_MEMBER
+                }
+
+                val dissemination = Dissemination(
+                    disseminationCategory = disseminationCategory,
+                    title = root.at("/services/service/$i/event-administration/event-description").asText(),
+                    date = dateFormat.parse(validatedDate),
+                    description = root.at("/services/service/$i/event-administration/event-description").asText()
+                )
+
+                disseminationRepository.save(dissemination)
+
+                val disseminationResearcher = DisseminationResearcher(
+                    disseminationId = dissemination.id,
+                    researcherId = "xxxx-xxxx-xxxx-xxxx"
+                )
+
+                //--save ResearcherDissemination
+                disseminationResearcherRepository.save(disseminationResearcher)
+            }
+
             if(root.at("/services/service/$i/service-category/value").asText() == "Participação em evento") {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-                var year = "2000"
+                var year = "1999"
                 var month = "01"
                 var day = "01"
 
@@ -86,10 +398,10 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                 val validatedDate = "$year-$month-$day"
 
                 val dissemination = Dissemination(
+                    disseminationCategory = DisseminationCategory.OTHER_DISSEMINATION,
                     title = root.at("/services/service/$i/event-participation/event-name").asText(),
                     date = dateFormat.parse(validatedDate),
-                    description = root.at("/services/service/$i/event-description").asText(),
-                    disseminationCategory = DisseminationCategory.KNOWLEDGE_AND_TECH_TRANSFER
+                    description = root.at("/services/service/$i/event-participation/event-description").asText()
                 )
 
                 disseminationRepository.save(dissemination)
@@ -104,19 +416,10 @@ class SessionController (val disseminationRepository: DisseminationRepository,
             }
         }
 
-        //S202 = Participação em evento
-
 
         model["fullName"] = fullName
-        //model["article"] = articles_title
 
-        /*//P101 = Artigo em Revista
-        if(root.at("/outputs/output/$i/output-type/code").asText() == "P101") {
-
-            articles_title.add(root.at("/outputs/output/$i/journal-article/article-title").asText())
-        }*/
-
-        return "cv"
+        return "sync-cv"
     }
     /*@GetMapping(value = ["/personal-information-form"])
     fun showPersonalInformationForm(model: ModelMap): String{

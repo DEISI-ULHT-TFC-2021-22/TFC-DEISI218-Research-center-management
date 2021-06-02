@@ -128,7 +128,8 @@
                             <div class="level-left" th:text="*{project.title}"></div>
                         </a>
                         <div class="level-right">
-                            <p class="level-item" th:text="*{#dates.format(project.date, 'dd/MM/yyyy')}"></p>
+                            <p class="level-item" th:text="*{#dates.format(project.initialDate, 'dd/MM/yyyy')}"></p>
+                            <p class="level-item" th:text="*{#dates.format(project.finalDate, 'dd/MM/yyyy')}"></p>
                             <p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">

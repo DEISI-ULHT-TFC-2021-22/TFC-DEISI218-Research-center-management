@@ -320,7 +320,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             descriptor = publication.descriptor,
                             publisher = publication.publisher,
                             indexation = publication.indexation,
-                            isbn = publication.indexation
+                            conferenceName = publication.conferenceName
                     )
                     "researcher-section/scientific-activity"
                 }else{
