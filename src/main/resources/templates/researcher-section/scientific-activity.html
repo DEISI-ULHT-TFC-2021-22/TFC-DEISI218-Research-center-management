@@ -7,17 +7,143 @@
 <section class="hero py-6">
     <div class="hero-body">
         <div class="container">
-            <div th:if="${advancedEdu != null}">
-                Formação Avançada funciona!
+            <div th:if="${advancedEdu != null}" th:object="${advancedEdu}">
+                <div class="title">
+                    Formação Avançada
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong>Categoria</strong>
+                        <div th:text="*{otherCategory}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Título</strong>
+                        <div th:text="*{title}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="date">Data</strong>
+                        <div th:text="*{#dates.format(date, 'dd/MM/yyyy')}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="description">Descrição</strong>
+                        <div th:text="*{description}"></div>
+                    </div>
+                </div>
             </div>
-            <div th:if="${scientificInit != null}">
-                Iniciação de Jovens Estudantes funciona!
+            <div th:if="${scientificInit != null}" th:object="${scientificInit}">
+                <div class="title">
+                    Iniciação de Jovens Estudantes
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong>Categoria</strong>
+                        <div th:text="*{otherCategory}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Título</strong>
+                        <div th:text="*{title}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="date">Data</strong>
+                        <div th:text="*{#dates.format(date, 'dd/MM/yyyy')}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="description">Descrição</strong>
+                        <div th:text="*{description}"></div>
+                    </div>
+                </div>
             </div>
-            <div th:if="${publication != null}">
-                Publicação funciona!
+            <div th:if="${publication != null}" th:object="${publication}">
+                <div class="title">
+                    Publicação
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong>Categoria</strong>
+                        <div th:text="*{publicationCategory}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Título</strong>
+                        <div th:text="*{title}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="date">Data</strong>
+                        <div th:text="*{#dates.format(publicationDate, 'dd/MM/yyyy')}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="descriptor">Descriptor</strong>
+                        <div th:text="*{descriptor}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="publisher">Editora</strong>
+                        <div th:text="*{publisher}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="indexation">Indexação</strong>
+                        <div th:text="*{indexation}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="conferenceName">Conferência</strong>
+                        <div th:text="*{conferenceName}"></div>
+                    </div>
+                </div>
+
             </div>
-            <div th:if="${project != null}">
-                Projecto funciona!
+            <div th:if="${project != null}" th:object="${project}">
+                <div class="title">
+                    Projecto
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong>Categoria</strong>
+                        <div th:text="*{projectCategory}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="title">Título</strong>
+                        <div th:text="*{title}"></div>
+                    </div>
+                    <div class="column">
+                        <strong for="date">Data</strong>
+                        <br>
+                        <div th:if="*{finalDate != null}">
+                            <span th:text="*{#dates.format(initialDate, 'dd/MM/yyyy')}"></span>
+                            <span>-</span>
+                            <span th:text="*{#dates.format(finalDate, 'dd/MM/yyyy')}"></span>
+                        </div>
+                        <div th:if="*{finalDate == null}">
+                            <span th:text="*{#dates.format(initialDate, 'dd/MM/yyyy')}"></span>
+                            <span>- ???</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <strong for="description">Descrição</strong>
+                        <div th:text="*{description}"></div>
+                    </div>
+                </div>
+                <div th:if="*{abstract} ? not '' " class="columns">
+                    <div class="column">
+                        <strong for="description">Abstract</strong>
+                        <div th:text="*{abstract}"></div>
+                    </div>
+                </div>
             </div>
             <div th:if="${dissemination != null}" th:object="${dissemination}">
                 <div class="title">
@@ -25,7 +151,7 @@
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <strong for="title">Categoria</strong>
+                        <strong>Categoria</strong>
                         <div th:text="*{disseminationCategory}"></div>
                     </div>
                 </div>
@@ -42,7 +168,7 @@
                 <div class="columns">
                     <div class="column">
                         <strong for="description">Descrição</strong>
-                        <div th:text="*{description}"></span>
+                        <div th:text="*{description}"></div>
                     </div>
                 </div>
             </div>
