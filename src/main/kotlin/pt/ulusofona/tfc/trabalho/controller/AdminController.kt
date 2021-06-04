@@ -319,6 +319,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             publicationDate = publication.publicationDate,
                             descriptor = publication.descriptor,
                             publisher = publication.publisher,
+                            authors = publication.authors,
                             indexation = publication.indexation,
                             conferenceName = publication.conferenceName
                     )

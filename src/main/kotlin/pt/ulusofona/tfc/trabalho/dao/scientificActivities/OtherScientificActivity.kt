@@ -38,7 +38,7 @@ enum class OtherCategory {
 enum class OtherType {
     ADVANCED_EDUCATION,
     SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,
-    PUBLICATIONM,
+    PUBLICATION,
     PROJECT,
     DISSEMINATION
 }

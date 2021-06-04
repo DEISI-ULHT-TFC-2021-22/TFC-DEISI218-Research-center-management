@@ -17,6 +17,7 @@ data class Publication (
         var publicationDate : Date,
         var descriptor : String,
         var publisher : String,
+        var authors: String,
         var indexation : String,
         var conferenceName : String
 )

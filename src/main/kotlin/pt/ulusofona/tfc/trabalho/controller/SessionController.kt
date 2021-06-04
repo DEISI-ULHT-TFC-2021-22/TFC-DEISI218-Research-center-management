@@ -6,18 +6,22 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
+import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.validation.Valid
 
 @Controller
 @RequestMapping("")
-class SessionController (val disseminationRepository: DisseminationRepository,
+class SessionController (val researcherRepository: ResearcherRepository,
+                         val disseminationRepository: DisseminationRepository,
                          val disseminationResearcherRepository: DisseminationResearcherRepository,
                          val projectRepository: ProjectRepository,
                          val projectResearcherRepository: ProjectResearcherRepository,
@@ -34,9 +38,49 @@ class SessionController (val disseminationRepository: DisseminationRepository,
     fun showLoginPage(model: ModelMap): String{
         return "login-page"
     }
+    @GetMapping(value = ["/new-researcher-form"])
+    fun showPersonalInformationFormPage(model: ModelMap): String{
+        model["researcherForm"] = ResearcherForm()
+        return "forms-section/new-researcher-form"
+    }
+    @PostMapping(value = ["/new-researcher-form"])
+    fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
+                         bindingResult: BindingResult,
+                         redirectAttributes: RedirectAttributes): String{
+
+        if(bindingResult.hasErrors()){
+            return "forms-section/new-researcher-form"
+            //return "admin-section/researcher-management"
+        }
+
+        val researcher = Researcher(
+            orcid = researcherForm.orcid!!,
+            name = researcherForm.name!!,
+            utilizador = researcherForm.utilizador!!,
+            email = researcherForm.email!!,
+            cienciaId = researcherForm.cienciaId!!,
+            associationKeyFct = researcherForm.associationKeyFct!!,
+            researcherCategory = researcherForm.researcherCategory!!,
+            origin = researcherForm.origin!!,
+            phoneNumber = researcherForm.phoneNumber!!,
+            siteCeied = researcherForm.siteCeied!!,
+            professionalStatus = researcherForm.professionalStatus!!,
+            professionalCategory = researcherForm.professionalCategory!!,
+            phdYear = researcherForm.phdYear,
+            isAdmin = false,
+        )
+
+        researcherRepository.save(researcher)
+
+        return "redirect:/accept-sync-cv"
+    }
     @GetMapping(value = ["/home"])
     fun showHomePage(model: ModelMap): String{
         return "home-page"
+    }
+    @GetMapping(value = ["/accept-sync-cv"])
+    fun showCvButtonPage(model: ModelMap): String{
+        return "sync-cv-page"
     }
     @GetMapping(value = ["/sync-cv"])
     fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap): String {
@@ -105,10 +149,10 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                         finalValidatedDate = dateFormat.parse("$finalYear-$finalMonth-$finalDay")
                     }
 
-                    var projectCategory = ProjectCategory.NACIONAL_PROJECT
+                    var projectCategory = ProjectCategory.NATIONAL_PROJECT
 
                     if(root.at("/fundings/funding/$i/institutions/institution/institution-address/country/code").asText() != "PT") {
-                        projectCategory = ProjectCategory.INTERNACIONAL_PROJECT
+                        projectCategory = ProjectCategory.INTERNATIONAL_PROJECT
                     }
 
                     val project = Project(
@@ -178,6 +222,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                             publicationDate = dateFormat.parse(validatedDate),
                             descriptor = identifiers,
                             publisher = "",
+                            authors = root.at("/outputs/output/$i/journal-article/authors/citation").asText(),
                             indexation = "",
                             conferenceName = ""
                         )
@@ -215,6 +260,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                             publicationDate = dateFormat.parse(validatedDate),
                             descriptor = identifiers,
                             publisher = root.at("/outputs/output/$i/book-chapter/book-publisher").asText(),
+                            authors = root.at("/outputs/output/$i/book-chapter/authors/citation").asText(),
                             indexation = "",
                             conferenceName = ""
                         )
@@ -252,6 +298,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                             publicationDate = dateFormat.parse(validatedDate),
                             descriptor = identifiers,
                             publisher = root.at("/outputs/output/$i/edited-book/publisher").asText(),
+                            authors = root.at("/outputs/output/$i/edited-book/authors/citation").asText(),
                             indexation = "",
                             conferenceName = ""
                         )
@@ -305,6 +352,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
                             descriptor = identifiers,
                             publisher = "",
                             indexation = "",
+                            authors = root.at("/outputs/output/$i/conference-abstract/authors/citation").asText(),
                             conferenceName = root.at("/outputs/output/$i/conference-abstract/conference-name").asText()
                         )
 
@@ -419,7 +467,7 @@ class SessionController (val disseminationRepository: DisseminationRepository,
 
         model["fullName"] = fullName
 
-        return "sync-cv"
+        return "cv-update-success"
     }
     /*@GetMapping(value = ["/personal-information-form"])
     fun showPersonalInformationForm(model: ModelMap): String{
