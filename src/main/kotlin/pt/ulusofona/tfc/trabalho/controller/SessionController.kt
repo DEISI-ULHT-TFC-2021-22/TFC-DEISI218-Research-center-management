@@ -53,15 +53,15 @@ class SessionController (val researcherRepository: ResearcherRepository,
     }
     @PostMapping(value = ["/new-researcher-form"])
     fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
-                         @ModelAttribute("getId") getId: String,
                          bindingResult: BindingResult,
+                         @ModelAttribute("getId") getId: String,
                          redirectAttributes: RedirectAttributes): String{
 
         if(bindingResult.hasErrors()){
             return "forms-section/new-researcher-form"
             //return "admin-section/researcher-management"
         }
-        //TODO Porque é que o orcid não aparece preenchido no formulário?
+
         val researcher = Researcher(
             orcid = getId,
             name = researcherForm.name!!,

@@ -42,16 +42,18 @@
            <div class="field">
                <div class="columns">
                    <div class="column">
-                       <label class="label" for="orcid">Orcid ID</label>
-                       <div class="control is-expanded has-icons-left">
-                           <input class="input"
-                                  id="orcid"
-                                  type="text"
-                                  placeholder="XXXX-XXXX-XXXX-XXXX"
-                                  th:field="*{orcid}">
-                       <p class="help is-danger" th:if="${#fields.hasErrors('orcid')}" th:errors="*{orcid}">Error</p>
-                           <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-                       </div>
+                       <fieldset disabled>
+                           <label class="label" for="orcid">Orcid ID</label>
+                           <div class="control is-expanded has-icons-left">
+                               <input class="input"
+                                      id="orcid"
+                                      type="text"
+                                      placeholder="XXXX-XXXX-XXXX-XXXX"
+                                      th:field="*{orcid}">
+                           <p class="help is-danger" th:if="${#fields.hasErrors('orcid')}" th:errors="*{orcid}">Error</p>
+                               <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+                           </div>
+                       </fieldset>
                    </div>
                    <div class="column">
                        <label class="label" for="cienciaId">Ciência ID</label>
