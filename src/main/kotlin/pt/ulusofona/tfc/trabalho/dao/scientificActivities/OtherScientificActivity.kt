@@ -20,25 +20,25 @@ data class OtherScientificActivity(
 )
 
 enum class OtherCategory {
-    //Advanced Education
-    AGGREGATION_EXAMS_COMPLETION,
-    PHD_SUPERVISION,
-    POST_DOCTORATE_SUPERVISION,
-    POST_DOCTORAL_STUDIES,
-    PARTICIPATION_IN_DOCTORAL_JURIES,
+        //Advanced Education
+        AGGREGATION_EXAMS_COMPLETION,
+        PHD_SUPERVISION,
+        POST_DOCTORATE_SUPERVISION,
+        POST_DOCTORAL_STUDIES,
+        PARTICIPATION_IN_DOCTORAL_JURIES,
 
-    //Scientific Initiation of Young Students
-    MASTERS_SUPERVISION,
-    INTERNSHIP_SUPERVISION,
+        //Scientific Initiation of Young Students
+        MASTERS_SUPERVISION,
+        INTERNSHIP_SUPERVISION,
 
-    //Other or Unknown Categories
-    OTHER_CATEGORY
+        //Other Categories
+        OTHER_CATEGORY
 }
 
 enum class OtherType {
-    ADVANCED_EDUCATION,
-    SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,
-    PUBLICATION,
-    PROJECT,
-    DISSEMINATION
+        ADVANCED_EDUCATION,
+        SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,
+        PUBLICATION,
+        PROJECT,
+        DISSEMINATION
 }

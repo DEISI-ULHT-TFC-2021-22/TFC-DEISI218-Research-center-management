@@ -21,5 +21,6 @@ data class Project(
 )
 
 enum class ProjectCategory {
-    NATIONAL_PROJECT, INTERNATIONAL_PROJECT
+        NATIONAL_PROJECT,
+        INTERNATIONAL_PROJECT
 }

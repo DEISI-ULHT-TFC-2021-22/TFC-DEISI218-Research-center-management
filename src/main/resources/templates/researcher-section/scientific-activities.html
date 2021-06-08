@@ -9,19 +9,16 @@
                 <div>
                     <div class="has-text-centered-mobile">
                         <div class="level-left">
-                            <div class="level-item is-size-3" th:text="*{name}"></div>
+                            <a th:href="@{'/admin/user/' + *{orcid}}">
+                                <div class="level-item is-size-2" th:text="*{name}"></div>
+                            </a>
+
                             <div class="level-item tag is-info is-small" th:if="*{isAdmin}"></div>
                         </div>
                         <div class="px-5 has-text-grey">
                             <div class="is-size-5" th:text="*{researcherCategory}"></div>
                         </div>
                     </div>
-                </div>
-                <div class="has-text-right-desktop has-text-centered-mobile">
-                    <button class="button is-primary">
-                        <span class="icon"><i class="fas fa-plus"></i></span>
-                        <span>Nova Atividade Cientifica</span>
-                    </button>
                 </div>
             </section>
 
