@@ -38,11 +38,11 @@
         </div>
 
         <div class="navbar-end">
-            <div class="navbar-item">
+            <!--<div class="navbar-item">
                 <p class="control">
-                    <a class="button is-small is-primary is-rounded" th:href="@{/sync-cv?id=E919-3A7A-E42C}">Atualizar CV</a>
+                    <a class="button is-small is-primary is-rounded" th:href="@{'/sync-cv?id=' + ${researcher.cienciaId}}">Atualizar CV</a>
                 </p>
-            </div>
+            </div>-->
             <div class="navbar-item has dropdown is-hoverable">
                 <span class="icon is-left"><i class="fas fa-user"></i></span>
                 <a class="navbar-link" th:text="${username}"></a>

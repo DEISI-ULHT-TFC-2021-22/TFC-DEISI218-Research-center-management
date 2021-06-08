@@ -2,6 +2,7 @@ package pt.ulusofona.tfc.trabalho.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import org.springframework.stereotype.Controller
@@ -10,10 +11,13 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.OAuthSecurityConfiguration
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
+import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.validation.Valid
@@ -43,8 +47,13 @@ class SessionController (val researcherRepository: ResearcherRepository,
         model["researcherForm"] = ResearcherForm()
         return "forms-section/new-researcher-form"
     }
+    @GetMapping(value = ["/no-permission"])
+    fun showNoPermissionPage(model: ModelMap): String{
+        return "no-permission"
+    }
     @PostMapping(value = ["/new-researcher-form"])
     fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
+                         @ModelAttribute("getId") getId: String,
                          bindingResult: BindingResult,
                          redirectAttributes: RedirectAttributes): String{
 
@@ -52,9 +61,9 @@ class SessionController (val researcherRepository: ResearcherRepository,
             return "forms-section/new-researcher-form"
             //return "admin-section/researcher-management"
         }
-
+        //TODO Porque é que o orcid não aparece preenchido no formulário?
         val researcher = Researcher(
-            orcid = researcherForm.orcid!!,
+            orcid = getId,
             name = researcherForm.name!!,
             utilizador = researcherForm.utilizador!!,
             email = researcherForm.email!!,
@@ -71,19 +80,47 @@ class SessionController (val researcherRepository: ResearcherRepository,
         )
 
         researcherRepository.save(researcher)
+        //TODO falta remover o user do ficheiro primeira vez. Necessário??
+        /*val inputStream: InputStream = File("src/main/resources/first_time_user_list_test.txt").inputStream()
+        val lineList = mutableListOf<String>()
+        inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
+        lineList.forEach{
+            if("https://sandbox.orcid.org/${researcher.orcid}" == it) {
 
-        return "redirect:/accept-sync-cv"
+            }
+        }*/
+        File("src/main/resources/user_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
+
+        return "redirect:/accept-sync-cv/${researcher.orcid}"
+    }
+    @GetMapping(value = ["/accept-sync-cv/{orcid}"])
+    fun showCvButtonPage(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+        val researcherOptional = researcherRepository.findById(orcid)
+        val researcher = researcherOptional.get()
+        model["researcher"] = Researcher(
+            orcid = researcher.orcid,
+            name = researcher.name,
+            utilizador = researcher.utilizador,
+            email = researcher.email,
+            cienciaId = researcher.cienciaId,
+            associationKeyFct = researcher.associationKeyFct,
+            researcherCategory = researcher.researcherCategory,
+            origin = researcher.origin,
+            phoneNumber = researcher.phoneNumber,
+            siteCeied = researcher.siteCeied,
+            professionalStatus = researcher.professionalStatus,
+            professionalCategory = researcher.professionalCategory,
+            phdYear = researcher.phdYear,
+            isAdmin = researcher.isAdmin,
+        )
+        return "sync-cv-page"
     }
     @GetMapping(value = ["/home"])
     fun showHomePage(model: ModelMap): String{
         return "home-page"
     }
-    @GetMapping(value = ["/accept-sync-cv"])
-    fun showCvButtonPage(model: ModelMap): String{
-        return "sync-cv-page"
-    }
     @GetMapping(value = ["/sync-cv"])
-    fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap): String {
+    fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap, @ModelAttribute("getId") getId: String): String {
 
         val restTemplate = RestTemplate()
         restTemplate.interceptors.add(BasicAuthenticationInterceptor(token, secret))
@@ -168,7 +205,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                     val projectResearcher = ProjectResearcher(
                         projectId = project.id,
-                        researcherId = "xxxx-xxxx-xxxx-xxxx"
+                        researcherId = getId
                     )
 
                     //--save ResearcherDissemination
@@ -231,7 +268,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                         val publicationResearcher = PublicationResearcher(
                             publicationId = publication.id,
-                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                            researcherId = getId
                         )
 
                         //--save ResearcherDissemination
@@ -269,7 +306,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                         val publicationResearcher = PublicationResearcher(
                             publicationId = publication.id,
-                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                            researcherId = getId
                         )
 
                         //--save ResearcherDissemination
@@ -307,7 +344,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                         val publicationResearcher = PublicationResearcher(
                             publicationId = publication.id,
-                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                            researcherId = getId
                         )
 
                         //--save ResearcherDissemination
@@ -360,7 +397,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                         val publicationResearcher = PublicationResearcher(
                             publicationId = publication.id,
-                            researcherId = "xxxx-xxxx-xxxx-xxxx"
+                            researcherId = getId
                         )
 
                         //--save ResearcherDissemination
@@ -416,7 +453,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                 val disseminationResearcher = DisseminationResearcher(
                     disseminationId = dissemination.id,
-                    researcherId = "xxxx-xxxx-xxxx-xxxx"
+                    researcherId = getId
                 )
 
                 //--save ResearcherDissemination
@@ -456,7 +493,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                 val disseminationResearcher = DisseminationResearcher(
                     disseminationId = dissemination.id,
-                    researcherId = "xxxx-xxxx-xxxx-xxxx"
+                    researcherId = getId
                 )
 
                 //--save ResearcherDissemination

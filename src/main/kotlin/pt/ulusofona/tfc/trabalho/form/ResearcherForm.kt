@@ -1,6 +1,5 @@
 package pt.ulusofona.tfc.trabalho.form
 
-import java.util.*
 import javax.validation.constraints.*
 
 data class ResearcherForm(

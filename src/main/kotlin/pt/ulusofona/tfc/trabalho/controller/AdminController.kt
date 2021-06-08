@@ -1,5 +1,6 @@
 package pt.ulusofona.tfc.trabalho.controller
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
@@ -7,9 +8,12 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
+import pt.ulusofona.tfc.trabalho.form.AddResearcherForm
 import pt.ulusofona.tfc.trabalho.form.DisseminationForm
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
+import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import javax.validation.Valid
 import kotlin.collections.ArrayList
@@ -99,13 +103,41 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "forms-section/personal-information-form"
     }
 
-    @GetMapping(value = ["/personal-information-form"])
+    @GetMapping(value = ["/add-researcher-form"])
     fun showResearcherForm(model: ModelMap): String{
-        model["researcherForm"] = ResearcherForm()
-        return "forms-section/personal-information-form"
+        model["addResearcherForm"] = AddResearcherForm()
+        return "forms-section/add-researcher-form"
+    }
+    @PostMapping(value = ["/add-researcher-form"])
+    fun addResearcher(@Valid @ModelAttribute("addResearcherForm") addResearcherForm: AddResearcherForm,
+                         bindingResult: BindingResult,
+                         redirectAttributes: RedirectAttributes): String{
+
+        if(bindingResult.hasErrors()){
+            return "forms-section/add-researcher-form"
+        }
+
+        val orcid = addResearcherForm.orcid!!
+        val name = addResearcherForm.name!!
+
+        var alreadyExistOnFile = false
+        val inputStream: InputStream = File("src/main/resources/first_time_user_list_test.txt").inputStream()
+        val lineList = mutableListOf<String>()
+        inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
+        lineList.forEach{
+            if("https://sandbox.orcid.org/${orcid}" == it) {
+                alreadyExistOnFile = true
+            }
+        }
+        if(!alreadyExistOnFile) {
+            File("src/main/resources/first_time_user_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${orcid}")
+        }
+
+        redirectAttributes.addFlashAttribute("message","O Investigador ${name} já pode registar-se no site!")
+        return "redirect:/admin/researcher-management"
     }
 
-    @PostMapping(value = ["/personal-information-form"])
+   @PostMapping(value = ["/personal-information-form"])
     fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
                          bindingResult: BindingResult,
                          redirectAttributes: RedirectAttributes): String{
@@ -136,15 +168,19 @@ class AdminController(val researcherRepository: ResearcherRepository,
         )
 
         researcherRepository.save(researcher)
+       //TODO Falta remover role aministrador caso seja editado (IMPORTANTE !!!)
+       if(researcher.isAdmin == true) {
+           File("src/main/resources/admin_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
+       }
 
-        //TODO adiconar a extensao bulma-toast para receber estes alertas vvvvv
-        redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} inserido com sucesso!")
+        redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} editado com sucesso!")
         return "redirect:/admin/researcher-management"
     }
 
     @GetMapping("/user/delete/{orcid}")
     fun deleteResearcher(@PathVariable orcid: String, redirectAttributes: RedirectAttributes): String{
         if (researcherRepository.findById(orcid).isPresent){
+            //TODO Falta remover roles caso o investigador seja eliminado (IMPORTANTE !!!)
             redirectAttributes.addFlashAttribute("message","Investigador ${researcherRepository.findById(orcid).get().name} eliminado com sucesso!")
             researcherRepository.deleteById(orcid)
         }

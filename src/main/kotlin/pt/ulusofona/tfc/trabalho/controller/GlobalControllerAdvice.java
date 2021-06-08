@@ -24,4 +24,16 @@ public class GlobalControllerAdvice {
         return "";
     }
 
+    @ModelAttribute("getId")
+    public String getId(Principal principal) {
+        if (principal != null) {
+            if (principal instanceof OAuth2AuthenticationToken) {
+                OAuth2AuthenticationToken oauth2Principal = (OAuth2AuthenticationToken) principal;
+                OAuth2User oAuth2User = oauth2Principal.getPrincipal();
+                return oAuth2User.getAttribute("sub");
+            }
+            return principal.getName();
+        }
+        return "";
+    }
 }
