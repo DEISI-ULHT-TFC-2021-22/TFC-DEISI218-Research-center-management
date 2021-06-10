@@ -1,6 +1,5 @@
 package pt.ulusofona.tfc.trabalho.controller
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
@@ -65,42 +64,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
                     phdYear = researcher.phdYear,
                     isAdmin = researcher.isAdmin,
             )
-            return "researcher-section/personal-information"
+            return "admin-section/personal-information"
         }else{
             return "not-found/researcher404"
         }
-    }
-
-    @GetMapping(value = ["/user/edit/{orcid}"])
-    fun editResearcherProfile(@PathVariable("orcid") orcid : String,
-                              model: ModelMap,
-                              redirectAttributes: RedirectAttributes): String{
-        val researcherOptional = researcherRepository.findById(orcid)
-        if (researcherOptional.isPresent) {
-            val researcher = researcherOptional.get()
-            var isAdminOptional = researcher.isAdmin
-            if (isAdminOptional == null){
-                isAdminOptional = false
-            }
-            model["researcherForm"] = ResearcherForm(
-                    orcid = researcher.orcid,
-                    name = researcher.name,
-                    utilizador = researcher.utilizador,
-                    email = researcher.email,
-                    cienciaId = researcher.cienciaId,
-                    associationKeyFct = researcher.associationKeyFct,
-                    researcherCategory = researcher.researcherCategory,
-                    origin = researcher.origin,
-                    phoneNumber = researcher.phoneNumber,
-                    siteCeied = researcher.siteCeied,
-                    professionalStatus = researcher.professionalStatus,
-                    professionalCategory = researcher.professionalCategory,
-                    phdYear = researcher.phdYear,
-                    isAdmin = isAdminOptional
-            )
-        }
-        redirectAttributes.addFlashAttribute("message","Investigador editado com sucesso!")
-        return "forms-section/personal-information-form"
     }
 
     @GetMapping(value = ["/add-researcher-form"])
@@ -136,11 +103,42 @@ class AdminController(val researcherRepository: ResearcherRepository,
         redirectAttributes.addFlashAttribute("message","O Investigador ${name} já pode registar-se no site!")
         return "redirect:/admin/researcher-management"
     }
+    @GetMapping(value = ["/user/edit/{orcid}"])
+    fun editResearcherProfile(@PathVariable("orcid") orcid : String,
+                              model: ModelMap,
+                              redirectAttributes: RedirectAttributes): String{
 
-   @PostMapping(value = ["/personal-information-form"])
+        val researcherOptional = researcherRepository.findById(orcid)
+        if (researcherOptional.isPresent) {
+            val researcher = researcherOptional.get()
+            var isAdminOptional = researcher.isAdmin
+            if (isAdminOptional == null){
+                isAdminOptional = false
+            }
+            model["researcherForm"] = ResearcherForm(
+                orcid = researcher.orcid,
+                name = researcher.name,
+                utilizador = researcher.utilizador,
+                email = researcher.email,
+                cienciaId = researcher.cienciaId,
+                associationKeyFct = researcher.associationKeyFct,
+                researcherCategory = researcher.researcherCategory,
+                origin = researcher.origin,
+                phoneNumber = researcher.phoneNumber,
+                siteCeied = researcher.siteCeied,
+                professionalStatus = researcher.professionalStatus,
+                professionalCategory = researcher.professionalCategory,
+                phdYear = researcher.phdYear,
+                isAdmin = isAdminOptional
+            )
+        }
+        return "forms-section/personal-information-form"
+    }
+    @PostMapping(value = ["/user/edit"])
     fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
                          bindingResult: BindingResult,
                          redirectAttributes: RedirectAttributes): String{
+
 
         if(bindingResult.hasErrors()){
            return "forms-section/personal-information-form"
@@ -171,6 +169,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
        //TODO Falta remover role aministrador caso seja editado (IMPORTANTE !!!)
        if(researcher.isAdmin == true) {
            File("src/main/resources/admin_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
+       } else {
+
        }
 
         redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} editado com sucesso!")

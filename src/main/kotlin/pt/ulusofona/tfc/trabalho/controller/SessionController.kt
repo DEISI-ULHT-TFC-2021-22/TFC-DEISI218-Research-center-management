@@ -2,7 +2,6 @@ package pt.ulusofona.tfc.trabalho.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import org.springframework.stereotype.Controller
@@ -11,16 +10,15 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import pt.ulusofona.tfc.trabalho.OAuthSecurityConfiguration
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
-import java.io.File
-import java.io.InputStream
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.validation.Valid
+
 
 @Controller
 @RequestMapping("")
@@ -47,14 +45,10 @@ class SessionController (val researcherRepository: ResearcherRepository,
         model["researcherForm"] = ResearcherForm()
         return "forms-section/new-researcher-form"
     }
-    @GetMapping(value = ["/no-permission"])
-    fun showNoPermissionPage(model: ModelMap): String{
-        return "no-permission"
-    }
     @PostMapping(value = ["/new-researcher-form"])
     fun createResearcher(@Valid @ModelAttribute("researcherForm") researcherForm: ResearcherForm,
                          bindingResult: BindingResult,
-                         @ModelAttribute("getId") getId: String,
+                         @ModelAttribute("getId") orcid: String,
                          redirectAttributes: RedirectAttributes): String{
 
         if(bindingResult.hasErrors()){
@@ -63,7 +57,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
         }
 
         val researcher = Researcher(
-            orcid = getId,
+            orcid = orcid,
             name = researcherForm.name!!,
             utilizador = researcherForm.utilizador!!,
             email = researcherForm.email!!,
@@ -92,6 +86,10 @@ class SessionController (val researcherRepository: ResearcherRepository,
         File("src/main/resources/user_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
 
         return "redirect:/accept-sync-cv/${researcher.orcid}"
+    }
+    @GetMapping(value = ["/no-permission"])
+    fun showNoPermissionPage(model: ModelMap): String{
+        return "no-permission"
     }
     @GetMapping(value = ["/accept-sync-cv/{orcid}"])
     fun showCvButtonPage(@PathVariable("orcid") orcid : String, model: ModelMap): String{
@@ -250,7 +248,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         //getIdentifiers
                         for(i2 in 1..identifiersSize) {
                             identifiers = root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code").asText() +
-                            ": " + root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier") + "\n"
+                            ": " + root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
                         val publication = Publication(
@@ -288,7 +286,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         //getIdentifiers
                         for(i2 in 1..identifiersSize) {
                             identifiers = root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code").asText() +
-                                    ": " + root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier") + "\n"
+                                    ": " + root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
                         val publication = Publication(
@@ -326,7 +324,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         //getIdentifiers
                         for(i2 in 1..identifiersSize) {
                             identifiers = root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText() +
-                                    ": " + root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier") + "\n"
+                                    ": " + root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
                         val publication = Publication(
@@ -379,7 +377,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         //getIdentifiers
                         for(i2 in 1..identifiersSize) {
                             identifiers = root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText() +
-                                    ": " + root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier") + "\n"
+                                    ": " + root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
                         val publication = Publication(

@@ -38,14 +38,26 @@
                             <span th:text="*{associationKeyFct}"></span>
                         </div>
                     </div>
-                    <!--<div class="column is-narrow">
+                    <div class="column is-narrow">
                         <p class="buttons">
-                            <a class="button is-primary is-outlined mt-4 mr-4" th:href="@{'/researcher/personal-information/edit'}">
+                            <a class="button is-primary is-outlined mt-4 mr-4" th:href="@{'/admin/user/edit/' + *{orcid}}">
                                 <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                 <span>Editar Dados</span>
                             </a>
                         </p>
-                    </div>-->
+                        <p class="buttons">
+                            <a class="button is-primary is-outlined mr-4" th:href="@{'/admin/scientific-activities/' + *{orcid}}">
+                                <span class="icon is-small"><i class="fas fa-list-alt"></i></span>
+                                <span>Atividades Científicas</span>
+                            </a>
+                        </p>
+                        <!--<p class="buttons">
+                            <a class="button is-primary is-outlined mr-4" th:href="@{'/admin/' + *{orcid} + '/dissemination-form/'}">
+                                <span class="icon is-small"><i class="fas fa-plus"></i></span>
+                                <span>Criar Disseminação</span>
+                            </a>
+                        </p>-->
+                    </div>
                 </div>
                 <div class="columns">
                     <div class="column">

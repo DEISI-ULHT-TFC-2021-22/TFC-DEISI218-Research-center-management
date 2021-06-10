@@ -10,7 +10,7 @@
         <form class="container"
               th:object="${researcherForm}"
               method="post"
-              th:action="@{/admin/personal-information-form}">
+              th:action="@{/admin/user/edit}">
             <div class="field">
                 <div class="columns">
                     <div class="column">
@@ -39,10 +39,9 @@
                    </div>
                </div>
            </div>
-           <div class="field">
+           <div class="field is-hidden">
                <div class="columns">
                    <div class="column">
-                       <fieldset disabled>
                            <label class="label" for="orcid">Orcid ID</label>
                            <div class="control is-expanded has-icons-left">
                                <input class="input"
@@ -53,7 +52,6 @@
                            <p class="help is-danger" th:if="${#fields.hasErrors('orcid')}" th:errors="*{orcid}">Error</p>
                                <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
                            </div>
-                       </fieldset>
                    </div>
                    <div class="column">
                        <label class="label" for="cienciaId">Ciência ID</label>
@@ -206,7 +204,7 @@
 
             <div class="container has-text-centered pt-6" >
                 <!--<button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null || orcid == ''}">Criar Investigador</button>-->
-                <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null && orcid != ''}">Editar Investigador</button>
+                <button class="button is-medium is-primary" type="submit" value="Gravar">Editar Investigador</button>
                 <!--<button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid != null}">Editar Investigador</button>
                 <button class="button is-medium is-primary" type="submit" value="Gravar" th:if="*{orcid == null}">Criar Investigador</button>-->
             </div>

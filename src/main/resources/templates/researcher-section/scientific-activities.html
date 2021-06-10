@@ -36,7 +36,7 @@
                         </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(advancedEdu.date, 'dd/MM/yyyy')}"></p>
-                            <p class="level-item">|</p>
+                            <!--<p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
@@ -46,7 +46,7 @@
                                 <a th:href="@{'/admin/advancedEducation/delete/' + *{advancedEdu.id}}">
                                     <span class="fas fa-times-circle" aria-hidden="true"></span>
                                 </a>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                     <div class="divider is-right" th:if="!*{advancedEduStat.last}"></div>
@@ -66,7 +66,7 @@
                         </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(scientificInit.date, 'dd/MM/yyyy')}"></p>
-                            <p class="level-item">|</p>
+                            <!--<p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
@@ -76,7 +76,7 @@
                                 <a th:href="@{'/admin/scientificInit/delete/' + *{scientificInit.id}}">
                                     <span class="fas fa-times-circle" aria-hidden="true"></span>
                                 </a>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                     <div class="divider is-right" th:if="!*{scientificInitStat.last}"></div>
@@ -96,7 +96,7 @@
                         </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(publication.publicationDate, 'dd/MM/yyyy')}"></p>
-                            <p class="level-item">|</p>
+                            <!--<p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
@@ -106,7 +106,7 @@
                                 <a th:href="@{'/admin/publication/delete/' + *{publication.id}}">
                                     <span class="fas fa-times-circle" aria-hidden="true"></span>
                                 </a>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                     <div class="divider is-right" th:if="!*{publicationStat.last}"></div>
@@ -127,7 +127,7 @@
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(project.initialDate, 'dd/MM/yyyy')}"></p>
                             <p class="level-item" th:text="*{#dates.format(project.finalDate, 'dd/MM/yyyy')}"></p>
-                            <p class="level-item">|</p>
+                            <!--<p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
@@ -137,7 +137,7 @@
                                 <a th:href="@{'/admin/project/delete/' + *{project.id}}">
                                     <span class="fas fa-times-circle" aria-hidden="true"></span>
                                 </a>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                     <div class="divider is-right" th:if="!*{projectStat.last}"></div>
@@ -157,7 +157,7 @@
                         </a>
                         <div class="level-right">
                             <p class="level-item" th:text="*{#dates.format(dissemination.date, 'dd/MM/yyyy')}"></p>
-                            <p class="level-item">|</p>
+                           <!-- <p class="level-item">|</p>
                             <p class="level-item">
                                 <a th:href="@{'/admin/user/'}">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
@@ -167,7 +167,7 @@
                                 <a th:href="@{'/admin/dissemination/delete/' + *{dissemination.id}}">
                                     <span class="fas fa-times-circle" aria-hidden="true"></span>
                                 </a>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                     <div class="divider is-right" th:if="!*{disseminationStat.last}"></div>
