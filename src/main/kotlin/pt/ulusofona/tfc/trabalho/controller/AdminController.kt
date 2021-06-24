@@ -13,6 +13,7 @@ import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.File
 import java.io.InputStream
+import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import javax.validation.Valid
 import kotlin.collections.ArrayList
@@ -166,11 +167,11 @@ class AdminController(val researcherRepository: ResearcherRepository,
         )
 
         researcherRepository.save(researcher)
-       //TODO Falta remover role aministrador caso seja editado (IMPORTANTE !!!)
+
        if(researcher.isAdmin == true) {
            File("src/main/resources/admin_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
        } else {
-
+           removeRoleFromFile("src/main/resources/admin_list_test.txt", researcher.orcid)
        }
 
         redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} editado com sucesso!")
@@ -180,7 +181,11 @@ class AdminController(val researcherRepository: ResearcherRepository,
     @GetMapping("/user/delete/{orcid}")
     fun deleteResearcher(@PathVariable orcid: String, redirectAttributes: RedirectAttributes): String{
         if (researcherRepository.findById(orcid).isPresent){
-            //TODO Falta remover roles caso o investigador seja eliminado (IMPORTANTE !!!)
+
+            removeRoleFromFile("src/main/resources/admin_list_test.txt", orcid)
+            removeRoleFromFile("src/main/resources/user_list_test.txt", orcid)
+            removeRoleFromFile("src/main/resources/first_time_user_list_test.txt", orcid)
+
             redirectAttributes.addFlashAttribute("message","Investigador ${researcherRepository.findById(orcid).get().name} eliminado com sucesso!")
             researcherRepository.deleteById(orcid)
         }
@@ -405,6 +410,31 @@ class AdminController(val researcherRepository: ResearcherRepository,
     @GetMapping(value = ["/annual-report"])
     fun showAnnualReport(model: ModelMap): String{
         return "admin-section/annual-report"
+    }
+
+    fun removeRoleFromFile(path: String, orcid: String) {
+        var content = mutableListOf<String>()
+        var existOnFile = false
+        val inputStream: InputStream = File(path).inputStream()
+        val lineList = mutableListOf<String>()
+        inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
+        lineList.forEach{
+            if("orcid" != it) {
+                content.add("\n" + it)
+            } else {
+                content.add(it)
+            }
+            if("https://sandbox.orcid.org/${orcid}" == it) {
+                existOnFile = true
+            }
+        }
+        if(existOnFile) {
+            content.remove("\nhttps://sandbox.orcid.org/${orcid}")
+            PrintWriter(path).close()
+            for(i in content) {
+                File(path).appendText(i)
+            }
+        }
     }
 
 
