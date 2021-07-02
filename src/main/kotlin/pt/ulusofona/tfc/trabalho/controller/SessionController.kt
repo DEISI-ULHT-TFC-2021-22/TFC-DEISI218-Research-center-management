@@ -74,15 +74,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
         )
 
         researcherRepository.save(researcher)
-        //TODO falta remover o user do ficheiro primeira vez. Necessário??
-        /*val inputStream: InputStream = File("src/main/resources/first_time_user_list_test.txt").inputStream()
-        val lineList = mutableListOf<String>()
-        inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
-        lineList.forEach{
-            if("https://sandbox.orcid.org/${researcher.orcid}" == it) {
 
-            }
-        }*/
         File("src/main/resources/user_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
 
         return "redirect:/accept-sync-cv/${researcher.orcid}"
@@ -119,6 +111,9 @@ class SessionController (val researcherRepository: ResearcherRepository,
     }
     @GetMapping(value = ["/sync-cv"])
     fun showCienciaVitae(@RequestParam(name="id") id: String, model: ModelMap, @ModelAttribute("getId") getId: String): String {
+
+        //TODO Falta dar drop nas tables para atualizar o ciencia Vitae
+        /*disseminationResearcherRepository.deleteAllByResearcherId(getId)*/
 
         val restTemplate = RestTemplate()
         restTemplate.interceptors.add(BasicAuthenticationInterceptor(token, secret))
@@ -246,8 +241,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         val identifiersSize = root.at("/outputs/output/$i/journal-article/identifiers/total").asInt()
 
                         //getIdentifiers
-                        for(i2 in 1..identifiersSize) {
-                            identifiers = root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code").asText() +
+                        for(i2 in 1 until identifiersSize) {
+                            identifiers += root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code").asText() +
                             ": " + root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
@@ -284,8 +279,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         val identifiersSize = root.at("/outputs/output/$i/book-chapter/identifiers/total").asInt()
 
                         //getIdentifiers
-                        for(i2 in 1..identifiersSize) {
-                            identifiers = root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code").asText() +
+                        for(i2 in 1 until identifiersSize) {
+                            identifiers += root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code").asText() +
                                     ": " + root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
@@ -322,8 +317,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         val identifiersSize = root.at("/outputs/output/$i/edited-book/identifiers/total").asInt()
 
                         //getIdentifiers
-                        for(i2 in 1..identifiersSize) {
-                            identifiers = root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText() +
+                        for(i2 in 1 until identifiersSize) {
+                            identifiers += root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText() +
                                     ": " + root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
@@ -375,8 +370,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         val identifiersSize = root.at("/outputs/output/$i/conference-abstract/identifiers/total").asInt()
 
                         //getIdentifiers
-                        for(i2 in 1..identifiersSize) {
-                            identifiers = root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText() +
+                        for(i2 in 1 until identifiersSize) {
+                            identifiers += root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText() +
                                     ": " + root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier").asText() + "\n"
                         }
 
@@ -405,7 +400,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                 }
             }
 
-            //services
+            /*//services
             if(root.at("/services/service/$i/service-category/value").asText() == "Organização de evento") {
                 var year = "1999"
                 var month = "01"
@@ -496,7 +491,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                 //--save ResearcherDissemination
                 disseminationResearcherRepository.save(disseminationResearcher)
-            }
+            }*/
         }
 
 

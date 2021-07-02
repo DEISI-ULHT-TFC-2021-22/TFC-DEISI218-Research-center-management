@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.dao.Researcher
@@ -139,5 +140,126 @@ class ResearcherController(val researcherRepository: ResearcherRepository,
         }else{
             return "not-found/researcher404"
         }
+    }
+    @GetMapping(value = ["/scientific-activity/{type}/{id}"])
+    fun viewSingleScientificActivity(@PathVariable("type") type : String,
+                                     @PathVariable("id") id : Long,
+                                     model: ModelMap): String{
+
+        when(type){
+            "advanced-education" ->{
+                val advancedEduOptional = otherScientificActivityRepository
+                    .findByOtherTypeAndId(OtherType.ADVANCED_EDUCATION,id)
+                return if (advancedEduOptional.isPresent){
+                    val advancedEdu = advancedEduOptional.get()
+                    model["advancedEdu"] = OtherScientificActivity(
+                        id = advancedEdu.id,
+                        otherCategory = advancedEdu.otherCategory,
+                        otherType = advancedEdu.otherType,
+                        title = advancedEdu.title,
+                        date = advancedEdu.date,
+                        description = advancedEdu.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "scientific-initiation" ->{
+                val scientificInitOptional = otherScientificActivityRepository
+                    .findByOtherTypeAndId(OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,id)
+                return if (scientificInitOptional.isPresent){
+                    val scientificInit = scientificInitOptional.get()
+                    model["scientificInit"] = OtherScientificActivity(
+                        id = scientificInit.id,
+                        otherCategory = scientificInit.otherCategory,
+                        otherType = scientificInit.otherType,
+                        title = scientificInit.title,
+                        date = scientificInit.date,
+                        description = scientificInit.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "publication" ->{
+                val publicationOptional = publicationRepository.findById(id)
+                return if (publicationOptional.isPresent){
+                    val publication = publicationOptional.get()
+                    model["publication"] = Publication(
+                        id = publication.id,
+                        publicationCategory = publication.publicationCategory,
+                        title = publication.title,
+                        publicationDate = publication.publicationDate,
+                        descriptor = publication.descriptor,
+                        publisher = publication.publisher,
+                        authors = publication.authors,
+                        indexation = publication.indexation,
+                        conferenceName = publication.conferenceName
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "project" ->{
+                val projectOptional = projectRepository.findById(id)
+                return if (projectOptional.isPresent){
+                    val project = projectOptional.get()
+                    model["project"] = Project(
+                        id = project.id,
+                        projectCategory = project.projectCategory,
+                        title = project.title,
+                        initialDate = project.initialDate,
+                        finalDate = project.finalDate,
+                        abstract = project.abstract,
+                        description = project.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+            "dissemination" ->{
+                val disseminationOptional = disseminationRepository.findById(id)
+                return if (disseminationOptional.isPresent){
+                    val dissemination = disseminationOptional.get()
+                    model["dissemination"] = Dissemination(
+                        id = dissemination.id,
+                        disseminationCategory = dissemination.disseminationCategory,
+                        title = dissemination.title,
+                        date = dissemination.date,
+                        description = dissemination.description
+                    )
+                    "researcher-section/scientific-activity"
+                }else{
+                    "not-found/researcher404"
+                }
+            }
+        }
+        return "not-found/researcher404"
+    }
+    @GetMapping(value = ["/accept-update-cv"])
+    fun showCvButtonPage(model: ModelMap, @ModelAttribute("getId") orcid: String): String{
+        val researcherOptional = researcherRepository.findById(orcid)
+        val researcher = researcherOptional.get()
+        model["researcher"] = Researcher(
+            orcid = researcher.orcid,
+            name = researcher.name,
+            utilizador = researcher.utilizador,
+            email = researcher.email,
+            cienciaId = researcher.cienciaId,
+            associationKeyFct = researcher.associationKeyFct,
+            researcherCategory = researcher.researcherCategory,
+            origin = researcher.origin,
+            phoneNumber = researcher.phoneNumber,
+            siteCeied = researcher.siteCeied,
+            professionalStatus = researcher.professionalStatus,
+            professionalCategory = researcher.professionalCategory,
+            phdYear = researcher.phdYear,
+            isAdmin = researcher.isAdmin,
+        )
+        return "researcher-section/update-cv"
     }
 }

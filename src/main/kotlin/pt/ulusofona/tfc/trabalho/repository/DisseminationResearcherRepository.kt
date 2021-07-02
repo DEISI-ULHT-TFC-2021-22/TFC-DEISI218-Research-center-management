@@ -13,4 +13,5 @@ interface DisseminationResearcherRepository: JpaRepository<DisseminationResearch
 
     @Transactional
     fun deleteByDisseminationId(id:Long)
+
 }

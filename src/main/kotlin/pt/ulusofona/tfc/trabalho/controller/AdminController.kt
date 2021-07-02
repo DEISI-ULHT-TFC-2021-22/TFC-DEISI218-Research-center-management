@@ -248,7 +248,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val scientificInitOfYoungStudents = otherScientificActivities.filter { it.otherType == OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS }
             model["scientificInitOfYoungStudents"] = scientificInitOfYoungStudents
 
-            return "researcher-section/scientific-activities"
+            return "admin-section/scientific-activities"
         }else{
             return "not-found/researcher404"
         }

@@ -31,6 +31,9 @@
 .select-width-100 {
   width: 100%; }
 
+.show-white-space {
+  white-space: pre-wrap; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name, .pagination-previous,
