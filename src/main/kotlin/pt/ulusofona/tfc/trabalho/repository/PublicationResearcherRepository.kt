@@ -13,4 +13,7 @@ interface PublicationResearcherRepository : JpaRepository<PublicationResearcher,
 
     @Transactional
     fun deleteByPublicationId(id:Long)
+
+    @Transactional
+    fun deleteByResearcherId(orcid: String)
 }

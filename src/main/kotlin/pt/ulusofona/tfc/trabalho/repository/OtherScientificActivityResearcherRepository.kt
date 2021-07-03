@@ -13,4 +13,7 @@ interface OtherScientificActivityResearcherRepository : JpaRepository<OtherScien
 
     @Transactional
     fun deleteByOtherScientificActivityId(id:Long)
+
+    @Transactional
+    fun deleteByResearcherId(orcid: String)
 }

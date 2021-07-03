@@ -13,4 +13,7 @@ interface ProjectResearcherRepository : JpaRepository<ProjectResearcher, String>
 
     @Transactional
     fun deleteByProjectId(id:Long)
+
+    @Transactional
+    fun deleteByResearcherId(orcid: String)
 }
