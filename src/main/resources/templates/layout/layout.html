@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head (pageTitle)">
     <title th:text="${pageTitle}">Trabalho</title>
     <meta charset="utf-8">
@@ -20,14 +21,14 @@
     <div class="navbar-menu is-size-5">
         <div class="navbar-start has-text-weight-medium">
             <a class="navbar-item px-4" th:href="@{/home}">Página Inicial</a>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Administração</a>
-                <div class="navbar-dropdown is-size-6">
-                    <a class="navbar-item py-3" th:href="@{/admin/searches}">Pesquisar Dados</a>
-                    <a class="navbar-item py-3" th:href="@{/admin/researcher-management}">Gerir Investigadores</a>
-                    <a class="navbar-item py-3" th:href="@{/admin/annual-report}">Gerar Relatório Anual</a>
+                <div sec:authorize="hasRole('ADMIN')" class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Administração</a>
+                    <div class="navbar-dropdown is-size-6">
+                        <a class="navbar-item py-3" th:href="@{/admin/searches}">Pesquisar Dados</a>
+                        <a class="navbar-item py-3" th:href="@{/admin/researcher-management}">Gerir Investigadores</a>
+                        <a class="navbar-item py-3" th:href="@{/admin/annual-report}">Gerar Relatório Anual</a>
+                    </div>
                 </div>
-            </div>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Investigador</a>
                 <div class="navbar-dropdown is-size-6">
