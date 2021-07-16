@@ -5,6 +5,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.ResearcherExcelExporter
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.AddResearcherForm
@@ -14,7 +15,9 @@ import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
+import java.net.http.HttpResponse
 import java.text.SimpleDateFormat
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
 
@@ -49,10 +52,20 @@ class AdminController(val researcherRepository: ResearcherRepository,
     }
 
     @GetMapping(value = ["/export-excel-accept"])
-    fun exportToExcel(model: ModelMap): String {
+    fun exportToExcel(response: HttpServletResponse): String {
+        response.contentType = "application/octet-stream"
+        val headerKey = "Content-Disposition"
+        val headerValue = "attachement; filename = dados-ceied.xlsx"
 
-        //TODO Implementação da lógica para exportar para excel
-        return ""
+        response.setHeader(headerKey,headerValue)
+
+        val researchers = researcherRepository.findAll()
+
+        val excelExporter = ResearcherExcelExporter(researchers)
+
+        excelExporter.export(response)
+
+        return "redirect:/admin-section/export-excel"
     }
 
 

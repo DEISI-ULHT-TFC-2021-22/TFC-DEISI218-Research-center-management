@@ -8,16 +8,15 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container is-fluid">
+            <div class="notification is-success has-text-centered" th:if="${message}" th:text="${message}">
+                Message...
+            </div>
             <div class="container mb-5">
                 <a class="button is-primary" th:href="@{/admin/add-researcher-form}">
                     <span class="icon is-large"><i class="fas fa-user-plus"></i></span>
                     <span>Novo Investigador</span>
                 </a>
-                <div class="notification is-success has-text-centered" th:if="${message}" th:text="${message}">
-                    Message...
-                </div>
             </div>
-
             <table class="table" th:if="${!researchers.isEmpty()}">
                <thead>
                <tr>
