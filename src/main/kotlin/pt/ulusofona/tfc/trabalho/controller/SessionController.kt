@@ -109,6 +109,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
     }
     @GetMapping(value = ["/home"])
     fun showHomePage(model: ModelMap): String{
+        val researchers = researcherRepository.findAll()
+        model["researchers"] = researchers
         return "home-page"
     }
     @GetMapping(value = ["/sync-cv"])

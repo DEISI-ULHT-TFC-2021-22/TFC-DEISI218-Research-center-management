@@ -9,62 +9,28 @@
             <div class="tile is-ancestor"><!--todo alterar o layout das tabelas, neste momento estao muito largas e ocupam o ecra todo-->
                 <div class="tile is-parent">
                     <article class="tile is-child box">
-                        <p class="title has-text-primary has-text-centered">Últimas Sincronizações do Ciência Vitae</p>
+                        <p class="title has-text-primary has-text-centered">Novos Investigadores do CeiED</p>
                         <div class="container">
-                            <table class="table">
+                            <table class="table" th:if="${!researchers.isEmpty()}">
                                 <thead>
                                 <tr>
                                     <th>Investigador</th>
-                                    <th >Data de sincronização</th>
+                                    <th >Categoria</th>
+                                    <th >Email</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>Gabriel Moura</td>
-                                    <td class="has-text-right">15:01 20-04-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>Carolina Guerra</td>
-                                    <td class="has-text-right">16:15 12-04-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>Marcos Ornelas</td>
-                                    <td class="has-text-right">21:31 29-03-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>Beatriz Cruz</td>
-                                    <td class="has-text-right">19:10 12-03-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>Tatiana Infante</td>
-                                    <td class="has-text-right">09:19 25-02-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>João Canela</td>
-                                    <td class="has-text-right">13:42 21-02-2021</td>
-                                </tr>
-                                <tr>
-                                    <td>José Sequeira</td>
-                                    <td class="has-text-right">09:21 04-11-2020</td>
-                                </tr>
-                                <tr>
-                                    <td>Diogo Rodrigues</td>
-                                    <td class="has-text-right">21:24 01-10-2020</td>
-                                </tr>
-                                <tr>
-                                    <td>Margarida Borba</td>
-                                    <td class="has-text-right">10:37 24-09-2020</td>
-                                </tr>
-                                <tr>
-                                    <td>Catarina Guimarães</td>
-                                    <td class="has-text-right">08:55 05-09-2020</td>
+                                <tr th:each="researcher, i : ${researchers}" th:unless="${i.index} > 5">
+                                    <td th:text="*{researcher.name}"></td>
+                                    <td th:text="*{researcher.professionalCategory}"></td>
+                                    <td th:text="*{researcher.email}"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </article>
                 </div>
-                <div class="tile is-parent">
+             <!--   <div class="tile is-parent">
                     <article class="tile is-child box">
                         <p class="title has-text-primary has-text-centered">Últimas Atividades Científicas</p>
                         <div class="container">
@@ -137,7 +103,7 @@
                                 </tbody>
                             </table>
                     </article>
-                </div>
+                </div>-->
             </div>
 
     </div>

@@ -48,7 +48,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "admin-section/export-excel"
     }
 
-    @GetMapping(value = ["export-excel-accept"])
+    @GetMapping(value = ["/export-excel-accept"])
     fun exportToExcel(model: ModelMap): String {
 
         //TODO Implementação da lógica para exportar para excel
