@@ -120,6 +120,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
         if(response.statusCode.is2xxSuccessful){
 
+            //Drop base de dados
             //Dissemination
             val disseminationResearchers = disseminationResearcherRepository.findByResearcherId(getId)
             for (i in disseminationResearchers){
@@ -296,6 +297,47 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //--save ResearcherDissemination
                             publicationResearcherRepository.save(publicationResearcher)
                         }
+                        if(root.at("/outputs/output/$i/output-type/value").asText() == "Livro") {
+
+                            //get year
+                            year = root.at("/outputs/output/$i/book/publication-year").asText()
+
+                            val validatedDate = "$year-$month-$day"
+
+
+                            //getIdentifiersSize
+                            val identifiersSize = root.at("/outputs/output/$i/book/identifiers/total").asInt()
+
+                            //getIdentifiers
+                            for (i2 in 1 until identifiersSize) {
+                                identifiers += root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier-type/code")
+                                    .asText() +
+                                        ": " + root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier")
+                                    .asText() + "\n"
+                            }
+
+                            val publication = Publication(
+                                publicationCategory = PublicationCategory.BOOK_AUTHORSHIP,
+                                title = root.at("/outputs/output/$i/book/title").asText(),
+                                publicationDate = dateFormat.parse(validatedDate),
+                                descriptor = identifiers,
+                                publisher = root.at("/outputs/output/$i/book/publisher").asText(),
+                                authors = root.at("/outputs/output/$i/book/authors/citation").asText(),
+                                indexation = "",
+                                conferenceName = ""
+                            )
+
+                            publicationRepository.save(publication)
+
+                            val publicationResearcher = PublicationResearcher(
+                                publicationId = publication.id,
+                                researcherId = getId
+                            )
+
+                            //--save ResearcherDissemination
+                            publicationResearcherRepository.save(publicationResearcher)
+                        }
+
                         if(root.at("/outputs/output/$i/output-type/value").asText() == "Capítulo de livro") {
 
                             //get year
@@ -430,6 +472,105 @@ class SessionController (val researcherRepository: ResearcherRepository,
                 }
 
                 //services
+                if(root.at("/services/service/$i/service-category/value").asText() == "Júri de grau académico") {
+                    if (root.at("/services/service/$i/graduate-examination/examination-degree/code").asText() == "D") {
+                        var year = "1999"
+                        var month = "01"
+                        var day = "01"
+
+                        //check year
+                        if (!root.at("/services/service/$i/graduate-examination/date/year").isNull) {
+                            year = root.at("/services/service/$i/graduate-examination/date/year")
+                                .asText()
+                        }
+
+                        //check month
+                        if (!root.at("/services/service/$i/graduate-examination/date/month").isNull) {
+                            month = root.at("/services/service/$i/graduate-examination/date/month")
+                                .asText()
+                        }
+
+                        //check day
+                        if (!root.at("/services/service/$i/graduate-examination/date/day").isNull) {
+                            day = root.at("/services/service/$i/graduate-examination/date/day").asText()
+                        }
+
+                        val validatedDate = "$year-$month-$day"
+
+                        val otherScientificActivity = OtherScientificActivity(
+                            otherType = OtherType.ADVANCED_EDUCATION,
+                            otherCategory = OtherCategory.PARTICIPATION_IN_DOCTORAL_JURIES,
+                            title = root.at("/services/service/$i/graduate-examination/theme").asText(),
+                            date = dateFormat.parse(validatedDate),
+                            description = root.at("/services/service/$i/graduate-examination/examination-subject").asText()
+                        )
+
+                        otherScientificActivityRepository.save(otherScientificActivity)
+
+                        val otherScientificActivityResearcher = OtherScientificActivityResearcher(
+                            otherScientificActivityId = otherScientificActivity.id,
+                            researcherId = getId
+                        )
+
+                        otherScientificActivityResearcherRepository.save(otherScientificActivityResearcher)
+                    }
+                }
+
+                if(root.at("/services/service/$i/service-category/value").asText() == "Orientação") {
+                    var year = "1999"
+                    var month = "01"
+                    var day = "01"
+
+                    //check year
+                    if(!root.at("/services/service/$i/research-based-degree-supervision/start-date/year").isNull) {
+                        year = root.at("/services/service/$i/research-based-degree-supervision/start-date/year").asText()
+                    }
+
+                    //check month
+                    if(!root.at("/services/service/$i/research-based-degree-supervision/start-date/month").isNull) {
+                        month = root.at("/services/service/$i/research-based-degree-supervision/start-date/month").asText()
+                    }
+
+                    //check day
+                    if(!root.at("/services/service/$i/research-based-degree-supervision/start-date/day").isNull) {
+                        day = root.at("/services/service/$i/research-based-degree-supervision/start-date/day").asText()
+                    }
+
+                    val validatedDate = "$year-$month-$day"
+
+                    var otherScientificActivityCategory = OtherCategory.OTHER_CATEGORY
+                    var otherScientificActivityType = OtherType.ADVANCED_EDUCATION
+
+                    //check Orientação Mestrado
+                    if(root.at("/services/service/$i/research-based-degree-supervision/degree-type/code").asText() == "M") {
+                        otherScientificActivityCategory = OtherCategory.MASTERS_SUPERVISION
+                        otherScientificActivityType = OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS
+                    }
+
+                    //check Orientação de Doutoramento
+                    if(root.at("/services/service/$i/research-based-degree-supervision/degree-type/code").asText() == "D") {
+                        otherScientificActivityCategory = OtherCategory.PHD_SUPERVISION
+                    }
+
+
+                    val otherScientificActivity = OtherScientificActivity(
+                        otherType = otherScientificActivityType,
+                        otherCategory = otherScientificActivityCategory,
+                        title = root.at("/services/service/$i/research-based-degree-supervision/thesis-title").asText(),
+                        date = dateFormat.parse(validatedDate),
+                        description = root.at("/services/service/$i/research-based-degree-supervision/degree-subject").asText()
+                    )
+
+                    otherScientificActivityRepository.save(otherScientificActivity)
+
+                    val otherScientificActivityResearcher = OtherScientificActivityResearcher(
+                        otherScientificActivityId = otherScientificActivity.id,
+                        researcherId = getId
+                    )
+
+                    otherScientificActivityResearcherRepository.save(otherScientificActivityResearcher)
+                }
+
                 if(root.at("/services/service/$i/service-category/value").asText() == "Organização de evento") {
                     var year = "1999"
                     var month = "01"
