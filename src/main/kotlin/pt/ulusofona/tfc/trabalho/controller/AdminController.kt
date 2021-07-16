@@ -43,6 +43,19 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "admin-section/researcher-management"
     }
 
+    @GetMapping(value = ["/export-excel"])
+    fun showExportButtonPage(model: ModelMap): String {
+        return "admin-section/export-excel"
+    }
+
+    @GetMapping(value = ["export-excel-accept"])
+    fun exportToExcel(model: ModelMap): String {
+
+        //TODO Implementação da lógica para exportar para excel
+        return ""
+    }
+
+
     @GetMapping(value = ["/user/{orcid}"])
     fun viewResearcherProfile(@PathVariable("orcid") orcid : String, model: ModelMap): String{
 
