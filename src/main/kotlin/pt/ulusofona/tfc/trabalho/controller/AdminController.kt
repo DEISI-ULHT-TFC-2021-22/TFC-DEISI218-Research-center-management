@@ -5,7 +5,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import pt.ulusofona.tfc.trabalho.ResearcherExcelExporter
+import pt.ulusofona.tfc.trabalho.ExcelExporter
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
@@ -16,8 +16,8 @@ import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
-import java.net.http.HttpResponse
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
@@ -60,13 +60,66 @@ class AdminController(val researcherRepository: ResearcherRepository,
     fun exportToExcel(response: HttpServletResponse): String {
         response.contentType = "application/octet-stream"
         val headerKey = "Content-Disposition"
-        val headerValue = "attachement; filename = dados-ceied.xlsx"
+
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd_HH:mm")
+        val currentDateTime = dateFormatter.format(Date())
+        val fileName = "dados-ceied_$currentDateTime.xlsx"
+        val headerValue = "attachement; filename = $fileName"
 
         response.setHeader(headerKey,headerValue)
 
         val researchers = researcherRepository.findAll()
 
-        val excelExporter = ResearcherExcelExporter(researchers)
+        //Disseminations
+        val listDissemination = disseminationRepository.findAll()
+        val mapDissemination = mutableMapOf<String,MutableList<Dissemination>>()
+
+        for (dissemination in listDissemination){
+            val connectedTable = disseminationResearcherRepository.findByDisseminationId(dissemination.id)
+            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
+            val cienciaID = researcher.get().cienciaId
+            mapDissemination.getOrPut(cienciaID,::mutableListOf).add(dissemination)
+        }
+
+        //OtherScientificActivity
+        val listOtherScientificActivity = otherScientificActivityRepository.findAll()
+        val mapOtherScientificActivity = mutableMapOf<String,MutableList<OtherScientificActivity>>()
+
+        for (otherScientificActivity in listOtherScientificActivity){
+            val connectedTable = otherScientificActivityResearcherRepository.findByOtherScientificActivityId(otherScientificActivity.id)
+            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
+            val cienciaID = researcher.get().cienciaId
+            mapOtherScientificActivity.getOrPut(cienciaID,::mutableListOf).add(otherScientificActivity)
+        }
+
+        //Project
+        val listProject = projectRepository.findAll()
+        val mapProject = mutableMapOf<String,MutableList<Project>>()
+
+        for (project in listProject){
+            val connectedTable = projectResearcherRepository.findByProjectId(project.id)
+            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
+            val cienciaID = researcher.get().cienciaId
+            mapProject.getOrPut(cienciaID,::mutableListOf).add(project)
+        }
+
+        //Publication
+        val listPublication = publicationRepository.findAll()
+        val mapPublication = mutableMapOf<String,MutableList<Publication>>()
+
+        for (publication in listPublication){
+            val connectedTable = publicationResearcherRepository.findByPublicationId(publication.id)
+            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
+            val cienciaID = researcher.get().cienciaId
+            mapPublication.getOrPut(cienciaID,::mutableListOf).add(publication)
+        }
+
+        //println(mapDissemination)
+        //println(mapOtherScientificActivity)
+        //println(mapProject)
+        //println(mapPublication)
+
+        val excelExporter = ExcelExporter(researchers,mapDissemination,mapOtherScientificActivity,mapProject,mapPublication)
 
         excelExporter.export(response)
 
