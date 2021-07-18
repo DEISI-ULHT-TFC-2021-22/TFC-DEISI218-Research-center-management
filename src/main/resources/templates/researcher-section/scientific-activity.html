@@ -40,6 +40,12 @@
                         <strong for="description">Descrição</strong>
                         <div th:text="*{description}"></div>
                     </div>
+                    <div class="column" th:if="${institutions != null}">
+                        <strong for="institution">Instituições</strong>
+                        <div th:each ="institution: ${institutions}">
+                            <div th:text="${institution.name}"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div th:if="${scientificInit != null}" th:object="${scientificInit}">
@@ -70,6 +76,12 @@
                     <div class="column">
                         <strong for="description">Descrição</strong>
                         <div th:text="*{description}"></div>
+                    </div>
+                    <div class="column" th:if="${institutions != null}">
+                        <strong for="institution">Instituições</strong>
+                        <div th:each ="institution: ${institutions}">
+                            <div th:text="${institution.name}"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,6 +181,14 @@
                         <div th:text="*{description}"></div>
                     </div>
                 </div>
+                <div class="columns">
+                    <div class="column" th:if="${institutions != null}">
+                        <strong for="institution">Instituições</strong>
+                        <div th:each ="institution: ${institutions}">
+                            <div th:text="${institution.name}"></div>
+                        </div>
+                    </div>
+                </div>
                 <div th:if="*{abstract} ? not '' " class="columns">
                     <div class="column">
                         <strong for="description">Abstract</strong>
@@ -208,6 +228,14 @@
                     <div class="column">
                         <strong for="description">Descrição</strong>
                         <div th:text="*{description}"></div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column" th:if="${institutions != null}">
+                        <strong for="institution">Instituições</strong>
+                        <div th:each ="institution: ${institutions}">
+                            <div th:text="${institution.name}"></div>
+                        </div>
                     </div>
                 </div>
             </div>

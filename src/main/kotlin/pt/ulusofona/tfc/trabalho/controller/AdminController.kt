@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.ResearcherExcelExporter
+import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.AddResearcherForm
@@ -25,14 +26,18 @@ import kotlin.collections.ArrayList
 @Controller
 @RequestMapping("/admin")
 class AdminController(val researcherRepository: ResearcherRepository,
+                      val institutionRepository: InstitutionRepository,
                       val disseminationRepository: DisseminationRepository,
                       val disseminationResearcherRepository: DisseminationResearcherRepository,
+                      val disseminationInstitutionRepository: DisseminationInstitutionRepository,
                       val publicationRepository: PublicationRepository,
                       val publicationResearcherRepository: PublicationResearcherRepository,
                       val projectRepository: ProjectRepository,
                       val projectResearcherRepository: ProjectResearcherRepository,
+                      val projectInstitutionRepository: ProjectInstitutionRepository,
                       val otherScientificActivityRepository: OtherScientificActivityRepository,
-                      val otherScientificActivityResearcherRepository: OtherScientificActivityResearcherRepository){
+                      val otherScientificActivityResearcherRepository: OtherScientificActivityResearcherRepository,
+                      val otherScientificActivityInstitutionRepository: OtherScientificActivityInstitutionRepository){
 
     @GetMapping(value = ["/searches"])
     fun showSearches(model: ModelMap): String{
@@ -255,6 +260,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
                     .mapTo(publications) { it.get() }
             model["publications"] = publications
 
+
             val projectResearcherlist = projectResearcherRepository.findByResearcherId(orcid)
             projectResearcherlist
                     .map { projectRepository.findById(it.projectId) }
@@ -352,6 +358,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             date = advancedEdu.date,
                             description = advancedEdu.description
                     )
+                    val otherScientificActivitiesInstitutions = otherScientificActivityInstitutionRepository.findByOtherScientificActivityId(advancedEdu.id)
+                    val institutions = mutableListOf<Institution>()
+                    for (otherScientificActivityInstitution in otherScientificActivitiesInstitutions) {
+                        institutions.add(institutionRepository.findById(otherScientificActivityInstitution.institutionId).get())
+                    }
+                    model["institutions"] = institutions
                     "researcher-section/scientific-activity"
                 }else{
                     "not-found/researcher404"
@@ -370,6 +382,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             date = scientificInit.date,
                             description = scientificInit.description
                     )
+                    val otherScientificActivitiesInstitutions = otherScientificActivityInstitutionRepository.findByOtherScientificActivityId(scientificInit.id)
+                    val institutions = mutableListOf<Institution>()
+                    for (otherScientificActivityInstitution in otherScientificActivitiesInstitutions) {
+                        institutions.add(institutionRepository.findById(otherScientificActivityInstitution.institutionId).get())
+                    }
+                    model["institutions"] = institutions
                     "researcher-section/scientific-activity"
                 }else{
                     "not-found/researcher404"
@@ -408,6 +426,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             abstract = project.abstract,
                             description = project.description
                     )
+                    val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
+                    val institutions = mutableListOf<Institution>()
+                    for (projectInstitution in projectsInstitutions) {
+                        institutions.add(institutionRepository.findById(projectInstitution.institutionId).get())
+                    }
+                    model["institutions"] = institutions
                     "researcher-section/scientific-activity"
                 }else{
                     "not-found/researcher404"
@@ -424,6 +448,13 @@ class AdminController(val researcherRepository: ResearcherRepository,
                             date = dissemination.date,
                             description = dissemination.description
                     )
+                    val disseminationsInstitutions = disseminationInstitutionRepository.findByDisseminationId(dissemination.id)
+                    val institutions = mutableListOf<Institution>()
+                    for (disseminationInstitution in disseminationsInstitutions) {
+                        institutions.add(institutionRepository.findById(disseminationInstitution.institutionId).get())
+                    }
+                    model["institutions"] = institutions
+
                     "researcher-section/scientific-activity"
                 }else{
                     "not-found/researcher404"
