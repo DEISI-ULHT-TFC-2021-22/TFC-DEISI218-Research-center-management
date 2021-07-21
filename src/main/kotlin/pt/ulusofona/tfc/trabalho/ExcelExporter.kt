@@ -4,9 +4,12 @@ import org.apache.poi.ss.usermodel.BorderStyle
 import org.apache.poi.ss.usermodel.FillPatternType
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.usermodel.VerticalAlignment
+import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.XSSFColor
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.xml.sax.ext.Attributes2
+import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import java.io.IOException
@@ -17,11 +20,17 @@ class ExcelExporter(
         private var mapDissemination: MutableMap<String, MutableList<Dissemination>>,
         private var mapOtherScientificActivity: MutableMap<String, MutableList<OtherScientificActivity>>,
         private var mapProject: MutableMap<String, MutableList<Project>>,
-        private var mapPublication: MutableMap<String, MutableList<Publication>>
+        private var mapPublication: MutableMap<String, MutableList<Publication>>,
+        private var mapDissInst: MutableMap<Institution,MutableList<Long>>,
+        private var mapOtherSAInst: MutableMap<Institution,MutableList<Long>>,
+        private var mapProjectInst: MutableMap<Institution,MutableList<Long>>
         ) {
     private var workbook: XSSFWorkbook = XSSFWorkbook()
     private var sheetResearchers: XSSFSheet = workbook.createSheet("Investigadores")
     private var sheetScientificActivities: XSSFSheet = workbook.createSheet("Atividades Científicas")
+    private var researcherReference = "A2"
+    private var SAReference = "A2"
+
 
     fun writeHeaderRowResearchers(){
         val row = sheetResearchers.createRow(0)
@@ -118,64 +127,69 @@ class ExcelExporter(
 
             val cellCienciaId = row.createCell(0)
             cellCienciaId.setCellValue(researcher.cienciaId)
-            sheetResearchers.autoSizeColumn(0)
+
             cellCienciaId.cellStyle = cellStyleData
 
             val cellName = row.createCell(1)
             cellName.setCellValue(researcher.name)
-            sheetResearchers.autoSizeColumn(1)
             cellName.cellStyle = cellStyleData
 
             val cellEmail = row.createCell(2)
             cellEmail.setCellValue(researcher.email)
-            sheetResearchers.autoSizeColumn(2)
             cellEmail.cellStyle = cellStyleData
 
             val cellUserFCT = row.createCell(3)
             cellUserFCT.setCellValue(researcher.utilizador)
-            sheetResearchers.autoSizeColumn(3)
             cellUserFCT.cellStyle = cellStyleData
 
             val cellAssociationKeyFct = row.createCell(4)
             cellAssociationKeyFct.setCellValue(researcher.associationKeyFct)
-            sheetResearchers.autoSizeColumn(4)
             cellAssociationKeyFct.cellStyle = cellStyleData
 
             val cellSiteCeied = row.createCell(5)
             cellSiteCeied.setCellValue(researcher.siteCeied)
-            sheetResearchers.autoSizeColumn(5)
             cellSiteCeied.cellStyle = cellStyleData
 
             val cellOrcid = row.createCell(6)
             cellOrcid.setCellValue(researcher.orcid)
-            sheetResearchers.autoSizeColumn(6)
             cellOrcid.cellStyle = cellStyleData
 
             val cellOrigin = row.createCell(7)
             cellOrigin.setCellValue(researcher.origin)
-            sheetResearchers.autoSizeColumn(7)
             cellOrigin.cellStyle = cellStyleData
 
             val cellPhdYear = row.createCell(8)
             cellPhdYear.setCellValue(researcher.phdYear.toString())
-            sheetResearchers.autoSizeColumn(8)
             cellPhdYear.cellStyle = cellStyleData
 
             val cellProfessionalStatus = row.createCell(9)
             cellProfessionalStatus.setCellValue(researcher.professionalStatus)
-            sheetResearchers.autoSizeColumn(9)
             cellProfessionalStatus.cellStyle = cellStyleData
 
             val cellProfessionalCategory = row.createCell(10)
             cellProfessionalCategory.setCellValue(researcher.professionalCategory)
-            sheetResearchers.autoSizeColumn(10)
             cellProfessionalCategory.cellStyle = cellStyleData
+            researcherReference = cellProfessionalCategory.reference
 
             val cellPhoneNumber = row.createCell(11)
             cellPhoneNumber.setCellValue(researcher.phoneNumber)
-            sheetResearchers.autoSizeColumn(11)
             cellPhoneNumber.cellStyle = cellStyleData
+            researcherReference = cellPhoneNumber.reference
         }
+        sheetResearchers.autoSizeColumn(0)
+        sheetResearchers.autoSizeColumn(1)
+        sheetResearchers.autoSizeColumn(2)
+        sheetResearchers.autoSizeColumn(3)
+        sheetResearchers.autoSizeColumn(4)
+        sheetResearchers.autoSizeColumn(5)
+        sheetResearchers.autoSizeColumn(6)
+        sheetResearchers.autoSizeColumn(7)
+        sheetResearchers.autoSizeColumn(8)
+        sheetResearchers.autoSizeColumn(9)
+        sheetResearchers.autoSizeColumn(10)
+        sheetResearchers.autoSizeColumn(11)
+        sheetResearchers.createFreezePane(0,1)
+        sheetResearchers.setAutoFilter(CellRangeAddress.valueOf("A1:$researcherReference"))
     }
 
     fun writeHeaderRowSA(){
@@ -285,10 +299,12 @@ class ExcelExporter(
                 val cellPublisher = row.createCell(6)
                 cellPublisher.setCellValue(publication.publisher)
                 cellPublisher.cellStyle = cellStyleData
+                SAReference = cellPublisher.reference
 
                 val cellAuthors = row.createCell(7)
                 cellAuthors.setCellValue(publication.authors)
                 cellAuthors.cellStyle = cellStyleData
+                SAReference = cellAuthors.reference
             }
         }
 
@@ -315,6 +331,18 @@ class ExcelExporter(
                 val cellCategory = row.createCell(4)
                 cellCategory.setCellValue(renameProjectCategoryEnum(project.projectCategory))
                 cellCategory.cellStyle = cellStyleData
+                SAReference = cellCategory.reference
+
+                for (institution in mapProjectInst){
+                    if (institution.value.contains(project.id)){
+                        val cellInstitution = row.createCell(8)
+                        cellInstitution.setCellValue(institution.key.name)
+                        cellInstitution.cellStyle = cellStyleData
+                        SAReference = cellInstitution.reference
+                        break
+                    }
+                }
+
 
             }
         }
@@ -350,6 +378,17 @@ class ExcelExporter(
                 val cellCategory = row.createCell(4)
                 cellCategory.setCellValue(renameOtherCategoryEnum(otherScientificActivity.otherCategory))
                 cellCategory.cellStyle = cellStyleData
+                SAReference = cellCategory.reference
+
+                for (institution in mapOtherSAInst){
+                    if (institution.value.contains(otherScientificActivity.id)){
+                        val cellInstitution = row.createCell(8)
+                        cellInstitution.setCellValue(institution.key.name)
+                        cellInstitution.cellStyle = cellStyleData
+                        SAReference = cellInstitution.reference
+                        break
+                    }
+                }
             }
         }
 
@@ -376,6 +415,17 @@ class ExcelExporter(
                 cellCategory.setCellValue(renameDisseminationCategoryEnum(dissemination.disseminationCategory))
                 sheetScientificActivities.autoSizeColumn(4)
                 cellCategory.cellStyle = cellStyleData
+                SAReference = cellCategory.reference
+
+                for (institution in mapDissInst){
+                    if (institution.value.contains(dissemination.id)){
+                        val cellInstitution = row.createCell(8)
+                        cellInstitution.setCellValue(institution.key.name)
+                        cellInstitution.cellStyle = cellStyleData
+                        SAReference = cellInstitution.reference
+                        break
+                    }
+                }
             }
         }
 
@@ -388,7 +438,8 @@ class ExcelExporter(
         sheetScientificActivities.autoSizeColumn(6)
         sheetScientificActivities.autoSizeColumn(7)
         sheetScientificActivities.autoSizeColumn(8)
-
+        sheetScientificActivities.createFreezePane(0,1)
+        sheetScientificActivities.setAutoFilter(CellRangeAddress.valueOf("A1:$SAReference"))
     }
 
     @Throws(IOException::class)

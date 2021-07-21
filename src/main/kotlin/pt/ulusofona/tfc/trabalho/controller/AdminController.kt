@@ -114,12 +114,48 @@ class AdminController(val researcherRepository: ResearcherRepository,
             mapPublication.getOrPut(cienciaID,::mutableListOf).add(publication)
         }
 
-        //println(mapDissemination)
-        //println(mapOtherScientificActivity)
-        //println(mapProject)
-        //println(mapPublication)
+        //Institutions
+        val listInstitution = institutionRepository.findAll()
+        val mapDissInst = mutableMapOf<Institution,MutableList<Long>>()
+        val mapProjectInst = mutableMapOf<Institution,MutableList<Long>>()
+        val mapOtherSAInst = mutableMapOf<Institution,MutableList<Long>>()
 
-        val excelExporter = ExcelExporter(researchers,mapDissemination,mapOtherScientificActivity,mapProject,mapPublication)
+        for(institution in listInstitution){
+            // in disseminations
+            val connectedTablesDiss = disseminationInstitutionRepository.findByInstitutionId(institution.id)
+            if (connectedTablesDiss.isNotEmpty()){
+                val dissIds = mutableListOf<Long>()
+                connectedTablesDiss.forEach { i -> dissIds.add(i.disseminationId)  }
+                dissIds.forEach { id -> mapDissInst.getOrPut(institution,::mutableListOf).add(id) }
+            }
+
+            // in projects
+            val connectedTablesProject = projectInstitutionRepository.findByInstitutionId(institution.id)
+            if (connectedTablesProject.isNotEmpty()){
+                val projectsIds = mutableListOf<Long>()
+                connectedTablesProject.forEach { i -> projectsIds.add(i.projectId) }
+                projectsIds.forEach { id -> mapProjectInst.getOrPut(institution,::mutableListOf).add(id) }
+            }
+
+            // in otherSA
+            val connectedTablesOtherSA = otherScientificActivityInstitutionRepository.findByInstitutionId(institution.id)
+            if (connectedTablesOtherSA.isNotEmpty()){
+                val otherSAIds = mutableListOf<Long>()
+                connectedTablesOtherSA.forEach { i -> otherSAIds.add(i.otherScientificActivityId) }
+                otherSAIds.forEach { id-> mapOtherSAInst.getOrPut(institution,::mutableListOf).add(id) }
+            }
+        }
+
+        val excelExporter = ExcelExporter(
+                researchers,
+                mapDissemination,
+                mapOtherScientificActivity,
+                mapProject,
+                mapPublication,
+                mapDissInst,
+                mapOtherSAInst,
+                mapProjectInst
+        )
 
         excelExporter.export(response)
 
@@ -367,7 +403,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         //--save Dissemination - já tenho ID
         disseminationRepository.save(dissemination)
 
-        //--criar ResearcherDissemination com o ID do dissemination e com o orcid do principal todo ver mais sobre principal
+        //--criar ResearcherDissemination com o ID do dissemination e com o orcid do principal
         val disseminationResearcher = DisseminationResearcher(
                 disseminationId = dissemination.id,
                 researcherId = orcid
