@@ -6,30 +6,30 @@
 <div th:replace="layout/layout :: header"></div>
 <section class="hero is-medium">
     <div class="hero-body">
-            <div class="tile is-ancestor"><!--todo alterar o layout das tabelas, neste momento estao muito largas e ocupam o ecra todo-->
-                <div class="tile is-parent">
-                    <article class="tile is-child box">
-                        <p class="title has-text-primary has-text-centered">Novos Investigadores do CeiED</p>
-                        <div class="container">
-                            <table class="table" th:if="${!researchers.isEmpty()}">
-                                <thead>
-                                <tr>
-                                    <th>Investigador</th>
-                                    <th >Categoria</th>
-                                    <th >Email</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="researcher, i : ${researchers}" th:unless="${i.index} > 5">
-                                    <td th:text="*{researcher.name}"></td>
-                                    <td th:text="*{researcher.professionalCategory}"></td>
-                                    <td th:text="*{researcher.email}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </article>
+        <div class="columns">
+            <div class="column is-three-fifths is-offset-one-fifth">
+                <div class="box">
+                    <h1 class="title has-text-primary has-text-centered">Novos Investigadores do CeiED</h1>
+                    <div class="container">
+                        <table class="table" th:if="${!researchers.isEmpty()}">
+                            <thead>
+                            <tr>
+                                <th>Investigador</th>
+                                <th >Categoria</th>
+                                <th >Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="researcher, i : ${researchers}" th:unless="${i.index} > 5">
+                                <td th:text="*{researcher.name}"></td>
+                                <td th:text="*{researcher.professionalCategory}"></td>
+                                <td th:text="*{researcher.email}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
              <!--   <div class="tile is-parent">
                     <article class="tile is-child box">
                         <p class="title has-text-primary has-text-centered">Últimas Atividades Científicas</p>
