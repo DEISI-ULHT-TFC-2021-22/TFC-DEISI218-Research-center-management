@@ -298,6 +298,34 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "redirect:/admin/researcher-management"
     }
 
+    @GetMapping(value = ["/delete-researcher-confirmation/{orcid}"])
+    fun deleteResearcherConfirmation(@PathVariable("orcid") orcid : String, model: ModelMap): String{
+
+        val researcherOptional = researcherRepository.findById(orcid)
+        if (researcherOptional.isPresent) {
+            val researcher = researcherOptional.get()
+            model["researcher"] = Researcher(
+                    orcid = researcher.orcid,
+                    name = researcher.name,
+                    utilizador = researcher.utilizador,
+                    email = researcher.email,
+                    cienciaId = researcher.cienciaId,
+                    associationKeyFct = researcher.associationKeyFct,
+                    researcherCategory = researcher.researcherCategory,
+                    origin = researcher.origin,
+                    phoneNumber = researcher.phoneNumber,
+                    siteCeied = researcher.siteCeied,
+                    professionalStatus = researcher.professionalStatus,
+                    professionalCategory = researcher.professionalCategory,
+                    phdYear = researcher.phdYear,
+                    isAdmin = researcher.isAdmin,
+            )
+            return "admin-section/delete-researcher-confirmation"
+        }else{
+            return "not-found/researcher404"
+        }
+    }
+
     @GetMapping("/user/delete/{orcid}")
     fun deleteResearcher(@PathVariable orcid: String, redirectAttributes: RedirectAttributes): String{
         if (researcherRepository.findById(orcid).isPresent){

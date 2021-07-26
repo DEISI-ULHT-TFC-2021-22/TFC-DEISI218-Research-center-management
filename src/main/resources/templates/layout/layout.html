@@ -26,7 +26,7 @@
             <div sec:authorize="hasRole('ADMIN')" class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Administração</a>
                 <div class="navbar-dropdown is-size-6">
-                    <a class="navbar-item py-3" th:href="@{/admin/searches}">Pesquisar Dados</a>
+                    <!--<a class="navbar-item py-3" th:href="@{/admin/searches}">Pesquisar Dados</a>-->
                     <a class="navbar-item py-3" th:href="@{/admin/researcher-management}">Gerir Investigadores</a>
                     <a class="navbar-item py-3" th:href="@{/admin/export-excel}">Exportar Dados Para Excel</a>
                 </div>
@@ -60,11 +60,11 @@
 </nav>
 <footer class="footer" th:fragment="footer">
     <div class="content has-text-centered">
-        <p>
-            <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-            is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
-        </p>
+         <p>
+             <a href="https://www.ceied.ulusofona.pt"> Centro de Estudos Interdisciplinares em Educação e Desenvolvimento</a>
+         </p>
+        <p>Solução desenvolvida por David Silva e Tiago Lourenço</p>
+        <p>No DEISI na Universidade Lusófona.</p>
     </div>
 </footer>
 </body>

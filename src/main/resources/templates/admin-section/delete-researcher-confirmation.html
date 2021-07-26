@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="layout/layout :: head (pageTitle='Confirmar Eliminação do Investigador')">
+</head>
+<body class="has-navbar-fixed-top">
+<div th:replace="layout/layout :: header"></div>
+<section class="hero is-fullheight-with-navbar pb-6">
+    <div class="hero-body">
+        <div class="container is-landing-page">
+            <div th:object="${researcher}">
+                <p class="title is-3 has-text-centered has-text-primary">Aviso Importante!</p>
+                <p class="subtitle pt-3 is-5 has-text-justified" th:text="'Está prestes a eliminar o Investigador ' + ${researcher.name} + '.'"></p>
+                <p class="is-size-5 pb-4 has-text-justified"> Os seus dados pessoais e todas as atividades científicas associadas vão ser também eliminadas.</p>
+                <p class="subtitle has-text-centered is-4"> Pretende continuar?</p>
+                <div class="box">
+                    <div class="field is-grouped is-justify-content-center">
+                        <p class="control">
+                            <a class="button is-medium is-primary" th:href="@{'/admin/user/delete/' + ${researcher.orcid}}">
+                                Eliminar Investigador
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a class="button is-medium is-outlined" th:href="@{/admin/researcher-management}">
+                                Cancelar
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
