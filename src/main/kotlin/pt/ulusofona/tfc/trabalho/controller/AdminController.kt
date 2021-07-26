@@ -335,6 +335,36 @@ class AdminController(val researcherRepository: ResearcherRepository,
             removeRoleFromFile("src/main/resources/first_time_user_list_test.txt", orcid)
 
             redirectAttributes.addFlashAttribute("message","Investigador ${researcherRepository.findById(orcid).get().name} eliminado com sucesso!")
+            //Dissemination
+            val disseminationResearchers = disseminationResearcherRepository.findByResearcherId(orcid)
+            for (i in disseminationResearchers) {
+                disseminationRepository.deleteById(i.disseminationId)
+                disseminationInstitutionRepository.deleteByDisseminationId(i.disseminationId)
+            }
+            disseminationResearcherRepository.deleteByResearcherId(orcid)
+
+            //Project
+            val projectResearchers = projectResearcherRepository.findByResearcherId(orcid)
+            for (i in projectResearchers) {
+                projectRepository.deleteById(i.projectId)
+                projectInstitutionRepository.deleteByProjectId(i.projectId)
+            }
+            projectResearcherRepository.deleteByResearcherId(orcid)
+
+            //Publication
+            val publicationResearchers = publicationResearcherRepository.findByResearcherId(orcid)
+            for (i in publicationResearchers) {
+                publicationRepository.deleteById(i.publicationId)
+            }
+            publicationResearcherRepository.deleteByResearcherId(orcid)
+
+            //OtherSA
+            val otherSAResearchers = otherScientificActivityResearcherRepository.findByResearcherId(orcid)
+            for (i in otherSAResearchers) {
+                otherScientificActivityRepository.deleteById(i.otherScientificActivityId)
+                otherScientificActivityInstitutionRepository.deleteByOtherScientificActivityId(i.otherScientificActivityId)
+            }
+            otherScientificActivityResearcherRepository.deleteByResearcherId(orcid)
             researcherRepository.deleteById(orcid)
         }
         return "redirect:/admin/researcher-management"

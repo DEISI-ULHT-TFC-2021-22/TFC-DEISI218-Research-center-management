@@ -1,6 +1,7 @@
 package pt.ulusofona.tfc.trabalho.dao.scientificActivities
 
 import java.util.*
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -15,6 +16,7 @@ data class Publication (
         var publicationCategory: PublicationCategory,
         var title : String,
         var publicationDate : Date,
+        @Column(columnDefinition = "TEXT")
         var descriptor : String,
         var publisher : String,
         var authors: String,
