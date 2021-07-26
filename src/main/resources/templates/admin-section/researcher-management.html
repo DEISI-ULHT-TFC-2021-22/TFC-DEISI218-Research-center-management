@@ -46,9 +46,12 @@
                             <span class="fas fa-list-alt" aria-hidden="true"></span>
                         </a>
                         &emsp;
-                        <a data-toggle="modal" th:attr="data-target=${'#myModal' + researcher.orcid}">
+                        <a th:href="@{'/admin/delete-researcher-confirmation/' + ${researcher.orcid}}">
                             <span class="fas fa-times-circle" aria-hidden="true"></span>
                         </a>
+                        <!--<a data-toggle="modal" th:attr="data-target=${'#myModal' + researcher.orcid}">
+                            <span class="fas fa-times-circle" aria-hidden="true"></span>
+                        </a>-->
                     </td>
                 </tr>
                 </tbody>
@@ -56,7 +59,7 @@
         </div>
     </div>
 </section>
-<div th:each="researcher : ${researchers}" class="modal" th:id="${'myModal' + researcher.orcid}">
+<!--<div th:each="researcher : ${researchers}" class="modal" th:id="${'myModal' + researcher.orcid}">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
@@ -78,7 +81,7 @@
         </footer>
         <button class="modal-close is-large" aria-label="close"></button>
     </div>
-</div>
+</div>-->
 <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
