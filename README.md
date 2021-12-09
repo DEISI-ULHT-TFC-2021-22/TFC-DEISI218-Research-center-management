@@ -32,3 +32,14 @@ grant all privileges on trabalho.* to 'trabalho'@'localhost';
 ```
 
 * Alterar o src/resources/application.properties com o nome da BD, nome e pass do utilizador
+
+### Ambiente de testes
+
+* Os utilizadores de teste devem ser criados na sandbox do orcid (ver ()[https://orcid.github.io/orcid-api-tutorial/sandbox/]). 
+Importante: o email com que se registam deve ser @mailinator.com 
+* Caso não consigam criar o utilizador, podem usar este:
+  * user: pedroalves@mailinator.com
+  * pass: zX9KnsgL
+  * orcid: 0000-0003-2187-5116
+  * link orcid: https://sandbox.orcid.org/0000-0003-2187-5116
+* Para indicar os utilizadores que são admin, editar o ficheiro admin_list_test.txt
