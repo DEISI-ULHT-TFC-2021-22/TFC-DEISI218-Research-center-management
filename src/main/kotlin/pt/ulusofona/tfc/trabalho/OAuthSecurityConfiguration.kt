@@ -25,7 +25,7 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
             .authorizeRequests()
             //                .antMatchers("/**").authenticated() // Block this
             .antMatchers("/css/**", "/images/**", "/sass/**").permitAll()
-            .antMatchers("/ceied-login").permitAll() // Allow this for all
+            .antMatchers("/", "/ceied-login").permitAll() // Allow this for all
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             .and().logout()

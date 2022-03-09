@@ -51,6 +51,18 @@ Importante: o email com que se registam deve ser @mailinator.com
   * link orcid: https://sandbox.orcid.org/0000-0003-2187-5116
 * Para indicar os utilizadores que são admin, editar o ficheiro admin_list_test.txt
 
+### Criar o primeiro utilizador (admin) do site
+
+A partir do momento em que se cria o admin do site, o processo de criação de novos utilizadores fica facilitado.
+
+Mas para criar o primeiro, tem que se fazer o seguinte:
+* Adicionar aos ficheiros first_time_user_list_test.txt e admin_list_test.txt, o orcid do primeiro utilizador
+* Aceder a http://localhost:8080
+* Clicar em login. Irá redireccionar para o orcid e retornar.
+* No retorno, deverá aparecer o formulário para preencher os dados pessoais e a hipótese de sincronizar com o ciencia vitae
+
+Uma vez criado o admin, este deverá usar a funcionalidade de gerir investigadores para criar os restantes utilizadores.
+
 ### Utilizadores de teste
 
 * user: investigador.ulht@mailinator.com | pass: password123 | orcid: 0000-0001-7290-8155

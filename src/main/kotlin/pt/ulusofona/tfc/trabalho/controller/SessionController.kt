@@ -16,6 +16,7 @@ import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.*
+import java.security.Principal
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.validation.Valid
@@ -43,6 +44,15 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
     @Value("\${ciencia.vitae.secret}")
     lateinit var secret: String
+
+    @GetMapping(value = ["/"])
+    fun redirectToLoginOrHome(model: ModelMap, principal: Principal?): String {
+        if (principal == null) {
+            return "redirect:/ceied-login"
+        } else {
+            return "redirect:/home"
+        }
+    }
 
     @GetMapping(value = ["/ceied-login"])
     fun showLoginPage(model: ModelMap): String {
