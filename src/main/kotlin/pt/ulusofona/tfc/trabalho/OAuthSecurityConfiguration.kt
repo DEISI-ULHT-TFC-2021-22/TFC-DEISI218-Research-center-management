@@ -89,11 +89,11 @@ class OAuthSecurityConfiguration : WebSecurityConfigurerAdapter() {
 class DefaultController {
     @RequestMapping("/default")
     fun defaultAfterLogin(request: HttpServletRequest): String {
-        if (request.isUserInRole("ADMIN") || request.isUserInRole("USER")) {
-            return "redirect:/home"
-        }
         if(request.isUserInRole("FIRST_USER")) {
             return "redirect:/new-researcher-form"
+        }
+        if (request.isUserInRole("ADMIN") || request.isUserInRole("USER")) {
+            return "redirect:/home"
         }
         return "redirect:/no-permission"
     }

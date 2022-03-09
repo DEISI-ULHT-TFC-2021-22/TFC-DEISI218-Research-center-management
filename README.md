@@ -33,6 +33,13 @@ grant all privileges on trabalho.* to 'trabalho'@'localhost';
 
 * Alterar o src/resources/application.properties com o nome da BD, nome e pass do utilizador
 
+### Ligação ao cienciavitae
+
+Para a aplicação se ligar à réplica do cienciavitae que existe na Lusófona, tem se instalar o certificado ssl respetivo pois é emitido
+por uma entidade que não consta da lista de certificados reconhecidos.
+
+    (sudo) keytool -importcert -keystore /Library/Java/JavaVirtualMachines/jdk-17.0.1.jdk/Contents/Home/lib/security/cacerts -storepass changeit -file playdev.ulusofona.pt.cer -alias "playdev-ulusofona-root"
+
 ### Ambiente de testes
 
 * Os utilizadores de teste devem ser criados na sandbox do orcid (ver ()[https://orcid.github.io/orcid-api-tutorial/sandbox/]). 
@@ -43,3 +50,13 @@ Importante: o email com que se registam deve ser @mailinator.com
   * orcid: 0000-0003-2187-5116
   * link orcid: https://sandbox.orcid.org/0000-0003-2187-5116
 * Para indicar os utilizadores que são admin, editar o ficheiro admin_list_test.txt
+
+### Utilizadores de teste
+
+* user: investigador.ulht@mailinator.com | pass: password123 | orcid: 0000-0001-7290-8155
+* user: investigador2.ulht@mailinator.com | pass: password123 | orcid: 0000-0002-5516-1747
+
+### Alguns ciencia vitae
+
+* Pedro Alves - 7B17-D35E-668E
+* Elsa Estrela - E919-3A7A-E42C
