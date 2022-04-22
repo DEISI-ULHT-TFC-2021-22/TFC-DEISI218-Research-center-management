@@ -616,13 +616,14 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "admin-section/annual-report"
     }
 
-    //@GetMapping(value = ["/annual-report"])
-    //fun showExportAnnualReportButtonPage(model: ModelMap): String {
-      //  return "admin-section/annual-report"
-   // }
 
 
-    //@GetMapping(value = ["/export-word-accept"])
+    @GetMapping(value = ["/export-word-accept"])
+    fun exportToWord(response: HttpServletResponse): String {
+
+
+        return "redirect:/admin-section/export-word"
+    }
 
 
     fun removeRoleFromFile(path: String, orcid: String) {
