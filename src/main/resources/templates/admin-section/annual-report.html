@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="layout/layout :: head (pageTitle='Relatório Anual')">
 </head>
 <body class="has-navbar-fixed-top">
@@ -7,9 +7,19 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container">
-            <div class="notification is-warning">
+            <p class="title is-3 has-text-centered has-text-primary">Pertende proceder com a exportação?</p>
+            <p class="subtitle pt-3 is-5 has-text-centered">Faça download do ficheiro, clicando no botão abaixo!</p>
+            <div class="field pb-1 px-6">
+                <p class="control">
+                    <a class="button is-medium is-info is-fullwidth"   th:href="@{'/admin/export-word-accept'}">
+                        <span class="icon pr-4"> <i class="fas fa-file-word"></i></span><span>Exportar para Word</span>
+                    </a>
+                </p>
+            </div>
+            <!--<div class="notification is-warning">
                 <strong> RELATÓRIO ANUAL EM CONSTRUÇÃO</strong>
             </div>
+            -->
         </div>
     </div>
 </section>

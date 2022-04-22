@@ -616,6 +616,15 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "admin-section/annual-report"
     }
 
+    //@GetMapping(value = ["/annual-report"])
+    //fun showExportAnnualReportButtonPage(model: ModelMap): String {
+      //  return "admin-section/annual-report"
+   // }
+
+
+    //@GetMapping(value = ["/export-word-accept"])
+
+
     fun removeRoleFromFile(path: String, orcid: String) {
         var content = mutableListOf<String>()
         var existOnFile = false
