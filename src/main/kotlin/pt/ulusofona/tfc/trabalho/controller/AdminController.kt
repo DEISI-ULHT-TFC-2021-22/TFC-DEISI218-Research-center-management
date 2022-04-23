@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.ExcelExporter
+import pt.ulusofona.tfc.trabalho.WordExporter
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
@@ -620,7 +621,20 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
     @GetMapping(value = ["/export-word-accept"])
     fun exportToWord(response: HttpServletResponse): String {
+        response.contentType = "application/pdf"
+        val headerKey = "Content-Disposition"
 
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd_HH:mm")
+        val currentDateTime = dateFormatter.format(Date())
+        val fileName = "Relatório-anual_$currentDateTime.pdf"
+        val headerValue = "attachement; filename = $fileName"
+
+        response.setHeader(headerKey,headerValue)
+
+
+        val wordExporter = WordExporter()
+
+        wordExporter.export(response)
 
         return "redirect:/admin-section/export-word"
     }

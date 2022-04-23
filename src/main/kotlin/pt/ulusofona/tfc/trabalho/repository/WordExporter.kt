@@ -17,13 +17,16 @@ import java.io.IOException
 import javax.servlet.http.HttpServletResponse
 
 
-public class WordExporter {
+public class WordExporter{
+
     private var doc: XWPFDocument = XWPFDocument()
     private var researcherReference = "A4"
     private var SAReference = "A4"
 
     @Throws(IOException::class)
     fun export(response: HttpServletResponse) {
+
+
 
         val outPutStream = response.outputStream
         doc.write(outPutStream)
