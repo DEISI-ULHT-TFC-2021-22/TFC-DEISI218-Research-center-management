@@ -2,4 +2,6 @@ orcid
 https://sandbox.orcid.org/0000-0003-0258-1411
 https://sandbox.orcid.org/0000-0002-5238-9420
 https://sandbox.orcid.org/0000-0003-2187-5116
+https://sandbox.orcid.org/0000-0002-5516-1747
+https://sandbox.orcid.org/0000-0003-2187-5116
 https://sandbox.orcid.org/0000-0001-7290-8155

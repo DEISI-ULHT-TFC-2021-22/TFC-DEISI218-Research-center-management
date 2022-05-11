@@ -148,14 +148,14 @@ class AdminController(val researcherRepository: ResearcherRepository,
         }
 
         val excelExporter = ExcelExporter(
-                researchers,
-                mapDissemination,
-                mapOtherScientificActivity,
-                mapProject,
-                mapPublication,
-                mapDissInst,
-                mapOtherSAInst,
-                mapProjectInst
+            researchers,
+            mapDissemination,
+            mapOtherScientificActivity,
+            mapProject,
+            mapPublication,
+            mapDissInst,
+            mapOtherSAInst,
+            mapProjectInst
         )
 
         excelExporter.export(response)
@@ -171,20 +171,20 @@ class AdminController(val researcherRepository: ResearcherRepository,
         if (researcherOptional.isPresent) {
             val researcher = researcherOptional.get()
             model["researcher"] = Researcher(
-                    orcid = researcher.orcid,
-                    name = researcher.name,
-                    utilizador = researcher.utilizador,
-                    email = researcher.email,
-                    cienciaId = researcher.cienciaId,
-                    associationKeyFct = researcher.associationKeyFct,
-                    researcherCategory = researcher.researcherCategory,
-                    origin = researcher.origin,
-                    phoneNumber = researcher.phoneNumber,
-                    siteCeied = researcher.siteCeied,
-                    professionalStatus = researcher.professionalStatus,
-                    professionalCategory = researcher.professionalCategory,
-                    phdYear = researcher.phdYear,
-                    isAdmin = researcher.isAdmin,
+                orcid = researcher.orcid,
+                name = researcher.name,
+                utilizador = researcher.utilizador,
+                email = researcher.email,
+                cienciaId = researcher.cienciaId,
+                associationKeyFct = researcher.associationKeyFct,
+                researcherCategory = researcher.researcherCategory,
+                origin = researcher.origin,
+                phoneNumber = researcher.phoneNumber,
+                siteCeied = researcher.siteCeied,
+                professionalStatus = researcher.professionalStatus,
+                professionalCategory = researcher.professionalCategory,
+                phdYear = researcher.phdYear,
+                isAdmin = researcher.isAdmin,
             )
             return "admin-section/personal-information"
         }else{
@@ -199,8 +199,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
     }
     @PostMapping(value = ["/add-researcher-form"])
     fun addResearcher(@Valid @ModelAttribute("addResearcherForm") addResearcherForm: AddResearcherForm,
-                         bindingResult: BindingResult,
-                         redirectAttributes: RedirectAttributes): String{
+                      bindingResult: BindingResult,
+                      redirectAttributes: RedirectAttributes): String{
 
         if(bindingResult.hasErrors()){
             return "forms-section/add-researcher-form"
@@ -263,7 +263,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
 
         if(bindingResult.hasErrors()){
-           return "forms-section/personal-information-form"
+            return "forms-section/personal-information-form"
             //return "admin-section/researcher-management"
         }
         var isAdminOptional = researcherForm.isAdmin
@@ -271,29 +271,29 @@ class AdminController(val researcherRepository: ResearcherRepository,
             isAdminOptional = false
         }
         val researcher = Researcher(
-                orcid = researcherForm.orcid!!,
-                name = researcherForm.name!!,
-                utilizador = researcherForm.utilizador!!,
-                email = researcherForm.email!!,
-                cienciaId = researcherForm.cienciaId!!,
-                associationKeyFct = researcherForm.associationKeyFct!!,
-                researcherCategory = researcherForm.researcherCategory!!,
-                origin = researcherForm.origin!!,
-                phoneNumber = researcherForm.phoneNumber!!,
-                siteCeied = researcherForm.siteCeied!!,
-                professionalStatus = researcherForm.professionalStatus!!,
-                professionalCategory = researcherForm.professionalCategory!!,
-                phdYear = researcherForm.phdYear,
-                isAdmin = researcherForm.isAdmin!!,
+            orcid = researcherForm.orcid!!,
+            name = researcherForm.name!!,
+            utilizador = researcherForm.utilizador!!,
+            email = researcherForm.email!!,
+            cienciaId = researcherForm.cienciaId!!,
+            associationKeyFct = researcherForm.associationKeyFct!!,
+            researcherCategory = researcherForm.researcherCategory!!,
+            origin = researcherForm.origin!!,
+            phoneNumber = researcherForm.phoneNumber!!,
+            siteCeied = researcherForm.siteCeied!!,
+            professionalStatus = researcherForm.professionalStatus!!,
+            professionalCategory = researcherForm.professionalCategory!!,
+            phdYear = researcherForm.phdYear,
+            isAdmin = researcherForm.isAdmin!!,
         )
 
         researcherRepository.save(researcher)
 
-       if(researcher.isAdmin == true) {
-           File("src/main/resources/admin_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
-       } else {
-           removeRoleFromFile("src/main/resources/admin_list_test.txt", researcher.orcid)
-       }
+        if(researcher.isAdmin == true) {
+            File("src/main/resources/admin_list_test.txt").appendText("\nhttps://sandbox.orcid.org/${researcher.orcid}")
+        } else {
+            removeRoleFromFile("src/main/resources/admin_list_test.txt", researcher.orcid)
+        }
 
         redirectAttributes.addFlashAttribute("message","Investigador ${researcher.name} editado com sucesso!")
         return "redirect:/admin/researcher-management"
@@ -306,20 +306,20 @@ class AdminController(val researcherRepository: ResearcherRepository,
         if (researcherOptional.isPresent) {
             val researcher = researcherOptional.get()
             model["researcher"] = Researcher(
-                    orcid = researcher.orcid,
-                    name = researcher.name,
-                    utilizador = researcher.utilizador,
-                    email = researcher.email,
-                    cienciaId = researcher.cienciaId,
-                    associationKeyFct = researcher.associationKeyFct,
-                    researcherCategory = researcher.researcherCategory,
-                    origin = researcher.origin,
-                    phoneNumber = researcher.phoneNumber,
-                    siteCeied = researcher.siteCeied,
-                    professionalStatus = researcher.professionalStatus,
-                    professionalCategory = researcher.professionalCategory,
-                    phdYear = researcher.phdYear,
-                    isAdmin = researcher.isAdmin,
+                orcid = researcher.orcid,
+                name = researcher.name,
+                utilizador = researcher.utilizador,
+                email = researcher.email,
+                cienciaId = researcher.cienciaId,
+                associationKeyFct = researcher.associationKeyFct,
+                researcherCategory = researcher.researcherCategory,
+                origin = researcher.origin,
+                phoneNumber = researcher.phoneNumber,
+                siteCeied = researcher.siteCeied,
+                professionalStatus = researcher.professionalStatus,
+                professionalCategory = researcher.professionalCategory,
+                phdYear = researcher.phdYear,
+                isAdmin = researcher.isAdmin,
             )
             return "admin-section/delete-researcher-confirmation"
         }else{
@@ -381,12 +381,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherOptional.get()
             //Recolha de apenas alguns dados (e não do investigador completo) que queiramos usar na pagina das atividades
             model["researcherInfo"] = mapOf(
-                    "orcid" to researcher.orcid,
-                    "name" to researcher.name,
-                    "email" to researcher.email,
-                    "cienciaId" to researcher.cienciaId,
-                    "researcherCategory" to researcher.researcherCategory,
-                    "isAdmin" to researcher.isAdmin,
+                "orcid" to researcher.orcid,
+                "name" to researcher.name,
+                "email" to researcher.email,
+                "cienciaId" to researcher.cienciaId,
+                "researcherCategory" to researcher.researcherCategory,
+                "isAdmin" to researcher.isAdmin,
             )
 
             val disseminations = ArrayList<Dissemination>()
@@ -396,31 +396,31 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
             val disseminationResearcherlist = disseminationResearcherRepository.findByResearcherId(orcid)
             disseminationResearcherlist
-                    .map { disseminationRepository.findById(it.disseminationId) }
-                    .filter { it.isPresent }
-                    .mapTo(disseminations) { it.get() }
+                .map { disseminationRepository.findById(it.disseminationId) }
+                .filter { it.isPresent }
+                .mapTo(disseminations) { it.get() }
             model["disseminations"] = disseminations
 
             val publicationResearcherlist = publicationResearcherRepository.findByResearcherId(orcid)
             publicationResearcherlist
-                    .map { publicationRepository.findById(it.publicationId) }
-                    .filter { it.isPresent }
-                    .mapTo(publications) { it.get() }
+                .map { publicationRepository.findById(it.publicationId) }
+                .filter { it.isPresent }
+                .mapTo(publications) { it.get() }
             model["publications"] = publications
 
 
             val projectResearcherlist = projectResearcherRepository.findByResearcherId(orcid)
             projectResearcherlist
-                    .map { projectRepository.findById(it.projectId) }
-                    .filter { it.isPresent }
-                    .mapTo(projects) { it.get() }
+                .map { projectRepository.findById(it.projectId) }
+                .filter { it.isPresent }
+                .mapTo(projects) { it.get() }
             model["projects"] = projects
 
             val otherScientificActivityResearcherList = otherScientificActivityResearcherRepository.findByResearcherId(orcid)
             otherScientificActivityResearcherList
-                    .map { otherScientificActivityRepository.findById(it.otherScientificActivityId) }
-                    .filter { it.isPresent }
-                    .mapTo(otherScientificActivities) { it.get() }
+                .map { otherScientificActivityRepository.findById(it.otherScientificActivityId) }
+                .filter { it.isPresent }
+                .mapTo(otherScientificActivities) { it.get() }
 
             val advancedEducations = otherScientificActivities.filter { it.otherType == OtherType.ADVANCED_EDUCATION }
             model["advancedEducations"] = advancedEducations
@@ -453,10 +453,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
         //--criar Dissemination - sem ID
         val dissemination = Dissemination(
-                disseminationCategory = disseminationForm.disseminationCategory!!,
-                title = disseminationForm.title!!,
-                date = dateFormat.parse(disseminationForm.date!!),
-                description = disseminationForm.description!!
+            disseminationCategory = disseminationForm.disseminationCategory!!,
+            title = disseminationForm.title!!,
+            date = dateFormat.parse(disseminationForm.date!!),
+            description = disseminationForm.description!!
         )
 
         //--save Dissemination - já tenho ID
@@ -464,8 +464,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
         //--criar ResearcherDissemination com o ID do dissemination e com o orcid do principal
         val disseminationResearcher = DisseminationResearcher(
-                disseminationId = dissemination.id,
-                researcherId = orcid
+            disseminationId = dissemination.id,
+            researcherId = orcid
         )
 
         //--save ResearcherDissemination
@@ -495,16 +495,16 @@ class AdminController(val researcherRepository: ResearcherRepository,
         when(type){
             "advanced-education" ->{
                 val advancedEduOptional = otherScientificActivityRepository
-                        .findByOtherTypeAndId(OtherType.ADVANCED_EDUCATION,id)
+                    .findByOtherTypeAndId(OtherType.ADVANCED_EDUCATION,id)
                 return if (advancedEduOptional.isPresent){
                     val advancedEdu = advancedEduOptional.get()
                     model["advancedEdu"] = OtherScientificActivity(
-                            id = advancedEdu.id,
-                            otherCategory = advancedEdu.otherCategory,
-                            otherType = advancedEdu.otherType,
-                            title = advancedEdu.title,
-                            date = advancedEdu.date,
-                            description = advancedEdu.description
+                        id = advancedEdu.id,
+                        otherCategory = advancedEdu.otherCategory,
+                        otherType = advancedEdu.otherType,
+                        title = advancedEdu.title,
+                        date = advancedEdu.date,
+                        description = advancedEdu.description
                     )
                     val otherScientificActivitiesInstitutions = otherScientificActivityInstitutionRepository.findByOtherScientificActivityId(advancedEdu.id)
                     val institutions = mutableListOf<Institution>()
@@ -519,16 +519,16 @@ class AdminController(val researcherRepository: ResearcherRepository,
             }
             "scientific-initiation" ->{
                 val scientificInitOptional = otherScientificActivityRepository
-                        .findByOtherTypeAndId(OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,id)
+                    .findByOtherTypeAndId(OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS,id)
                 return if (scientificInitOptional.isPresent){
                     val scientificInit = scientificInitOptional.get()
                     model["scientificInit"] = OtherScientificActivity(
-                            id = scientificInit.id,
-                            otherCategory = scientificInit.otherCategory,
-                            otherType = scientificInit.otherType,
-                            title = scientificInit.title,
-                            date = scientificInit.date,
-                            description = scientificInit.description
+                        id = scientificInit.id,
+                        otherCategory = scientificInit.otherCategory,
+                        otherType = scientificInit.otherType,
+                        title = scientificInit.title,
+                        date = scientificInit.date,
+                        description = scientificInit.description
                     )
                     val otherScientificActivitiesInstitutions = otherScientificActivityInstitutionRepository.findByOtherScientificActivityId(scientificInit.id)
                     val institutions = mutableListOf<Institution>()
@@ -546,15 +546,15 @@ class AdminController(val researcherRepository: ResearcherRepository,
                 return if (publicationOptional.isPresent){
                     val publication = publicationOptional.get()
                     model["publication"] = Publication(
-                            id = publication.id,
-                            publicationCategory = publication.publicationCategory,
-                            title = publication.title,
-                            publicationDate = publication.publicationDate,
-                            descriptor = publication.descriptor,
-                            publisher = publication.publisher,
-                            authors = publication.authors,
-                            indexation = publication.indexation,
-                            conferenceName = publication.conferenceName
+                        id = publication.id,
+                        publicationCategory = publication.publicationCategory,
+                        title = publication.title,
+                        publicationDate = publication.publicationDate,
+                        descriptor = publication.descriptor,
+                        publisher = publication.publisher,
+                        authors = publication.authors,
+                        indexation = publication.indexation,
+                        conferenceName = publication.conferenceName
                     )
                     "researcher-section/scientific-activity"
                 }else{
@@ -566,13 +566,13 @@ class AdminController(val researcherRepository: ResearcherRepository,
                 return if (projectOptional.isPresent){
                     val project = projectOptional.get()
                     model["project"] = Project(
-                            id = project.id,
-                            projectCategory = project.projectCategory,
-                            title = project.title,
-                            initialDate = project.initialDate,
-                            finalDate = project.finalDate,
-                            abstract = project.abstract,
-                            description = project.description
+                        id = project.id,
+                        projectCategory = project.projectCategory,
+                        title = project.title,
+                        initialDate = project.initialDate,
+                        finalDate = project.finalDate,
+                        abstract = project.abstract,
+                        description = project.description
                     )
                     val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
                     val institutions = mutableListOf<Institution>()
@@ -590,11 +590,11 @@ class AdminController(val researcherRepository: ResearcherRepository,
                 return if (disseminationOptional.isPresent){
                     val dissemination = disseminationOptional.get()
                     model["dissemination"] = Dissemination(
-                            id = dissemination.id,
-                            disseminationCategory = dissemination.disseminationCategory,
-                            title = dissemination.title,
-                            date = dissemination.date,
-                            description = dissemination.description
+                        id = dissemination.id,
+                        disseminationCategory = dissemination.disseminationCategory,
+                        title = dissemination.title,
+                        date = dissemination.date,
+                        description = dissemination.description
                     )
                     val disseminationsInstitutions = disseminationInstitutionRepository.findByDisseminationId(dissemination.id)
                     val institutions = mutableListOf<Institution>()
@@ -617,22 +617,30 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "admin-section/annual-report"
     }
 
-
-
     @GetMapping(value = ["/export-word-accept"])
     fun exportToWord(response: HttpServletResponse): String {
-        response.contentType = "application/pdf"
+        response.contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         val headerKey = "Content-Disposition"
 
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd_HH:mm")
         val currentDateTime = dateFormatter.format(Date())
-        val fileName = "Relatório-anual_$currentDateTime.pdf"
+        val fileName = "Relatório-anual_$currentDateTime.docx"
         val headerValue = "attachement; filename = $fileName"
 
         response.setHeader(headerKey,headerValue)
 
+        //Project
+        val listProject = projectRepository.findAll()
+        val mapProject = mutableMapOf<String,MutableList<Project>>()
 
-        val wordExporter = WordExporter()
+        for (project in listProject){
+            val connectedTable = projectResearcherRepository.findByProjectId(project.id)
+            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
+            val cienciaID = researcher.get().cienciaId
+            mapProject.getOrPut(cienciaID,::mutableListOf).add(project)
+        }
+
+        val wordExporter = WordExporter(listProject)
 
         wordExporter.export(response)
 
