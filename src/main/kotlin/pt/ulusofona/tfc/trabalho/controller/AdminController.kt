@@ -640,6 +640,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
             mapProject.getOrPut(cienciaID,::mutableListOf).add(project)
         }
 
+        println(mapProject)
+
         val wordExporter = WordExporter(listProject)
 
         wordExporter.export(response)
