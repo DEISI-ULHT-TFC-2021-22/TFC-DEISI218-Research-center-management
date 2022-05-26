@@ -251,7 +251,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             initialDate = dateFormat.parse(initialValidatedDate),
                             finalDate = finalValidatedDate,
                             abstract = "",
-                            description = root.at("/fundings/funding/$i/project-description").asText()
+                            description = root.at("/fundings/funding/$i/project-description").asText(),
+                            website = ""
                         )
 
                         projectRepository.save(project)

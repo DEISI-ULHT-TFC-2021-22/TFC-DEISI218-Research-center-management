@@ -9,10 +9,9 @@ import javax.persistence.IdClass
 @IdClass(ProjectResearcherId::class)
 data class ProjectResearcher(
         @Id
-        val researcherId: String,
-
+        val projectId: Long,
         @Id
-        val projectId: Long
+        val researcherId: String
 )
 
-data class ProjectResearcherId(val researcherId: String, val projectId: String) : Serializable
+data class ProjectResearcherId(var projectId: Long = 0, var researcherId: String = "") : Serializable

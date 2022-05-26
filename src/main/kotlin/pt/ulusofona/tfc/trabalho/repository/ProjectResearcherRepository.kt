@@ -9,7 +9,7 @@ interface ProjectResearcherRepository : JpaRepository<ProjectResearcher, String>
 
     fun findByResearcherId(orcid: String): List<ProjectResearcher>
 
-    fun findByProjectId(id:Long): Optional<ProjectResearcher>
+    fun findByProjectId(id:Long): List<ProjectResearcher>
 
     @Transactional
     fun deleteByProjectId(id:Long)

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse
 
 class WordExporter(
     private var listProject: MutableList<Project>,
+    private var mapProjectResearcher: MutableMap<Long, MutableList<Researcher>>
     ) {
 
     private var doc: XWPFDocument = XWPFDocument()
@@ -48,10 +49,22 @@ class WordExporter(
             titulo2.fontFamily = "Calibri (Corpo)"
             titulo2.fontSize = 12
 
+            // Lista dos investigadores do projeto
+            val researchers = mapProjectResearcher[project.id]
+            var researchersString = ""
+            if (researchers != null) {
+                for ((i, researcher) in researchers.withIndex()) {
+                    researchersString += researcher.name
+                    if (i < researchers.size - 1) {
+                        researchersString += ", "
+                    }
+                }
+            }
+
             val paragrafo2 = doc.createParagraph()
             paragrafo2.alignment = ParagraphAlignment.LEFT
             val researchTeam = paragrafo2.createRun()
-            researchTeam.setText("Research team:") //TODO
+            researchTeam.setText("Research team: $researchersString")
             researchTeam.fontFamily = "Calibri (Corpo)"
             researchTeam.fontSize = 12
 
@@ -89,7 +102,7 @@ class WordExporter(
             val paragrafo7 = doc.createParagraph()
             paragrafo7.alignment = ParagraphAlignment.LEFT
             val website = paragrafo7.createRun()
-            website.setText("Website:")
+            website.setText("Website: ${project.website}")
             website.fontFamily = "Calibri (Corpo)"
             website.fontSize = 12
             website.addCarriageReturn()

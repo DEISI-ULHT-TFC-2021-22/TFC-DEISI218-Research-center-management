@@ -231,7 +231,8 @@ class ResearcherController(val researcherRepository: ResearcherRepository,
                         initialDate = project.initialDate,
                         finalDate = project.finalDate,
                         abstract = project.abstract,
-                        description = project.description
+                        description = project.description,
+                        website = project.website
                     )
                     val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
                     val institutions = mutableListOf<Institution>()

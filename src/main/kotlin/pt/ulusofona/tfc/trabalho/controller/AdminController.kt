@@ -59,6 +59,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
     @GetMapping(value = ["/export-excel-accept"])
     fun exportToExcel(response: HttpServletResponse): String {
+        /* TODO
         response.contentType = "application/octet-stream"
         val headerKey = "Content-Disposition"
 
@@ -159,6 +160,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         )
 
         excelExporter.export(response)
+        */
 
         return "redirect:/admin-section/export-excel"
     }
@@ -572,7 +574,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
                         initialDate = project.initialDate,
                         finalDate = project.finalDate,
                         abstract = project.abstract,
-                        description = project.description
+                        description = project.description,
+                        website = project.website
                     )
                     val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
                     val institutions = mutableListOf<Institution>()
@@ -631,18 +634,18 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
         //Project
         val listProject = projectRepository.findAll()
-        val mapProject = mutableMapOf<String,MutableList<Project>>()
+        val mapProjectResearcher = mutableMapOf<Long,MutableList<Researcher>>()
 
         for (project in listProject){
             val connectedTable = projectResearcherRepository.findByProjectId(project.id)
-            val researcher = researcherRepository.findById(connectedTable.get().researcherId)
-            val cienciaID = researcher.get().cienciaId
-            mapProject.getOrPut(cienciaID,::mutableListOf).add(project)
+
+            for (projectResearcher in connectedTable) {
+                val researcher = researcherRepository.findById(projectResearcher.researcherId)
+                mapProjectResearcher.getOrPut(project.id,::mutableListOf).add(researcher.get())
+            }
         }
 
-        println(mapProject)
-
-        val wordExporter = WordExporter(listProject)
+        val wordExporter = WordExporter(listProject, mapProjectResearcher)
 
         wordExporter.export(response)
 
