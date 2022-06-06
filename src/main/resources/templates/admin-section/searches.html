@@ -7,13 +7,74 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container">
-            <div class="notification is-warning">
+            <div class="columns">
+                <div class="column">
+                    <label for="activity-type" class="has-text-primary">Tipo de Atividade</label><br>
+                    <select name="activity-type" id="activity-type" class="select-width-100">
+                        <option value="temp">Temp</option>
+                    </select>
+                </div>
+                <div class="column">
+                    <label for="researcher" class="has-text-primary">Investigador</label><br>
+                    <select name="researcher" id="researcher" class="select-width-100">
+                        <option value="temp">Temp</option>
+                    </select>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <label for="activity-category" class="has-text-primary">Categoria da Atividade</label><br>
+                    <select name="activity-category" id="activity-category" class="select-width-100">
+                        <option value="temp">Temp</option>
+                    </select>
+                </div>
+                <div class="column">
+                    <span class="has-text-primary">Data</span><br>
+                    <label for="date-from">De</label>
+                    <input name="date-from" id="date-from" type="date"/><br>
+                    <label for="date-to">Até</label>
+                    <input name="date-to" id="date-to" type="date"/>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <label for="entries">Show</label>
+                    <select name="entries" id="entries">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+                <div class="column">
+                    <label for="search">Search:</label>
+                    <input type="text" name="search" id="search">
+                </div>
+            </div>
+
+            <table class="table select-width-100">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start Date</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <!--<div class="notification is-warning">
                 <strong> PESQUISAS EM CONSTRUÇÃO</strong>
                 <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
                     <span class="icon pr-4"> <i class="fas fa-file-excel"></i></span><span>Pesquisa de Investigadores
                 </span>
                 </a>
-            </div>
+            </div>-->
         </div>
     </div>
 </section>

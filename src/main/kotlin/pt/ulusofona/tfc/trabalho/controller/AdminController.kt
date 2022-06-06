@@ -635,6 +635,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         //Project
         val listProject = projectRepository.findAll()
         val mapProjectResearcher = mutableMapOf<Long,MutableList<Researcher>>()
+        val listPublication = publicationRepository.findAll()
 
         for (project in listProject){
             val connectedTable = projectResearcherRepository.findByProjectId(project.id)
@@ -645,7 +646,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             }
         }
 
-        val wordExporter = WordExporter(listProject, mapProjectResearcher)
+        val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
 
         wordExporter.export(response)
 
