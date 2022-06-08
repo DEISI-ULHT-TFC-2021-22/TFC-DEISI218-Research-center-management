@@ -15,8 +15,8 @@
                     </select>
                 </div>
                 <div class="column">
-                    <label for="researcher" class="has-text-primary">Investigador</label><br>
-                    <select name="researcher" id="researcher" class="select-width-100">
+                    <label for="researcher-category" class="has-text-primary">Categoria do Investigador</label><br>
+                    <select name="researcher-category" id="researcher-category" class="select-width-100">
                         <option value="temp">Temp</option>
                     </select>
                 </div>
@@ -28,17 +28,21 @@
                         <option value="temp">Temp</option>
                     </select>
                 </div>
-                <div class="column">
-                    <span class="has-text-primary">Data</span><br>
-                    <label for="date-from">De</label>
-                    <input name="date-from" id="date-from" type="date"/><br>
-                    <label for="date-to">Até</label>
-                    <input name="date-to" id="date-to" type="date"/>
+                <div class="column is-flex is-flex-direction-column">
+                    <span class="has-text-primary">Data</span>
+                    <div class="is-flex is-flex-direction-row" style="margin-bottom: 0.5rem">
+                        <label for="date-from" style="width: 2.5rem">De</label>
+                        <input name="date-from" id="date-from" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+                    </div>
+                    <div class="is-flex is-flex-direction-row">
+                        <label for="date-to" style="width: 2.5rem">Até</label>
+                        <input name="date-to" id="date-to" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+                    </div>
                 </div>
             </div>
 
-            <div class="columns">
-                <div class="column">
+            <div class="is-flex is-flex-direction-row is-align-items-center">
+                <div style="margin-right: 2rem">
                     <label for="entries">Show</label>
                     <select name="entries" id="entries">
                         <option value="10">10</option>
@@ -47,9 +51,14 @@
                     </select>
                     <span>entries</span>
                 </div>
-                <div class="column">
-                    <label for="search">Search:</label>
-                    <input type="text" name="search" id="search">
+                <div class="is-flex is-flex-direction-row is-flex-grow-1">
+                    <label for="search" style="margin-right: 1rem">Search:</label>
+                    <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
+                </div>
+                <div style="margin-left: 2rem">
+                    <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
+                        <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
+                    </a>
                 </div>
             </div>
 
@@ -67,17 +76,30 @@
                 <tbody>
                 </tbody>
             </table>
-
-            <!--<div class="notification is-warning">
-                <strong> PESQUISAS EM CONSTRUÇÃO</strong>
-                <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
-                    <span class="icon pr-4"> <i class="fas fa-file-excel"></i></span><span>Pesquisa de Investigadores
-                </span>
-                </a>
-            </div>-->
         </div>
     </div>
 </section>
 <div th:replace="layout/layout :: footer"></div>
+<script>
+    function validateDates(element) {
+        let elemDateFrom = document.getElementById("date-from");
+        let elemDateTo = document.getElementById("date-to");
+
+        let dateFrom = new Date(elemDateFrom.value);
+        let dateTo = new Date(elemDateTo.value);
+
+        if (elemDateFrom.value !== "" && elemDateTo.value !== "" && dateFrom > dateTo) {
+            if (element.id === "date-from") {
+                elemDateTo.value = elemDateFrom.value
+            }
+            else if (element.id === "date-to") {
+                elemDateFrom.value = elemDateTo.value
+            }
+        }
+    }
+
+
+
+</script>
 </body>
 </html>
