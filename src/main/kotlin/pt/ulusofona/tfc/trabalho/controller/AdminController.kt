@@ -13,6 +13,7 @@ import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
 import pt.ulusofona.tfc.trabalho.form.AddResearcherForm
 import pt.ulusofona.tfc.trabalho.form.DisseminationForm
 import pt.ulusofona.tfc.trabalho.form.ResearcherForm
+import pt.ulusofona.tfc.trabalho.form.ResearcherSearchForm
 import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.File
 import java.io.InputStream
@@ -441,7 +442,6 @@ class AdminController(val researcherRepository: ResearcherRepository,
                               model: ModelMap): String{
         model["disseminationForm"] = DisseminationForm()
         model["orcid"] = orcid
-        //model["orcid"] = orcid
         return "forms-section/dissemination-form"
     }
 
@@ -487,6 +487,14 @@ class AdminController(val researcherRepository: ResearcherRepository,
             disseminationRepository.deleteById(id)
         }
         return "redirect:/admin/scientific-activities/$orcid"
+    }
+
+    @GetMapping(value = ["/researcher-search"])
+    fun searchResearcher(@Valid @ModelAttribute("researcherSearchForm") researcherSearchForm: ResearcherSearchForm,
+                         bindingResult: BindingResult,
+                         redirectAttributes: RedirectAttributes): String {
+        print(researcherSearchForm);
+        return "/admin-section/searches"
     }
 
     @GetMapping(value = ["/scientific-activity/{type}/{id}"])
@@ -652,7 +660,6 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
         return "redirect:/admin-section/export-word"
     }
-
 
     fun removeRoleFromFile(path: String, orcid: String) {
         var content = mutableListOf<String>()
