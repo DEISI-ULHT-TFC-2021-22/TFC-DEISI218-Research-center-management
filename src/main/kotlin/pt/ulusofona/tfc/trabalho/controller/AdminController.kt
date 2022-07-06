@@ -41,11 +41,6 @@ class AdminController(val researcherRepository: ResearcherRepository,
                       val otherScientificActivityResearcherRepository: OtherScientificActivityResearcherRepository,
                       val otherScientificActivityInstitutionRepository: OtherScientificActivityInstitutionRepository){
 
-    @GetMapping(value = ["/searches"])
-    fun showSearches(model: ModelMap): String{
-        return "admin-section/searches"
-    }
-
     @GetMapping(value = ["/researcher-management"])
     fun showResearcherManagement(model: ModelMap): String{
         val researchers = researcherRepository.findAll()
@@ -491,9 +486,21 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
     @GetMapping(value = ["/researcher-search"])
     fun searchResearcher(@Valid @ModelAttribute("researcherSearchForm") researcherSearchForm: ResearcherSearchForm,
-                         bindingResult: BindingResult,
-                         redirectAttributes: RedirectAttributes): String {
-        print(researcherSearchForm);
+                         model: ModelMap): String {
+        println("TESTE")
+
+        model["researchers"] = researcherRepository.findResearchers(
+            researcherSearchForm.activityType,
+            researcherSearchForm.researcherCategory,
+            researcherSearchForm.activityCategory,
+            researcherSearchForm.dateFrom,
+            researcherSearchForm.dateTo,
+            researcherSearchForm.entries,
+            researcherSearchForm.search
+        )
+
+        println(model["researchers"])
+
         return "/admin-section/searches"
     }
 

@@ -7,84 +7,94 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container">
-            <div class="columns">
-                <div class="column">
-                    <label for="activity-type" class="has-text-primary">Tipo de Atividade</label><br>
-                    <select name="activity-type" id="activity-type" class="select-width-100">
-                        <option value="0">Advanced Education</option>
-                        <option value="1">Scientific Init of Young Students</option>
-                        <option value="2">Publication</option>
-                        <option value="3">Project</option>
-                        <option value="4">Dissemination</option>
-                    </select>
-                </div>
-                <div class="column">
-                    <label for="researcher-category" class="has-text-primary">Categoria do Investigador</label><br>
-                    <select name="researcher-category" id="researcher-category" class="select-width-100">
-                        <option value="Integrado Doutorado">Integrado Doutorado</option>
-                    </select>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column">
-                    <label for="activity-category" class="has-text-primary">Categoria da Atividade</label><br>
-                    <select name="activity-category" id="activity-category" class="select-width-100">
-                        <option value="0">Aggregation Exams Completion</option>
-                        <option value="1">PhD Supervision</option>
-                        <option value="2">Post Doctorate Supervision</option>
-                        <option value="3">Post Doctoral Studies</option>
-                        <option value="4">Participation in Doctoral Juries</option>
-                        <option value="5">Masters Supervision</option>
-                        <option value="6">Internship Supervision</option>
-                        <option value="7">Other Category</option>
-                    </select>
-                </div>
-                <div class="column is-flex is-flex-direction-column">
-                    <span class="has-text-primary">Data</span>
-                    <div class="is-flex is-flex-direction-row" style="margin-bottom: 0.5rem">
-                        <label for="date-from" style="width: 2.5rem">De</label>
-                        <input name="date-from" id="date-from" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+            <form th:action="@{/researcher-search}" method="get">
+                <div class="columns">
+                    <div class="column">
+                        <label for="activity_type" class="has-text-primary">Tipo de Atividade</label><br>
+                        <select name="activity_type" id="activity_type" class="select-width-100">
+                            <option value="0">Advanced Education</option>
+                            <option value="1">Scientific Init of Young Students</option>
+                            <option value="2">Publication</option>
+                            <option value="3">Project</option>
+                            <option value="4">Dissemination</option>
+                        </select>
                     </div>
-                    <div class="is-flex is-flex-direction-row">
-                        <label for="date-to" style="width: 2.5rem">Até</label>
-                        <input name="date-to" id="date-to" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+                    <div class="column">
+                        <label for="researcher_category" class="has-text-primary">Categoria do Investigador</label><br>
+                        <select name="researcher_category" id="researcher_category" class="select-width-100">
+                            <option value="Integrado Doutorado">Integrado Doutorado</option>
+                        </select>
                     </div>
                 </div>
-            </div>
+                <div class="columns">
+                    <div class="column">
+                        <label for="activity_category" class="has-text-primary">Categoria da Atividade</label><br>
+                        <select name="activity_category" id="activity_category" class="select-width-100">
+                            <option value="0">Aggregation Exams Completion</option>
+                            <option value="1">PhD Supervision</option>
+                            <option value="2">Post Doctorate Supervision</option>
+                            <option value="3">Post Doctoral Studies</option>
+                            <option value="4">Participation in Doctoral Juries</option>
+                            <option value="5">Masters Supervision</option>
+                            <option value="6">Internship Supervision</option>
+                            <option value="7">Other Category</option>
+                        </select>
+                    </div>
+                    <div class="column is-flex is-flex-direction-column">
+                        <span class="has-text-primary">Data</span>
+                        <div class="is-flex is-flex-direction-row" style="margin-bottom: 0.5rem">
+                            <label for="date_from" style="width: 2.5rem">De</label>
+                            <input name="date_from" id="date_from" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+                        </div>
+                        <div class="is-flex is-flex-direction-row">
+                            <label for="date_to" style="width: 2.5rem">Até</label>
+                            <input name="date_to" id="date_to" type="date" class="is-flex-grow-1" onchange="validateDates(this)"/>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="is-flex is-flex-direction-row is-align-items-center">
-                <div style="margin-right: 2rem">
-                    <label for="entries">Show</label>
-                    <select name="entries" id="entries">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                    <span>entries</span>
+                <div class="is-flex is-flex-direction-row is-align-items-center">
+                    <div style="margin-right: 2rem">
+                        <label for="entries">Show</label>
+                        <select name="entries" id="entries">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span>entries</span>
+                    </div>
+                    <div class="is-flex is-flex-direction-row is-flex-grow-1">
+                        <label for="search" style="margin-right: 1rem">Search:</label>
+                        <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
+                    </div>
+                    <div style="margin-left: 2rem">
+                        <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
+                            <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="is-flex is-flex-direction-row is-flex-grow-1">
-                    <label for="search" style="margin-right: 1rem">Search:</label>
-                    <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
-                </div>
-                <div style="margin-left: 2rem">
-                    <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
-                        <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
-                    </a>
-                </div>
-            </div>
+            </form>
 
-            <table class="table select-width-100">
+            <table class="table select-width-100" th:if="${!researchers.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Nome</th>
+                    <th>CIÊNCIA ID</th>
                     <th>Email</th>
-                    <th>Phone No.</th>
-                    <th>Origin</th>
-                    <th>PhD Year</th>
+                    <th>Categoria de Investigador</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr><td colspan="5">Sem valores a apresentar</td></tr>
+                <tr th:each="researcher : ${researchers}">
+                    <td th:text="*{researcher.name}">
+                        <a th:href="@{'/admin/user/' + ${researcher.orcid}}">
+                            <span class="fas fa-eye" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td th:text="*{researcher.cienciaId}"></td>
+                    <td th:text="*{researcher.email}"></td>
+                    <td th:text="*{researcher.researcherCategory}"></td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -93,22 +103,21 @@
 <div th:replace="layout/layout :: footer"></div>
 <script>
     function validateDates(element) {
-        let elemDateFrom = document.getElementById("date-from");
-        let elemDateTo = document.getElementById("date-to");
+        let elemDateFrom = document.getElementById("date_from");
+        let elemDateTo = document.getElementById("date_to");
 
         let dateFrom = new Date(elemDateFrom.value);
         let dateTo = new Date(elemDateTo.value);
 
         if (elemDateFrom.value !== "" && elemDateTo.value !== "" && dateFrom > dateTo) {
-            if (element.id === "date-from") {
+            if (element.id === "date_from") {
                 elemDateTo.value = elemDateFrom.value
             }
-            else if (element.id === "date-to") {
+            else if (element.id === "date_to") {
                 elemDateFrom.value = elemDateTo.value
             }
         }
     }
-
 
 </script>
 </body>

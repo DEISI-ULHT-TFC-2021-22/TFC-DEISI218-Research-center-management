@@ -13,14 +13,16 @@ data class ResearcherSearchForm(
         //@field:NotEmpty(message = "Campo obrigatório")
         var activityCategory: Int? = null,
 
-        @field:NotEmpty(message = "Campo obrigatório")
+        //@field:NotEmpty(message = "Campo obrigatório")
         var researcherCategory: String? = null,
 
-        @field:NotEmpty(message = "Campo obrigatório")
+        //@field:NotEmpty(message = "Campo obrigatório")
         var dateFrom: String? = null,
 
-        @field:NotEmpty(message = "Campo obrigatório")
+        //@field:NotEmpty(message = "Campo obrigatório")
         var dateTo: String? = null,
+
+        var entries: Int? = null,
 
         var search: String? = null,
 )
