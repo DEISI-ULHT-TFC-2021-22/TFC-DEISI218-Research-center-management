@@ -5,8 +5,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import pt.ulusofona.tfc.trabalho.ExcelExporter
-import pt.ulusofona.tfc.trabalho.WordExporter
+import pt.ulusofona.tfc.trabalho.WordUtil
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
 
+class Activity (val type: OtherType, val researchers: String, val title: String, val date: Date)
 
 @Controller
 @RequestMapping("/admin")
@@ -488,8 +488,17 @@ class AdminController(val researcherRepository: ResearcherRepository,
     fun searchResearcher(@Valid @ModelAttribute("researcherSearchForm") researcherSearchForm: ResearcherSearchForm,
                          model: ModelMap): String {
         println("TESTE")
+        val activities = ArrayList<Activity>()
+        val publications = publicationRepository.findAll()
 
-        model["researchers"] = researcherRepository.findResearchers(
+        for (publication in publications) {
+            val activity = Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
+            activities.add(activity)
+        }
+
+        model["activities"] = activities
+
+        /*model["researchers"] = researcherRepository.findResearchers(
             researcherSearchForm.activityType,
             researcherSearchForm.researcherCategory,
             researcherSearchForm.activityCategory,
@@ -499,7 +508,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
             researcherSearchForm.search
         )
 
+
         println(model["researchers"])
+
+         */
 
         return "/admin-section/searches"
     }
@@ -661,9 +673,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
             }
         }
 
-        val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
+        //val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
 
-        wordExporter.export(response)
+        //wordExporter.export(response)
+        WordUtil().generateDocument(response)
 
         return "redirect:/admin-section/export-word"
     }

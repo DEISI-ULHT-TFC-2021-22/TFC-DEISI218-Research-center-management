@@ -75,25 +75,21 @@
                 </div>
             </form>
 
-            <table class="table select-width-100" th:if="${!researchers.isEmpty()}">
+            <table class="table select-width-100" th:if="${!activities.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>CIÊNCIA ID</th>
-                    <th>Email</th>
-                    <th>Categoria de Investigador</th>
+                    <th>Tipo</th>
+                    <th>Investigador</th>
+                    <th>Título</th>
+                    <th>Data</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="researcher : ${researchers}">
-                    <td th:text="*{researcher.name}">
-                        <a th:href="@{'/admin/user/' + ${researcher.orcid}}">
-                            <span class="fas fa-eye" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td th:text="*{researcher.cienciaId}"></td>
-                    <td th:text="*{researcher.email}"></td>
-                    <td th:text="*{researcher.researcherCategory}"></td>
+                <tr th:each="activity : ${activities}">
+                    <td th:text="*{activity.type}"></td>
+                    <td th:text="*{activity.researchers}"></td>
+                    <td th:text="*{activity.title}"></td>
+                    <td th:text="*{activity.date}"></td>
                 </tr>
                 </tbody>
             </table>
