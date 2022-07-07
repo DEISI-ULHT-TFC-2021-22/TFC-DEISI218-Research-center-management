@@ -487,13 +487,20 @@ class AdminController(val researcherRepository: ResearcherRepository,
     @GetMapping(value = ["/researcher-search"])
     fun searchResearcher(@Valid @ModelAttribute("researcherSearchForm") researcherSearchForm: ResearcherSearchForm,
                          model: ModelMap): String {
-        println("TESTE")
         val activities = ArrayList<Activity>()
-        val publications = publicationRepository.findAll()
 
-        for (publication in publications) {
-            val activity = Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
-            activities.add(activity)
+        if (researcherSearchForm.activityType == OtherType.PUBLICATION.ordinal) {
+            val publications = publicationRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search
+            )
+
+            for (publication in publications) {
+                val activity =
+                    Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
+                activities.add(activity)
+            }
         }
 
         model["activities"] = activities
