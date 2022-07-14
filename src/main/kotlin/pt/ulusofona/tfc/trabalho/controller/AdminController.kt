@@ -489,41 +489,22 @@ class AdminController(val researcherRepository: ResearcherRepository,
                          model: ModelMap): String {
         val activities = ArrayList<Activity>()
 
-        if(researcherSearchForm.activityType == 100 || researcherSearchForm.activityType == null ){ //100 = all
-
-           getPublications(researcherSearchForm,activities);
-        }
-        if (researcherSearchForm.activityType == OtherType.PUBLICATION.ordinal) {
-
-            getPublications(researcherSearchForm,activities);
-
-        }
-        if(researcherSearchForm.activityType == 100 || researcherSearchForm.activityType == null ){ //100 = all
-
-            getProject(researcherSearchForm,activities);
-        }
-        if (researcherSearchForm.activityType == OtherType.PROJECT.ordinal) {
-
-            getProject(researcherSearchForm,activities);
-
+        when (researcherSearchForm.activityType) {
+            OtherType.PUBLICATION.ordinal -> getPublications(researcherSearchForm, activities)
+            OtherType.PROJECT.ordinal -> getProject(researcherSearchForm, activities)
+            OtherType.ADVANCED_EDUCATION.ordinal -> getAdvancedEducation(researcherSearchForm, activities)
+            OtherType.DISSEMINATION.ordinal -> getDissemination(researcherSearchForm, activities)
+            //OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS.ordinal -> getScientificInitOfYoungStudents(researcherSearchForm, activities)
+            else -> {
+                getPublications(researcherSearchForm,activities)
+                getProject(researcherSearchForm,activities)
+                getAdvancedEducation(researcherSearchForm,activities)
+                getDissemination(researcherSearchForm,activities)
+                //getScientificInitOfYoungStudents(researcherSearchForm, activities)
+            }
         }
 
         model["activities"] = activities
-
-        /*model["researchers"] = researcherRepository.findResearchers(
-            researcherSearchForm.activityType,
-            researcherSearchForm.researcherCategory,
-            researcherSearchForm.activityCategory,
-            researcherSearchForm.dateFrom,
-            researcherSearchForm.dateTo,
-            researcherSearchForm.entries,
-            researcherSearchForm.search
-        )
-
-
-        println(model["researchers"])
-
-         */
 
         return "/admin-section/searches"
     }
@@ -739,9 +720,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
     }
 
     fun getProject (researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
-        var projects = emptyList<Project>()
-        var researchersString = ""
-
+        val projects: List<Project>
 
         if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
             projects = projectRepository.findAll()
@@ -755,12 +734,16 @@ class AdminController(val researcherRepository: ResearcherRepository,
         for (project in projects) {
 
             val projectResearchers = projectResearcherRepository.findByProjectId(project.id)
+            var researchersString = ""
 
-            for (projectResearcher in projectResearchers) {
+            for ((i, projectResearcher) in projectResearchers.withIndex()) {
                 val researcher = researcherRepository.findById(projectResearcher.researcherId)
-                val getResearchers = researcher.get().name
-                 researchersString += "$getResearchers, "
 
+                researchersString += researcher.get().name
+
+                if (i < projectResearchers.size - 1) {
+                    researchersString += ", "
+                }
             }
 
             val activity =
@@ -768,6 +751,62 @@ class AdminController(val researcherRepository: ResearcherRepository,
             activities.add(activity)
         }
 
+    }
+
+    fun getAdvancedEducation (researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
+        val advancedEducations : List<OtherScientificActivity>
+
+        if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
+            advancedEducations = otherScientificActivityRepository.findAll()
+        }else {
+            advancedEducations = otherScientificActivityRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search,
+                OtherType.ADVANCED_EDUCATION.ordinal
+            )
+        }
+        for (advanceEducation in advancedEducations) {
+
+            val advanceEducationResearchers = projectResearcherRepository.findByProjectId(advanceEducation.id)
+            var researchersString = ""
+
+            for ((i, advanceEducationResearcher) in advanceEducationResearchers.withIndex()) {
+                val researcher = researcherRepository.findById(advanceEducationResearcher.researcherId)
+
+                researchersString += researcher.get().name
+
+                if (i < advanceEducationResearchers.size - 1) {
+                    researchersString += ", "
+                }
+            }
+
+            val activity =
+                Activity(OtherType.ADVANCED_EDUCATION, researchersString, advanceEducation.title, advanceEducation.date)
+            activities.add(activity)
+        }
+    }
+
+    fun getDissemination(researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
+        val disseminations: List<Dissemination>
+
+        if( researcherSearchForm.dateFrom == null && researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
+            disseminations = disseminationRepository.findAll()
+        }else {
+            disseminations = disseminationRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search
+            )
+        }
+        for (dissemination in disseminations) {
+            val disseminationResearcher = disseminationResearcherRepository.findByDisseminationId(dissemination.id).get()
+            val researcher = researcherRepository.findById(disseminationResearcher.researcherId).get()
+            
+            val activity =
+                Activity(OtherType.PUBLICATION, researcher.name, dissemination.title, dissemination.date)
+            activities.add(activity)
+        }
     }
 
 

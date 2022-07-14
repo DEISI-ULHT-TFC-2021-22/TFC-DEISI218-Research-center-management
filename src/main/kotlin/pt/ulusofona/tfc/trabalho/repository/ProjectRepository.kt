@@ -17,17 +17,20 @@ interface ProjectRepository: JpaRepository<Project, String> {
     fun deleteById(id:Long)
 
     @Query(value="""
-        SELECT
-            * 
+        SELECT DISTINCT
+            project.* 
         FROM
-            project AS proj
+            project JOIN
+            project_researcher ON project.id = project_researcher.project_id JOIN
+            researcher ON researcher.orcid = project_researcher.researcher_id
         WHERE
-            (project_date >= :dateFrom) AND 
-            (project_date <= :dateTo) AND
+            (initial_date >= :dateFrom) AND 
+            (initial_date <= :dateTo) AND
             (
                 LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
-                LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
+                LOWER(researcher.name) LIKE CONCAT('%', LOWER(:search), '%')
             )
+            
     """, nativeQuery = true, )
     fun search(
         @Param("dateFrom") dateFrom : String?,
@@ -39,7 +42,7 @@ interface ProjectRepository: JpaRepository<Project, String> {
         SELECT
             * 
         FROM
-            project AS proj
+            project 
         WHERE
                 LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
                 LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
