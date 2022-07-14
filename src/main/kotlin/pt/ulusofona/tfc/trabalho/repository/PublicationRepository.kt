@@ -32,4 +32,17 @@ interface PublicationRepository: JpaRepository<Publication, String> {
         @Param("dateTo") dateTo : String?,
         @Param("search") search : String?
     ): List<Publication>
+
+    @Query(value="""
+        SELECT
+            * 
+        FROM
+            publication AS pub
+        WHERE
+                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
+                LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
+    """, nativeQuery = true, )
+    fun search(
+        @Param("search") search : String?
+    ): List<Publication>
 }

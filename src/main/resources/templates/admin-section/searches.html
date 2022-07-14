@@ -12,6 +12,7 @@
                     <div class="column">
                         <label for="activityType" class="has-text-primary">Tipo de Atividade</label><br>
                         <select name="activityType" id="activityType" class="select-width-100" onchange="this.form.submit()">
+                            <option value="100">All</option>
                             <option value="0">Advanced Education</option>
                             <option value="1">Scientific Init of Young Students</option>
                             <option value="2">Publication</option>
@@ -67,7 +68,7 @@
                     <td th:text="*{activity.type}"></td>
                     <td th:text="*{activity.researchers}"></td>
                     <td th:text="*{activity.title}"></td>
-                    <td th:text="*{activity.date}"></td>
+                    <td th:text="${#calendars.format(activity.date, 'dd/MM/yyyy')}"></td>
                 </tr>
                 </tbody>
             </table>

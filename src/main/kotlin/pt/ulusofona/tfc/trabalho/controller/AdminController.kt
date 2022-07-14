@@ -489,18 +489,23 @@ class AdminController(val researcherRepository: ResearcherRepository,
                          model: ModelMap): String {
         val activities = ArrayList<Activity>()
 
-        if (researcherSearchForm.activityType == OtherType.PUBLICATION.ordinal) {
-            val publications = publicationRepository.search(
-                researcherSearchForm.dateFrom,
-                researcherSearchForm.dateTo,
-                researcherSearchForm.search
-            )
+        if(researcherSearchForm.activityType == 100 || researcherSearchForm.activityType == null ){ //100 = all
 
-            for (publication in publications) {
-                val activity =
-                    Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
-                activities.add(activity)
-            }
+           getPublications(researcherSearchForm,activities);
+        }
+        if (researcherSearchForm.activityType == OtherType.PUBLICATION.ordinal) {
+
+            getPublications(researcherSearchForm,activities);
+
+        }
+        if(researcherSearchForm.activityType == 100 || researcherSearchForm.activityType == null ){ //100 = all
+
+            getProject(researcherSearchForm,activities);
+        }
+        if (researcherSearchForm.activityType == OtherType.PROJECT.ordinal) {
+
+            getProject(researcherSearchForm,activities);
+
         }
 
         model["activities"] = activities
@@ -711,6 +716,58 @@ class AdminController(val researcherRepository: ResearcherRepository,
                 File(path).appendText(i)
             }
         }
+    }
+
+    fun getPublications(researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
+
+        var publications = emptyList<Publication>()
+
+        if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
+             publications = publicationRepository.findAll()
+        }else {
+             publications = publicationRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search
+            )
+        }
+        for (publication in publications) {
+            val activity =
+                Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
+            activities.add(activity)
+        }
+    }
+
+    fun getProject (researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
+        var projects = emptyList<Project>()
+        var researchersString = ""
+
+
+        if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
+            projects = projectRepository.findAll()
+        }else {
+            projects = projectRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search
+            )
+        }
+        for (project in projects) {
+
+            val projectResearchers = projectResearcherRepository.findByProjectId(project.id)
+
+            for (projectResearcher in projectResearchers) {
+                val researcher = researcherRepository.findById(projectResearcher.researcherId)
+                val getResearchers = researcher.get().name
+                 researchersString += "$getResearchers, "
+
+            }
+
+            val activity =
+                Activity(OtherType.PROJECT, researchersString, project.title, project.initialDate)
+            activities.add(activity)
+        }
+
     }
 
 
