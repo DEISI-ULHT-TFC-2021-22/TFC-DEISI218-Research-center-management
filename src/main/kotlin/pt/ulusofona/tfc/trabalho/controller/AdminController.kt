@@ -487,6 +487,16 @@ class AdminController(val researcherRepository: ResearcherRepository,
     @GetMapping(value = ["/researcher-search"])
     fun searchResearcher(@Valid @ModelAttribute("researcherSearchForm") researcherSearchForm: ResearcherSearchForm,
                          model: ModelMap): String {
+        if (researcherSearchForm.dateFrom == null || researcherSearchForm.dateFrom == "") {
+            researcherSearchForm.dateFrom = "0001-01-01"
+        }
+        if (researcherSearchForm.dateTo == null || researcherSearchForm.dateTo == "") {
+            researcherSearchForm.dateTo = "9999-12-31"
+        }
+        if (researcherSearchForm.activityType == null) {
+            researcherSearchForm.activityType = 100
+        }
+
         val activities = ArrayList<Activity>()
 
         when (researcherSearchForm.activityType) {
@@ -701,12 +711,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
     fun getPublications(researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
 
-        var publications = emptyList<Publication>()
+        var publications: List<Publication>
 
         if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
              publications = publicationRepository.findAll()
         }else {
-             publications = publicationRepository.search(
+            publications = publicationRepository.search(
                 researcherSearchForm.dateFrom,
                 researcherSearchForm.dateTo,
                 researcherSearchForm.search
@@ -768,18 +778,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
         }
         for (advanceEducation in advancedEducations) {
 
-            val advanceEducationResearchers = projectResearcherRepository.findByProjectId(advanceEducation.id)
-            var researchersString = ""
-
-            for ((i, advanceEducationResearcher) in advanceEducationResearchers.withIndex()) {
-                val researcher = researcherRepository.findById(advanceEducationResearcher.researcherId)
-
-                researchersString += researcher.get().name
-
-                if (i < advanceEducationResearchers.size - 1) {
-                    researchersString += ", "
-                }
-            }
+            val advanceEducationResearcher = otherScientificActivityResearcherRepository.findByOtherScientificActivityId(advanceEducation.id).get()
+            val researchersString = researcherRepository.findById(advanceEducationResearcher.researcherId).get().name
 
             val activity =
                 Activity(OtherType.ADVANCED_EDUCATION, researchersString, advanceEducation.title, advanceEducation.date)
@@ -804,10 +804,8 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherRepository.findById(disseminationResearcher.researcherId).get()
             
             val activity =
-                Activity(OtherType.PUBLICATION, researcher.name, dissemination.title, dissemination.date)
+                Activity(OtherType.DISSEMINATION, researcher.name, dissemination.title, dissemination.date)
             activities.add(activity)
         }
     }
-
-
 }

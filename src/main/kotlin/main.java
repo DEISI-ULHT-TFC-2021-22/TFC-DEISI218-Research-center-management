@@ -3,6 +3,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.util.Units;
 import org.apache.poi.wp.usermodel.Paragraph;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTR;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTText;
@@ -50,6 +51,29 @@ public class main {
         //XWPFRun rImage = p.createRun();
         //rImage.addPicture(stream, Document.PICTURE_TYPE_PNG, "logo.png", Units.toEMU(48), Units.toEMU(48));  // 48x48 pixeis
         //rImage.addBreak();
+
+
+        // create header-footer
+        XWPFHeaderFooterPolicy headerFooterPolicy = doc.getHeaderFooterPolicy();
+        if (headerFooterPolicy == null) headerFooterPolicy = doc.createHeaderFooterPolicy();
+
+        // create header start
+        XWPFHeader header = headerFooterPolicy.createHeader(XWPFHeaderFooterPolicy.DEFAULT);
+
+        XWPFParagraph paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText("Header");
+
+        // create footer start
+        XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
+
+        paragraph = footer.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+
+        run = paragraph.createRun();
+        run.setText("Footer");
 
 
         XWPFParagraph paragrafo = doc.createParagraph();

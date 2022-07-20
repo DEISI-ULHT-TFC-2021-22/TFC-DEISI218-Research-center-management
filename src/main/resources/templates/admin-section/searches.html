@@ -7,11 +7,16 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container">
+            <a class="button is-medium is-dark" th:href="@{'/admin/export-excel-accept'}">
+                <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
+            </a>
+            <span class="divider"></span>
+
             <form th:action="@{/admin/researcher-search}" method="get">
                 <div class="columns">
                     <div class="column">
                         <label for="activityType" class="has-text-primary">Tipo de Atividade</label><br>
-                        <select name="activityType" id="activityType" class="select-width-100" onchange="this.form.submit()">
+                        <select name="activityType" id="activityType" class="select-width-100">
                             <option value="100">All</option>
                             <option value="0">Advanced Education</option>
                             <option value="1">Scientific Init of Young Students</option>
@@ -47,28 +52,42 @@
                         <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
                     </div>
                     <div style="margin-left: 2rem">
-                        <a class="button is-medium is-dark is-fullwidth" th:href="@{'/admin/export-excel-accept'}">
-                            <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
-                        </a>
+                        <input type="submit" class="button is-medium is-dark is-fullwidth" value="Pesquisar">
                     </div>
                 </div>
             </form>
 
-            <table class="table select-width-100" th:if="${!activities.isEmpty()}">
+            <span class="divider"></span>
+
+            <table class="table select-width-100">
                 <thead>
                 <tr>
                     <th>Tipo</th>
                     <th>Investigador</th>
                     <th>Título</th>
                     <th>Data</th>
+                    <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="activity : ${activities}">
+                <tr th:if="${!activities.isEmpty()}" th:each="activity : ${activities}">
                     <td th:text="*{activity.type}"></td>
-                    <td th:text="*{activity.researchers}"></td>
+                    <td class="authors" th:field="*{activity.researchers}"></td>
                     <td th:text="*{activity.title}"></td>
                     <td th:text="${#calendars.format(activity.date, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <div class="is-flex is-flex-direction-row is-justify-content-space-around">
+                            <a th:href="@{'/admin/user/'}">
+                                <span class="fas fa-user" aria-hidden="true"></span>
+                            </a>
+                            <a th:href="@{'/admin/scientific-activities/'}">
+                                <span class="fas fa-list-alt" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${activities.isEmpty()}">
+                    <td colspan="4">Sem resultados encontrados.</td>
                 </tr>
                 </tbody>
             </table>
@@ -94,6 +113,41 @@
         }
     }
 
+    function summarizeAuthors() {
+        let elements = document.getElementsByClassName("authors");
+
+        for (const element of elements) {
+            let text = element.getAttribute("field");
+            let authors = text.split(";");
+
+            element.textContent = authors[0];
+
+            if (authors.length > 1) {
+                let span = document.createElement("span");
+
+                span.textContent = `+${authors.length - 1}`;
+                span.className = "chip has-text-link-light has-background-link-dark";
+                element.appendChild(span);
+            }
+        }
+    }
+
+    function initForm() {
+        const params = new URLSearchParams(document.location.search);
+
+        let elemActivityType = document.getElementById("activityType");
+        let elemDateFrom = document.getElementById("dateFrom");
+        let elemDateTo = document.getElementById("dateTo");
+        let elemSearch = document.getElementById("search");
+
+        elemActivityType.value = params.has("activityType") ? params.get("activityType") : 100;
+        elemDateFrom.value = params.get("dateFrom");
+        elemDateTo.value = params.get("dateTo");
+        elemSearch.value = params.get("search");
+    }
+
+    initForm();
+    summarizeAuthors();
 </script>
 </body>
 </html>

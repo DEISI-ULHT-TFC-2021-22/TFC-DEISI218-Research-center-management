@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.OtherScientificActivity
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.OtherType
-import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Project
 import java.util.*
 
 interface OtherScientificActivityRepository:JpaRepository<OtherScientificActivity, String> {
@@ -21,15 +20,18 @@ interface OtherScientificActivityRepository:JpaRepository<OtherScientificActivit
 
     @Query(value="""
         SELECT
-            * 
+            osa.* 
         FROM
-            other_scientific_activity AS activity
+            other_scientific_activity AS osa JOIN
+            other_scientific_activity_researcher AS osar ON osa.id = osar.other_scientific_activity_id JOIN
+            researcher ON researcher.orcid = osar.researcher_id
         WHERE
             (other_type = :type) AND
-            (project_date >= :dateFrom) AND 
-            (project_date <= :dateTo) AND
+            (date >= :dateFrom) AND 
+            (date <= :dateTo) AND
             (
-                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%')
+                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
+                LOWER(researcher.name) LIKE CONCAT('%', LOWER(:search), '%')
             )
     """, nativeQuery = true, )
     fun search(
@@ -41,12 +43,17 @@ interface OtherScientificActivityRepository:JpaRepository<OtherScientificActivit
 
     @Query(value="""
         SELECT
-            * 
+            osa.* 
         FROM
-            other_scientific_activity AS activity
+            other_scientific_activity AS osa JOIN
+            other_scientific_activity_researcher AS osar ON osa.id = osar.other_scientific_activity_id JOIN
+            researcher ON researcher.orcid = osar.researcher_id
         WHERE
             (other_type = :type) AND
-            LOWER(title) LIKE CONCAT('%', LOWER(:search), '%')
+            (
+                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
+                LOWER(researcher.name) LIKE CONCAT('%', LOWER(:search), '%')
+            )
     """, nativeQuery = true, )
     fun search(
         @Param("search") search : String?,

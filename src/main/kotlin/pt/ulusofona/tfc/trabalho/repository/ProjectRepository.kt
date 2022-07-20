@@ -40,12 +40,14 @@ interface ProjectRepository: JpaRepository<Project, String> {
 
     @Query(value="""
         SELECT
-            * 
+            project.* 
         FROM
-            project 
+            project JOIN
+            project_researcher ON project.id = project_researcher.project_id JOIN
+            researcher ON researcher.orcid = project_researcher.researcher_id
         WHERE
-                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
-                LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
+            LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
+            LOWER(researcher.name) LIKE CONCAT('%', LOWER(:search), '%')
     """, nativeQuery = true, )
     fun search(
         @Param("search") search : String?

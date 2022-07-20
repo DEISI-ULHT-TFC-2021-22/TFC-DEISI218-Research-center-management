@@ -9063,3 +9063,9 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   width: 22rem;
   max-width: 95vw;
   overflow-y: auto; }
+
+.chip {
+  border-radius: 1em;
+  padding: 0.25em 0.5em;
+  margin: 0.25em;
+}

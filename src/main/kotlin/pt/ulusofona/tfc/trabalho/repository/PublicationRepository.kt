@@ -24,7 +24,7 @@ interface PublicationRepository: JpaRepository<Publication, String> {
             (publication_date <= :dateTo) AND
             (
                 LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
-                LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
+                LOWER(authors) LIKE CONCAT('%', LOWER(:search), '%')
             )
     """, nativeQuery = true, )
     fun search(
@@ -39,8 +39,8 @@ interface PublicationRepository: JpaRepository<Publication, String> {
         FROM
             publication AS pub
         WHERE
-                LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
-                LOWER(authors) LIKE CONCAT('%' + LOWER(:search), '%')
+            LOWER(title) LIKE CONCAT('%', LOWER(:search), '%') OR
+            LOWER(authors) LIKE CONCAT('%', LOWER(:search), '%')
     """, nativeQuery = true, )
     fun search(
         @Param("search") search : String?
