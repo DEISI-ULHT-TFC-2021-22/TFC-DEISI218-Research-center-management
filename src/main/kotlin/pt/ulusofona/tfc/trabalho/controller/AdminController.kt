@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
 
-class Activity (val type: OtherType, val researchers: String, val title: String, val date: Date)
+class Activity (val type: OtherType, val researchers: String, val orcid: String, val numberResearchers: Int, val title: String, val date: Date)
 
 @Controller
 @RequestMapping("/admin")
@@ -496,6 +496,9 @@ class AdminController(val researcherRepository: ResearcherRepository,
         if (researcherSearchForm.activityType == null) {
             researcherSearchForm.activityType = 100
         }
+        if (researcherSearchForm.search == null) {
+            researcherSearchForm.search = ""
+        }
 
         val activities = ArrayList<Activity>()
 
@@ -723,8 +726,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
             )
         }
         for (publication in publications) {
+            val numberResearchers = publication.authors.split(";").size
+
             val activity =
-                Activity(OtherType.PUBLICATION, publication.authors, publication.title, publication.publicationDate)
+                Activity(OtherType.PUBLICATION, publication.authors, numberResearchers, publication.title, publication.publicationDate)
             activities.add(activity)
         }
     }
@@ -745,19 +750,21 @@ class AdminController(val researcherRepository: ResearcherRepository,
 
             val projectResearchers = projectResearcherRepository.findByProjectId(project.id)
             var researchersString = ""
+            var numberResearchers = 0
 
             for ((i, projectResearcher) in projectResearchers.withIndex()) {
                 val researcher = researcherRepository.findById(projectResearcher.researcherId)
 
                 researchersString += researcher.get().name
+                numberResearchers++
 
                 if (i < projectResearchers.size - 1) {
-                    researchersString += ", "
+                    researchersString += ";"
                 }
             }
 
             val activity =
-                Activity(OtherType.PROJECT, researchersString, project.title, project.initialDate)
+                Activity(OtherType.PROJECT, researchersString, ..., numberResearchers, project.title, project.initialDate)
             activities.add(activity)
         }
 
@@ -782,7 +789,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researchersString = researcherRepository.findById(advanceEducationResearcher.researcherId).get().name
 
             val activity =
-                Activity(OtherType.ADVANCED_EDUCATION, researchersString, advanceEducation.title, advanceEducation.date)
+                Activity(OtherType.ADVANCED_EDUCATION, researchersString, 1, advanceEducation.title, advanceEducation.date)
             activities.add(activity)
         }
     }
@@ -804,7 +811,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherRepository.findById(disseminationResearcher.researcherId).get()
             
             val activity =
-                Activity(OtherType.DISSEMINATION, researcher.name, dissemination.title, dissemination.date)
+                Activity(OtherType.DISSEMINATION, researcher.name, 1, dissemination.title, dissemination.date)
             activities.add(activity)
         }
     }

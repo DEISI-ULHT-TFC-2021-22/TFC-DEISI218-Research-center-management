@@ -64,6 +64,7 @@
                 <tr>
                     <th>Tipo</th>
                     <th>Investigador</th>
+                    <th></th>
                     <th>Título</th>
                     <th>Data</th>
                     <th>Ações</th>
@@ -71,16 +72,26 @@
                 </thead>
                 <tbody>
                 <tr th:if="${!activities.isEmpty()}" th:each="activity : ${activities}">
-                    <td th:text="*{activity.type}"></td>
-                    <td class="authors" th:field="*{activity.researchers}"></td>
-                    <td th:text="*{activity.title}"></td>
-                    <td th:text="${#calendars.format(activity.date, 'dd/MM/yyyy')}"></td>
-                    <td>
+                    <td class="is-vcentered" th:text="*{activity.type}"></td>
+                    <td class="is-vcentered" th:text='*{activity.researchers.split(";")[0]}'></td>
+                    <td class="is-vcentered">
+                        <div class="tooltip">
+                            <div class="chip has-text-link-light has-background-link-dark"
+                                  th:if="${activity.numberResearchers > 1}"
+                                  th:text='*{"+"+(activity.numberResearchers-1)}'>
+                            </div>
+                            <span class="tooltiptext tooltip-top"
+                                  th:text='*{activity.researchers}'></span>
+                        </div>
+                    </td>
+                    <td class="is-vcentered" th:text="*{activity.title}"></td>
+                    <td class="is-vcentered" th:text="${#calendars.format(activity.date, 'dd/MM/yyyy')}"></td>
+                    <td class="is-vcentered">
                         <div class="is-flex is-flex-direction-row is-justify-content-space-around">
-                            <a th:href="@{'/admin/user/'}">
+                            <a th:href="@{'/admin/user/' + *{activity.orcid}">
                                 <span class="fas fa-user" aria-hidden="true"></span>
                             </a>
-                            <a th:href="@{'/admin/scientific-activities/'}">
+                            <a th:href="@{'/admin/scientific-activities/' + *{activity.id}}">
                                 <span class="fas fa-list-alt" aria-hidden="true"></span>
                             </a>
                         </div>
@@ -113,25 +124,6 @@
         }
     }
 
-    function summarizeAuthors() {
-        let elements = document.getElementsByClassName("authors");
-
-        for (const element of elements) {
-            let text = element.getAttribute("field");
-            let authors = text.split(";");
-
-            element.textContent = authors[0];
-
-            if (authors.length > 1) {
-                let span = document.createElement("span");
-
-                span.textContent = `+${authors.length - 1}`;
-                span.className = "chip has-text-link-light has-background-link-dark";
-                element.appendChild(span);
-            }
-        }
-    }
-
     function initForm() {
         const params = new URLSearchParams(document.location.search);
 
@@ -147,7 +139,6 @@
     }
 
     initForm();
-    summarizeAuthors();
 </script>
 </body>
 </html>
