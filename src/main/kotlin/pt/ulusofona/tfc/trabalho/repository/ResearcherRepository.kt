@@ -4,8 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import pt.ulusofona.tfc.trabalho.dao.Researcher
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Project
+import java.util.*
 
 interface ResearcherRepository: JpaRepository<Researcher, String> {
+    @Query
+    fun findByName(name: String): Optional<Researcher>
+
     @Query(value="""
         SELECT
             * 

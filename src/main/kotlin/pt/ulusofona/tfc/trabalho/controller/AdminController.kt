@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
 
-class Activity (val type: OtherType, val researchers: String, val orcid: String, val numberResearchers: Int, val title: String, val date: Date)
+class Activity (val type: OtherType, val researchers: String, val orcids: List<String?>, val numberResearchers: Int, val title: String, val date: Date)
 
 @Controller
 @RequestMapping("/admin")
@@ -726,10 +726,21 @@ class AdminController(val researcherRepository: ResearcherRepository,
             )
         }
         for (publication in publications) {
-            val numberResearchers = publication.authors.split(";").size
+            val researchers = publication.authors.split(";")
+            val numberResearchers = researchers.size
+            val orcids = mutableListOf<String?>()
 
+            for (researcher in researchers) {
+                val r = researcherRepository.findByName(researcher)
+
+                if (r.isPresent) {
+                    orcids.add(r.get().orcid)
+                } else {
+                    orcids.add(null)
+                }
+            }
             val activity =
-                Activity(OtherType.PUBLICATION, publication.authors, numberResearchers, publication.title, publication.publicationDate)
+                Activity(OtherType.PUBLICATION, publication.authors, orcids, numberResearchers, publication.title, publication.publicationDate)
             activities.add(activity)
         }
     }
@@ -751,20 +762,28 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val projectResearchers = projectResearcherRepository.findByProjectId(project.id)
             var researchersString = ""
             var numberResearchers = 0
+            val orcids = mutableListOf<String?>()
 
             for ((i, projectResearcher) in projectResearchers.withIndex()) {
                 val researcher = researcherRepository.findById(projectResearcher.researcherId)
 
-                researchersString += researcher.get().name
-                numberResearchers++
+                if (researcher.isPresent) {
+                    researchersString += researcher.get().name
+                    numberResearchers++
 
-                if (i < projectResearchers.size - 1) {
-                    researchersString += ";"
+                    if (i < projectResearchers.size - 1) {
+                        researchersString += ";"
+                    }
+
+                    orcids.add(researcher.get().orcid)
+                } else {
+                    orcids.add(null)
                 }
+
             }
 
             val activity =
-                Activity(OtherType.PROJECT, researchersString, ..., numberResearchers, project.title, project.initialDate)
+                Activity(OtherType.PROJECT, researchersString, orcids, numberResearchers, project.title, project.initialDate)
             activities.add(activity)
         }
 
@@ -786,10 +805,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
         for (advanceEducation in advancedEducations) {
 
             val advanceEducationResearcher = otherScientificActivityResearcherRepository.findByOtherScientificActivityId(advanceEducation.id).get()
-            val researchersString = researcherRepository.findById(advanceEducationResearcher.researcherId).get().name
+            val researcher = researcherRepository.findById(advanceEducationResearcher.researcherId).get()
 
             val activity =
-                Activity(OtherType.ADVANCED_EDUCATION, researchersString, 1, advanceEducation.title, advanceEducation.date)
+                Activity(OtherType.ADVANCED_EDUCATION, researcher.name, listOf(researcher.orcid), 1, advanceEducation.title, advanceEducation.date)
             activities.add(activity)
         }
     }
@@ -811,7 +830,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherRepository.findById(disseminationResearcher.researcherId).get()
             
             val activity =
-                Activity(OtherType.DISSEMINATION, researcher.name, 1, dissemination.title, dissemination.date)
+                Activity(OtherType.DISSEMINATION, researcher.name, listOf(researcher.orcid), 1, dissemination.title, dissemination.date)
             activities.add(activity)
         }
     }

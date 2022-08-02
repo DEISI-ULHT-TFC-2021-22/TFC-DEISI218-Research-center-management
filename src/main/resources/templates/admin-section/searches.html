@@ -88,12 +88,12 @@
                     <td class="is-vcentered" th:text="${#calendars.format(activity.date, 'dd/MM/yyyy')}"></td>
                     <td class="is-vcentered">
                         <div class="is-flex is-flex-direction-row is-justify-content-space-around">
-                            <a th:href="@{'/admin/user/' + *{activity.orcid}">
+                            <a href="#" th:onclick="@{'openMultipleLinks(&quot;/admin/user/&quot;, [&quot;' + ${#strings.arrayJoin(activity.orcids, '&quot;,&quot;')} + '&quot;])'}">
                                 <span class="fas fa-user" aria-hidden="true"></span>
                             </a>
-                            <a th:href="@{'/admin/scientific-activities/' + *{activity.id}}">
+                            <!--<a th:href="@{'/admin/scientific-activities/' + *{activity.id}}">
                                 <span class="fas fa-list-alt" aria-hidden="true"></span>
-                            </a>
+                            </a>-->
                         </div>
                     </td>
                 </tr>
@@ -136,6 +136,12 @@
         elemDateFrom.value = params.get("dateFrom");
         elemDateTo.value = params.get("dateTo");
         elemSearch.value = params.get("search");
+    }
+
+    function openMultipleLinks(prefix, links) {
+        for (let i = 0; i < links.length; i++) {
+            window.open(prefix + links[i]);
+        }
     }
 
     initForm();
