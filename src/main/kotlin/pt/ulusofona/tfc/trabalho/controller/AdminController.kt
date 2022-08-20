@@ -5,6 +5,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.WordExporter
 import pt.ulusofona.tfc.trabalho.WordUtil
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 import kotlin.collections.ArrayList
 
-class Activity (val type: OtherType, val researchers: String, val orcids: List<String?>, val numberResearchers: Int, val title: String, val date: Date)
+class Activity (val type: OtherType, val scientificActivityType: String, val scientificActivityId: Long, val researchers: String, val orcids: List<String?>, val numberResearchers: Int, val title: String, val date: Date)
 
 @Controller
 @RequestMapping("/admin")
@@ -679,10 +680,10 @@ class AdminController(val researcherRepository: ResearcherRepository,
             }
         }
 
-        //val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
+        val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
 
-        //wordExporter.export(response)
-        WordUtil().generateDocument(response)
+        wordExporter.export(response)
+        //WordUtil().generateDocument(response)
 
         return "redirect:/admin-section/export-word"
     }
@@ -740,7 +741,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
                 }
             }
             val activity =
-                Activity(OtherType.PUBLICATION, publication.authors, orcids, numberResearchers, publication.title, publication.publicationDate)
+                Activity(OtherType.PUBLICATION, "publication", publication.id, publication.authors, orcids, numberResearchers, publication.title, publication.publicationDate)
             activities.add(activity)
         }
     }
@@ -783,7 +784,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             }
 
             val activity =
-                Activity(OtherType.PROJECT, researchersString, orcids, numberResearchers, project.title, project.initialDate)
+                Activity(OtherType.PROJECT, "project", project.id, researchersString, orcids, numberResearchers, project.title, project.initialDate)
             activities.add(activity)
         }
 
@@ -808,7 +809,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherRepository.findById(advanceEducationResearcher.researcherId).get()
 
             val activity =
-                Activity(OtherType.ADVANCED_EDUCATION, researcher.name, listOf(researcher.orcid), 1, advanceEducation.title, advanceEducation.date)
+                Activity(OtherType.ADVANCED_EDUCATION, "advanced-education", advanceEducation.id, researcher.name, listOf(researcher.orcid), 1, advanceEducation.title, advanceEducation.date)
             activities.add(activity)
         }
     }
@@ -830,7 +831,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val researcher = researcherRepository.findById(disseminationResearcher.researcherId).get()
             
             val activity =
-                Activity(OtherType.DISSEMINATION, researcher.name, listOf(researcher.orcid), 1, dissemination.title, dissemination.date)
+                Activity(OtherType.DISSEMINATION, "dissemination", dissemination.id, researcher.name, listOf(researcher.orcid), 1, dissemination.title, dissemination.date)
             activities.add(activity)
         }
     }

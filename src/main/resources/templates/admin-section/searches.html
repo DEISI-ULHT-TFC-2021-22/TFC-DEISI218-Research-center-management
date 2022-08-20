@@ -39,20 +39,23 @@
                 </div>
                 <div class="is-flex is-flex-direction-row is-align-items-center">
                     <div style="margin-right: 2rem">
-                        <label for="entries">Show</label>
+                        <label for="entries">Mostrar</label>
                         <select name="entries" id="entries">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                         </select>
-                        <span>entries</span>
+                        <span>entradas</span>
                     </div>
                     <div class="is-flex is-flex-direction-row is-flex-grow-1">
-                        <label for="search" style="margin-right: 1rem">Search:</label>
+                        <label for="search" style="margin-right: 1rem">Pesquisa:</label>
                         <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
                     </div>
                     <div style="margin-left: 2rem">
-                        <input type="submit" class="button is-medium is-dark is-fullwidth" value="Pesquisar">
+                        <input type="button" class="button is-medium has-text-link has-background-white-ter is-fullwidth" value="Limpar" onclick="clearForm()">
+                    </div>
+                    <div style="margin-left: 1rem">
+                        <input type="submit" class="button is-medium has-text-link-light has-background-link-dark is-fullwidth" value="Pesquisar">
                     </div>
                 </div>
             </form>
@@ -91,9 +94,9 @@
                             <a href="#" th:onclick="@{'openMultipleLinks(&quot;/admin/user/&quot;, [&quot;' + ${#strings.arrayJoin(activity.orcids, '&quot;,&quot;')} + '&quot;])'}">
                                 <span class="fas fa-user" aria-hidden="true"></span>
                             </a>
-                            <!--<a th:href="@{'/admin/scientific-activities/' + *{activity.id}}">
+                            <a th:href="@{'/admin/scientific-activity/' + *{activity.scientificActivityType} + '/'  + *{activity.scientificActivityId}}">
                                 <span class="fas fa-list-alt" aria-hidden="true"></span>
-                            </a>-->
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -136,6 +139,18 @@
         elemDateFrom.value = params.get("dateFrom");
         elemDateTo.value = params.get("dateTo");
         elemSearch.value = params.get("search");
+    }
+
+    function clearForm() {
+        let elemActivityType = document.getElementById("activityType");
+        let elemDateFrom = document.getElementById("dateFrom");
+        let elemDateTo = document.getElementById("dateTo");
+        let elemSearch = document.getElementById("search");
+
+        elemActivityType.value = 100;
+        elemDateFrom.value = "";
+        elemDateTo.value = "";
+        elemSearch.value = "";
     }
 
     function openMultipleLinks(prefix, links) {
