@@ -6,7 +6,6 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import pt.ulusofona.tfc.trabalho.WordExporter
-import pt.ulusofona.tfc.trabalho.WordUtil
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
@@ -681,9 +680,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         }
 
         val wordExporter = WordExporter(listProject, mapProjectResearcher, listPublication)
-
         wordExporter.export(response)
-        //WordUtil().generateDocument(response)
 
         return "redirect:/admin-section/export-word"
     }
