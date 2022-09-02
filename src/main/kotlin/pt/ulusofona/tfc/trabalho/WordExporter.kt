@@ -5,6 +5,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Project
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.Publication
+import pt.ulusofona.tfc.trabalho.dao.scientificActivities.PublicationCategory
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -88,36 +89,73 @@ class WordExporter(
         paragrafo.style = "Ttulo1"
 
         val titulo = paragrafo.createRun()
-        titulo.setText("Publicações")
+        titulo.setText("Produção Científica")
 
         val paragrafo1 = doc.createParagraph()
         paragrafo1.alignment = ParagraphAlignment.LEFT
         paragrafo1.style = "Normal"
 
-        for ((index, publication) in listPublication.withIndex()) {
-            val tituloPublicacao = paragrafo1.createRun()
-            tituloPublicacao.addCarriageReturn()
-            tituloPublicacao.addCarriageReturn()
-            tituloPublicacao.setText("${index+1}. ${publication.title}")
-            tituloPublicacao.isBold = true
+        // Ordenar pela categoria da publicação
+        val publicationCategories = listPublication.groupBy { it.publicationCategory }
 
-            val authorsTitle = paragrafo1.createRun()
-            authorsTitle.addCarriageReturn()
-            authorsTitle.setText("Autor(es) / Editor(es)")
+        for ((category, publications) in publicationCategories.entries) {
+            if (publications.size > 0) {
+                var categoryName = ""
 
-            val authors = paragrafo1.createRun()
-            authors.addCarriageReturn()
-            authors.setText(publication.authors)
+                when (category) {
+                    PublicationCategory.KNOWLEDGE_CONTRIBUTION -> categoryName =
+                        "Contribuição para o Avanço e Aplicação do Conhecimento"
+                    PublicationCategory.NATIONAL_MAGAZINE -> categoryName = "Artigo em Revista Científica Nacional"
+                    PublicationCategory.INTERNATIONAL_MAGAZINE -> categoryName =
+                        "Artigo em Revista Científica Internacional"
+                    PublicationCategory.BOOK_AUTHORSHIP -> categoryName = "Autoria e Coautoria de Livro"
+                    PublicationCategory.BOOK_CHAPTER -> categoryName = "Capítulo de Livro"
+                    PublicationCategory.BOOK_EDITING_AND_ORGANISATION -> categoryName = "Edição/organização de Livro"
+                    PublicationCategory.INTERNATIONAL_CONFERENCE -> categoryName =
+                        "Comunicação em Conferência Internacional"
+                    PublicationCategory.NATIONAL_CONFERENCE -> categoryName = "Comunicação em Conferência Nacional"
+                    PublicationCategory.OTHER_PUBLICATION -> categoryName = "Outra Publicação"
+                }
 
-            val cal = Calendar.getInstance()
-            cal.time = publication.publicationDate
-            val publicationYear = paragrafo1.createRun()
-            publicationYear.addCarriageReturn()
-            publicationYear.setText("Ano de edição: ${cal.get(Calendar.YEAR)}")
+                val tituloCategoria = paragrafo1.createRun()
+                tituloCategoria.addCarriageReturn()
+                tituloCategoria.addCarriageReturn()
+                tituloCategoria.setText("${categoryName}")
+                tituloCategoria.isBold = true
 
-            val descriptor = paragrafo1.createRun()
-            descriptor.addCarriageReturn()
-            descriptor.setText(publication.descriptor)
+                for (publication in publications) {
+                    publication.publisher
+                    val cal = Calendar.getInstance()
+                    cal.time = publication.publicationDate
+
+                    val publicacao = paragrafo1.createRun()
+                    publicacao.addCarriageReturn()
+                    publicacao.addCarriageReturn()
+                    publicacao.setText("${publication.authors} (${cal.get(Calendar.YEAR)}). ${publication.title}. ")
+
+                    val revista = paragrafo1.createRun()
+                    revista.setText("Revista, 1, 1-2. ")
+                    revista.isItalic = true
+
+                    if (publication.conferenceName != "" && publication.conferenceName != null) {
+                        val conference = paragrafo1.createRun()
+                        conference.setText("${publication.conferenceName}. ")
+                    }
+
+                    if (publication.publisher != "" && publication.publisher != null) {
+                        val publisher = paragrafo1.createRun()
+                        publisher.setText("${publication.publisher}. ")
+                    }
+
+                    if (publication.descriptor != "" && publication.descriptor != null) {
+                        val doi = paragrafo1.createRun()
+                        doi.setText("${publication.descriptor}. ")
+                    }
+                }
+
+                val espaco = paragrafo1.createRun()
+                espaco.addCarriageReturn()
+            }
         }
     }
 

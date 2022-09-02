@@ -507,17 +507,22 @@ class AdminController(val researcherRepository: ResearcherRepository,
             OtherType.PROJECT.ordinal -> getProject(researcherSearchForm, activities)
             OtherType.ADVANCED_EDUCATION.ordinal -> getAdvancedEducation(researcherSearchForm, activities)
             OtherType.DISSEMINATION.ordinal -> getDissemination(researcherSearchForm, activities)
-            //OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS.ordinal -> getScientificInitOfYoungStudents(researcherSearchForm, activities)
+            OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS.ordinal -> getScientificInitOfYoungStudents(researcherSearchForm, activities)
             else -> {
                 getPublications(researcherSearchForm,activities)
                 getProject(researcherSearchForm,activities)
                 getAdvancedEducation(researcherSearchForm,activities)
                 getDissemination(researcherSearchForm,activities)
-                //getScientificInitOfYoungStudents(researcherSearchForm, activities)
+                getScientificInitOfYoungStudents(researcherSearchForm, activities)
             }
         }
 
-        model["activities"] = activities
+        var entries = researcherSearchForm.entries?:10
+        if (entries >= activities.size) {
+            entries = activities.size
+        }
+
+        model["activities"] = activities.slice(0 until entries)
 
         return "/admin-section/searches"
     }
@@ -762,6 +767,30 @@ class AdminController(val researcherRepository: ResearcherRepository,
             activities.add(activity)
         }
 
+    }
+
+    fun getScientificInitOfYoungStudents (researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
+        val scientificInits : List<OtherScientificActivity>
+
+        if( researcherSearchForm.dateFrom ==  null &&  researcherSearchForm.dateTo == null && researcherSearchForm.search == null){
+            scientificInits = otherScientificActivityRepository.findAll()
+        }else {
+            scientificInits = otherScientificActivityRepository.search(
+                researcherSearchForm.dateFrom,
+                researcherSearchForm.dateTo,
+                researcherSearchForm.search,
+                OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS.ordinal
+            )
+        }
+        for (scientificInit in scientificInits) {
+
+            val scientificInitResearcher = otherScientificActivityResearcherRepository.findByOtherScientificActivityId(scientificInit.id).get()
+            val researcher = researcherRepository.findById(scientificInitResearcher.researcherId).get()
+
+            val activity =
+                Activity(OtherType.SCIENTIFIC_INIT_OF_YOUNG_STUDENTS, "scientific-initiation", scientificInit.id, researcher.name, listOf(researcher.orcid), 1, scientificInit.title, scientificInit.date)
+            activities.add(activity)
+        }
     }
 
     fun getAdvancedEducation (researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){

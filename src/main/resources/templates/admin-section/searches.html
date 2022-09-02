@@ -7,9 +7,7 @@
 <section class="hero is-medium">
     <div class="hero-body">
         <div class="container">
-            <a class="button is-medium is-dark" th:href="@{'/admin/export-excel-accept'}">
-                <span class="icon pr-4"><i class="fas fa-file-excel"></i></span><span>Exportar</span>
-            </a>
+
             <span class="divider"></span>
 
             <form th:action="@{/admin/researcher-search}" method="get">
@@ -47,12 +45,14 @@
                         </select>
                         <span>entradas</span>
                     </div>
-                    <div class="is-flex is-flex-direction-row is-flex-grow-1">
+                    <div class="is-flex column is-flex-grow-1">
                         <label for="search" style="margin-right: 1rem">Pesquisa:</label>
                         <input type="text" name="search" id="search" style="height: fit-content" class="is-flex-grow-1">
                     </div>
-                    <div style="margin-left: 2rem">
-                        <input type="button" class="button is-medium has-text-link has-background-white-ter is-fullwidth" value="Limpar" onclick="clearForm()">
+                    <div style="margin-left: 1rem">
+                        <a class="button is-medium has-text-link-dark has-background-link-light" th:href="@{/admin/researcher-search}">
+                            <span class="icon p-4"><i class="fas fa-trash"></i></span>
+                        </a>
                     </div>
                     <div style="margin-left: 1rem">
                         <input type="submit" class="button is-medium has-text-link-light has-background-link-dark is-fullwidth" value="Pesquisar">

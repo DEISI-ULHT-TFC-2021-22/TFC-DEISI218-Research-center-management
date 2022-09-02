@@ -2,7 +2,14 @@ package pt.ulusofona.tfc.trabalho.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.http.conn.ssl.NoopHostnameVerifier
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.ssl.SSLContexts
+import javax.net.ssl.SSLContext
+import org.apache.http.conn.ssl.TrustStrategy
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.client.support.BasicAuthenticationInterceptor
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
@@ -150,7 +157,14 @@ class SessionController (val researcherRepository: ResearcherRepository,
     @GetMapping(value = ["/sync-cv"])
     fun showCienciaVitae(@RequestParam(name = "id") id: String, model: ModelMap, @ModelAttribute("getId") getId: String): String {
 
-        val restTemplate = RestTemplate()
+        val acceptingTrustStrategy = TrustStrategy { x509Certificates, s -> true }
+        val sslContext: SSLContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build()
+        val csf = SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier())
+        val httpClient = HttpClients.custom().setSSLSocketFactory(csf).build()
+        val requestFactory = HttpComponentsClientHttpRequestFactory()
+        requestFactory.httpClient = httpClient
+
+        val restTemplate = RestTemplate(requestFactory)
         restTemplate.interceptors.add(BasicAuthenticationInterceptor(token, secret))
         val response = restTemplate.getForEntity("https://vitaeapi.playdev.ulusofona.pt/curriculum/$id", String::class.java)
 
