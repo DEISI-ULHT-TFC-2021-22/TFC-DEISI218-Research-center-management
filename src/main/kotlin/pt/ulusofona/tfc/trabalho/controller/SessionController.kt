@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import pt.ulusofona.tfc.trabalho.controller.AdminController.Companion.removeRoleFromFile
 import pt.ulusofona.tfc.trabalho.dao.Institution
 import pt.ulusofona.tfc.trabalho.dao.Researcher
 import pt.ulusofona.tfc.trabalho.dao.scientificActivities.*
@@ -19,6 +20,7 @@ import java.io.*
 import java.security.Principal
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 
@@ -131,7 +133,15 @@ class SessionController (val researcherRepository: ResearcherRepository,
     }
 
     @GetMapping(value = ["/home"])
-    fun showHomePage(model: ModelMap): String {
+    fun showHomePage(model: ModelMap, request: HttpServletRequest, principal: Principal?): String {
+
+        // check if the user is first time. in that case, remove the user from the list of first time users
+        if (principal != null && request.isUserInRole("FIRST_USER")) {
+            val orcid = GlobalControllerAdvice().getId(principal)
+            removeRoleFromFile("src/main/resources/first_time_user_list_test.txt", orcid)
+        }
+
+
         val researchers = researcherRepository.findAll()
         model["researchers"] = researchers
         return "home-page"

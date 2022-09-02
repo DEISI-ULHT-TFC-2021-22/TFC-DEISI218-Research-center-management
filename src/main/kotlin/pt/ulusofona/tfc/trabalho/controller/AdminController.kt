@@ -685,30 +685,7 @@ class AdminController(val researcherRepository: ResearcherRepository,
         return "redirect:/admin-section/export-word"
     }
 
-    fun removeRoleFromFile(path: String, orcid: String) {
-        var content = mutableListOf<String>()
-        var existOnFile = false
-        val inputStream: InputStream = File(path).inputStream()
-        val lineList = mutableListOf<String>()
-        inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
-        lineList.forEach{
-            if("orcid" != it) {
-                content.add("\n" + it)
-            } else {
-                content.add(it)
-            }
-            if("https://sandbox.orcid.org/${orcid}" == it) {
-                existOnFile = true
-            }
-        }
-        if(existOnFile) {
-            content.remove("\nhttps://sandbox.orcid.org/${orcid}")
-            PrintWriter(path).close()
-            for(i in content) {
-                File(path).appendText(i)
-            }
-        }
-    }
+
 
     fun getPublications(researcherSearchForm: ResearcherSearchForm, activities : ArrayList<Activity>){
 
@@ -830,6 +807,33 @@ class AdminController(val researcherRepository: ResearcherRepository,
             val activity =
                 Activity(OtherType.DISSEMINATION, "dissemination", dissemination.id, researcher.name, listOf(researcher.orcid), 1, dissemination.title, dissemination.date)
             activities.add(activity)
+        }
+    }
+
+    companion object {
+        fun removeRoleFromFile(path: String, orcid: String) {
+            var content = mutableListOf<String>()
+            var existOnFile = false
+            val inputStream: InputStream = File(path).inputStream()
+            val lineList = mutableListOf<String>()
+            inputStream.bufferedReader().useLines { lines -> lines.forEach { lineList.add(it)} }
+            lineList.forEach{
+                if("orcid" != it) {
+                    content.add("\n" + it)
+                } else {
+                    content.add(it)
+                }
+                if("https://sandbox.orcid.org/${orcid}" == it) {
+                    existOnFile = true
+                }
+            }
+            if(existOnFile) {
+                content.remove("\nhttps://sandbox.orcid.org/${orcid}")
+                PrintWriter(path).close()
+                for(i in content) {
+                    File(path).appendText(i)
+                }
+            }
         }
     }
 }
