@@ -25,7 +25,9 @@ import pt.ulusofona.tfc.trabalho.form.ResearcherForm
 import pt.ulusofona.tfc.trabalho.repository.*
 import java.io.*
 import java.security.Principal
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -211,8 +213,8 @@ class SessionController (val researcherRepository: ResearcherRepository,
             val outputsSize = root.at("/outputs/total").asInt()
             val servicesSize = root.at("/services/total").asInt()
             val count = maxOf(fundingsSize, outputsSize, servicesSize)
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
+            //val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateFormat = DateTimeFormatter.ofPattern("yyy-MM-dd")
 
             for (i in 0..count) {
                 //fundings
@@ -241,8 +243,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         }
 
                         val initialValidatedDate = "$initialYear-$initialMonth-$initialDay"
-
-                        var finalValidatedDate: Date? = null
+                        var finalValidatedDate = ""
 
                         if (!root.at("/fundings/funding/$i/end-date-participation").isNull) {
                             //check finalYear
@@ -260,7 +261,7 @@ class SessionController (val researcherRepository: ResearcherRepository,
                                 finalDay = root.at("/fundings/funding/$i/end-date-participation/day").asText()
                             }
 
-                            finalValidatedDate = dateFormat.parse("$finalYear-$finalMonth-$finalDay")
+                            finalValidatedDate = "$finalYear-$finalMonth-$finalDay"
                         }
 
                         var projectCategory = ProjectCategory.INTERNATIONAL_PROJECT
@@ -269,15 +270,30 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             projectCategory = ProjectCategory.NATIONAL_PROJECT
                         }
 
+                        val initialDate = Date.from(LocalDate.parse(initialValidatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant())
+                        var finalDate: Date? = null
+
+                        if (finalValidatedDate.isNotEmpty()) {
+                            finalDate = Date.from(LocalDate.parse(finalValidatedDate, dateFormat)
+                                .atStartOfDay()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
+                        }
+
                         val project = Project(
                             projectCategory = projectCategory,
                             title = root.at("/fundings/funding/$i/project-title").asText(),
-                            initialDate = dateFormat.parse(initialValidatedDate),
-                            finalDate = finalValidatedDate,
+                            initialDate = initialDate,
+                            finalDate = finalDate,
                             abstract = "",
                             description = root.at("/fundings/funding/$i/project-description").asText(),
-                            website = ""
-                        )
+                            website = root.at("/fundings/funding/$i/funding-identifiers/funding-identifier/0/url").asText(),
+                            funding = root.at("/fundings/funding/$i/program-name").asText(),
+                            partners = ""
+                        ,)
 
                         projectRepository.save(project)
 
@@ -375,23 +391,59 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             val identifiersSize =
                                 root.at("/outputs/output/$i/journal-article/identifiers/total").asInt()
 
+                            var isbn = ""
+
                             //getIdentifiers
                             for (i2 in 1 until identifiersSize) {
-                                identifiers += root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code")
-                                    .asText() +
-                                        ": " + root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier")
-                                    .asText() + "\n"
+                                val code = root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/journal-article/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
                             }
+
+                            val volume = root.at("/outputs/output/$i/journal-article/volume")
+                            val issue = root.at("/outputs/output/$i/journal-article/issue")
+
+                            val pageFrom = root.at("/outputs/output/$i/journal-article/page-range-from")
+                            val pageTo = root.at("/outputs/output/$i/journal-article/page-range-to")
+
+                            var indexation = ""
+                            if (!volume.isNull) {
+                                indexation += volume.asText()
+                            }
+                            if (!issue.isNull) {
+                                indexation += " (${issue.asText()})"
+                            }
+                            if (!pageFrom.isNull && !pageTo.isNull) {
+                                if (pageFrom == pageTo) {
+                                    indexation += ", ${pageFrom.asText()}"
+                                } else {
+                                    indexation += ", ${pageFrom.asText()}-${pageTo.asText()}"
+                                }
+                            }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
 
                             val publication = Publication(
                                 publicationCategory = publicationCategory,
                                 title = root.at("/outputs/output/$i/journal-article/article-title").asText(),
-                                publicationDate = dateFormat.parse(validatedDate),
+                                publicationDate = date,
                                 descriptor = identifiers,
                                 publisher = "",
                                 authors = root.at("/outputs/output/$i/journal-article/authors/citation").asText(),
-                                indexation = "",
-                                conferenceName = ""
+                                indexation = indexation,
+                                conferenceName = "",
+                                isbn = isbn,
+                                journalName = root.at("/outputs/output/$i/journal-article/journal").asText()
                             )
 
                             publicationRepository.save(publication)
@@ -415,23 +467,38 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //getIdentifiersSize
                             val identifiersSize = root.at("/outputs/output/$i/book/identifiers/total").asInt()
 
+                            var isbn = ""
+
                             //getIdentifiers
                             for (i2 in 1 until identifiersSize) {
-                                identifiers += root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier-type/code")
-                                    .asText() +
-                                        ": " + root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier")
-                                    .asText() + "\n"
+                                val code = root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/book/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
                             }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
 
                             val publication = Publication(
                                 publicationCategory = PublicationCategory.BOOK_AUTHORSHIP,
                                 title = root.at("/outputs/output/$i/book/title").asText(),
-                                publicationDate = dateFormat.parse(validatedDate),
+                                publicationDate = date,
                                 descriptor = identifiers,
                                 publisher = root.at("/outputs/output/$i/book/publisher").asText(),
                                 authors = root.at("/outputs/output/$i/book/authors/citation").asText(),
                                 indexation = "",
-                                conferenceName = ""
+                                conferenceName = "",
+                                isbn = isbn,
+                                journalName = ""
                             )
 
                             publicationRepository.save(publication)
@@ -444,7 +511,6 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //--save ResearcherDissemination
                             publicationResearcherRepository.save(publicationResearcher)
                         }
-
                         if (root.at("/outputs/output/$i/output-type/value").asText() == "Capítulo de livro") {
 
                             //get year
@@ -452,27 +518,41 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                             val validatedDate = "$year-$month-$day"
 
-
                             //getIdentifiersSize
                             val identifiersSize = root.at("/outputs/output/$i/book-chapter/identifiers/total").asInt()
 
+                            var isbn = ""
+
                             //getIdentifiers
                             for (i2 in 1 until identifiersSize) {
-                                identifiers += root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code")
-                                    .asText() +
-                                        ": " + root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier")
-                                    .asText() + "\n"
+                                val code = root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/book-chapter/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
                             }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
 
                             val publication = Publication(
                                 publicationCategory = PublicationCategory.BOOK_CHAPTER,
                                 title = root.at("/outputs/output/$i/book-chapter/chapter-title").asText(),
-                                publicationDate = dateFormat.parse(validatedDate),
+                                publicationDate = date,
                                 descriptor = identifiers,
                                 publisher = root.at("/outputs/output/$i/book-chapter/book-publisher").asText(),
                                 authors = root.at("/outputs/output/$i/book-chapter/authors/citation").asText(),
                                 indexation = "",
-                                conferenceName = ""
+                                conferenceName = "",
+                                isbn = isbn,
+                                journalName = ""
                             )
 
                             publicationRepository.save(publication)
@@ -496,21 +576,38 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //getIdentifiersSize
                             val identifiersSize = root.at("/outputs/output/$i/edited-book/identifiers/total").asInt()
 
+                            var isbn = ""
+
                             //getIdentifiers
                             for (i2 in 1 until identifiersSize) {
-                                identifiers += root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText() +
-                                        ": " + root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier").asText() + "\n"
+                                val code = root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/edited-book/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
                             }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
 
                             val publication = Publication(
                                 publicationCategory = PublicationCategory.BOOK_EDITING_AND_ORGANISATION,
                                 title = root.at("/outputs/output/$i/edited-book/title").asText(),
-                                publicationDate = dateFormat.parse(validatedDate),
+                                publicationDate = date,
                                 descriptor = identifiers,
                                 publisher = root.at("/outputs/output/$i/edited-book/publisher").asText(),
                                 authors = root.at("/outputs/output/$i/edited-book/authors/citation").asText(),
                                 indexation = "",
-                                conferenceName = ""
+                                conferenceName = "",
+                                isbn = isbn,
+                                journalName = ""
                             )
 
                             publicationRepository.save(publication)
@@ -549,21 +646,38 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //getIdentifiersSize
                             val identifiersSize = root.at("/outputs/output/$i/conference-abstract/identifiers/total").asInt()
 
+                            var isbn = ""
+
                             //getIdentifiers
                             for (i2 in 1 until identifiersSize) {
-                                identifiers += root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText() +
-                                        ": " + root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier").asText() + "\n"
+                                val code = root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/conference-abstract/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
                             }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
 
                             val publication = Publication(
                                 publicationCategory = publicationCategory,
                                 title = root.at("/outputs/output/$i/conference-abstract/article-title").asText(),
-                                publicationDate = dateFormat.parse(validatedDate),
+                                publicationDate = date,
                                 descriptor = identifiers,
                                 publisher = "",
                                 indexation = "",
                                 authors = root.at("/outputs/output/$i/conference-abstract/authors/citation").asText(),
-                                conferenceName = root.at("/outputs/output/$i/conference-abstract/conference-name").asText()
+                                conferenceName = root.at("/outputs/output/$i/conference-abstract/conference-name").asText(),
+                                isbn = isbn,
+                                journalName = ""
                             )
 
                             publicationRepository.save(publication)
@@ -576,7 +690,81 @@ class SessionController (val researcherRepository: ResearcherRepository,
                             //--save ResearcherDissemination
                             publicationResearcherRepository.save(publicationResearcher)
                         }
+                        if (root.at("/outputs/output/$i/output-type/value").asText() == "Artigo em conferência") {
 
+                            //check year
+                            if (!root.at("/outputs/output/$i/conference-paper/conference-date/year").isNull) {
+                                year = root.at("/outputs/output/$i/conference-paper/conference-date/year").asText()
+                            }
+                            //check month
+                            if (!root.at("/outputs/output/$i/conference-paper/conference-date/month").isNull) {
+                                month = root.at("/outputs/output/$i/conference-paper/conference-date/month").asText()
+                            }
+                            //check day
+                            if (!root.at("/outputs/output/$i/conference-paper/conference-date/day").isNull) {
+                                day = root.at("/outputs/output/$i/conference-paper/conference-date/day").asText()
+                            }
+
+                            val validatedDate = "$year-$month-$day"
+
+                            var publicationCategory = PublicationCategory.NATIONAL_CONFERENCE
+
+                            if (root.at("/outputs/output/$i/conference-paper/conference-location/country/code").asText() != "PT") {
+                                publicationCategory = PublicationCategory.INTERNATIONAL_CONFERENCE
+                            }
+
+                            //getIdentifiersSize
+                            val identifiersSize = root.at("/outputs/output/$i/conference-paper/identifiers/total").asInt()
+
+                            var isbn = ""
+
+                            //getIdentifiers
+                            for (i2 in 1 until identifiersSize) {
+                                val code = root.at("/outputs/output/$i/conference-paper/identifiers/identifier/$i2/identifier-type/code").asText()
+                                val value = root.at("/outputs/output/$i/conference-paper/identifiers/identifier/$i2/identifier").asText()
+
+                                if (code == "isbn") {
+                                    isbn = value
+                                }
+
+                                identifiers += "$code: $value\n"
+                            }
+
+                            var conferenceName = ""
+                            if (!root.at("/outputs/output/$i/conference-paper/conference-name").isNull) {
+                                conferenceName = root.at("/outputs/output/$i/conference-paper/conference-name").asText()
+                            }
+
+                            val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())
+
+                            val publication = Publication(
+                                publicationCategory = publicationCategory,
+                                title = root.at("/outputs/output/$i/conference-paper/paper-title").asText(),
+                                publicationDate = date,
+                                descriptor = identifiers,
+                                publisher = "",
+                                indexation = "",
+                                authors = root.at("/outputs/output/$i/conference-paper/authors/citation").asText(),
+                                conferenceName = conferenceName,
+                                isbn = isbn,
+                                journalName = ""
+                            )
+
+                            publicationRepository.save(publication)
+
+                            val publicationResearcher = PublicationResearcher(
+                                publicationId = publication.id,
+                                researcherId = getId
+                            )
+
+                            //--save ResearcherDissemination
+                            publicationResearcherRepository.save(publicationResearcher)
+                        }
                     }
                 }
 
@@ -604,11 +792,16 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                         val validatedDate = "$year-$month-$day"
 
+                        val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant())
+
                         val otherScientificActivity = OtherScientificActivity(
                             otherType = OtherType.ADVANCED_EDUCATION,
                             otherCategory = OtherCategory.PARTICIPATION_IN_DOCTORAL_JURIES,
                             title = root.at("/services/service/$i/graduate-examination/theme").asText(),
-                            date = dateFormat.parse(validatedDate),
+                            date = date,
                             description = root.at("/services/service/$i/graduate-examination/examination-subject").asText()
                         )
 
@@ -711,12 +904,18 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         otherScientificActivityCategory = OtherCategory.PHD_SUPERVISION
                     }
 
+                    val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant())
 
                     val otherScientificActivity = OtherScientificActivity(
                         otherType = otherScientificActivityType,
                         otherCategory = otherScientificActivityCategory,
                         title = root.at("/services/service/$i/research-based-degree-supervision/thesis-title").asText(),
-                        date = dateFormat.parse(validatedDate),
+                        date = date,
                         description = root.at("/services/service/$i/research-based-degree-supervision/degree-subject").asText()
                     )
 
@@ -814,10 +1013,17 @@ class SessionController (val researcherRepository: ResearcherRepository,
                         disseminationCategory = DisseminationCategory.SCIENTIFIC_COMMITTEE_MEMBER
                     }
 
+                    val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant())
+
                     val dissemination = Dissemination(
                         disseminationCategory = disseminationCategory,
                         title = root.at("/services/service/$i/event-administration/event-description").asText(),
-                        date = dateFormat.parse(validatedDate),
+                        date = date,
                         description = root.at("/services/service/$i/event-administration/event-description").asText()
                     )
 
@@ -904,10 +1110,17 @@ class SessionController (val researcherRepository: ResearcherRepository,
 
                     val validatedDate = "$year-$month-$day"
 
+                    val date = Date.from(LocalDate.parse(validatedDate, dateFormat)
+                            .atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant())
+
                     val dissemination = Dissemination(
                         disseminationCategory = DisseminationCategory.OTHER_DISSEMINATION,
                         title = root.at("/services/service/$i/event-participation/event-name").asText(),
-                        date = dateFormat.parse(validatedDate),
+                        date = date,
                         description = root.at("/services/service/$i/event-participation/event-description").asText()
                     )
 

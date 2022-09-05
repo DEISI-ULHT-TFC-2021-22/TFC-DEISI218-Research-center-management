@@ -18,7 +18,9 @@ data class Project(
         var abstract : String,
         @Column(columnDefinition = "TEXT")
         var description : String, // ou descriptor
-        var website: String
+        var website: String,
+        var funding: String,
+        var partners: String
 )
 
 enum class ProjectCategory {

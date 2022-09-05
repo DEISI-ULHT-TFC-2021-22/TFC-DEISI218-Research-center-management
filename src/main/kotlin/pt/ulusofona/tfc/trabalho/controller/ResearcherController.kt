@@ -213,7 +213,9 @@ class ResearcherController(val researcherRepository: ResearcherRepository,
                         publisher = publication.publisher,
                         authors = publication.authors,
                         indexation = publication.indexation,
-                        conferenceName = publication.conferenceName
+                        conferenceName = publication.conferenceName,
+                        isbn = publication.isbn,
+                        journalName = publication.journalName
                     )
                     "researcher-section/scientific-activity"
                 }else{
@@ -232,7 +234,9 @@ class ResearcherController(val researcherRepository: ResearcherRepository,
                         finalDate = project.finalDate,
                         abstract = project.abstract,
                         description = project.description,
-                        website = project.website
+                        website = project.website,
+                        funding = project.funding,
+                        partners = project.partners
                     )
                     val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
                     val institutions = mutableListOf<Institution>()

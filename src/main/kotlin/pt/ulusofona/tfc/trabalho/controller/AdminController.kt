@@ -594,7 +594,9 @@ class AdminController(val researcherRepository: ResearcherRepository,
                         publisher = publication.publisher,
                         authors = publication.authors,
                         indexation = publication.indexation,
-                        conferenceName = publication.conferenceName
+                        conferenceName = publication.conferenceName,
+                        isbn = publication.isbn,
+                        journalName = publication.journalName
                     )
                     "researcher-section/scientific-activity"
                 }else{
@@ -613,7 +615,9 @@ class AdminController(val researcherRepository: ResearcherRepository,
                         finalDate = project.finalDate,
                         abstract = project.abstract,
                         description = project.description,
-                        website = project.website
+                        website = project.website,
+                        funding = project.funding,
+                        partners = project.partners
                     )
                     val projectsInstitutions = projectInstitutionRepository.findByProjectId(project.id)
                     val institutions = mutableListOf<Institution>()
@@ -708,19 +712,12 @@ class AdminController(val researcherRepository: ResearcherRepository,
         for (publication in publications) {
             val researchers = publication.authors.split(";")
             val numberResearchers = researchers.size
-            val orcids = mutableListOf<String?>()
 
-            for (researcher in researchers) {
-                val r = researcherRepository.findByName(researcher)
+            val publicationResearcher = publicationResearcherRepository.findByPublicationId(publication.id).get()
+            val researcher = researcherRepository.findById(publicationResearcher.researcherId).get()
 
-                if (r.isPresent) {
-                    orcids.add(r.get().orcid)
-                } else {
-                    orcids.add(null)
-                }
-            }
             val activity =
-                Activity(OtherType.PUBLICATION, "publication", publication.id, publication.authors, orcids, numberResearchers, publication.title, publication.publicationDate)
+                Activity(OtherType.PUBLICATION, "publication", publication.id, publication.authors, listOf(researcher.orcid), numberResearchers, publication.title, publication.publicationDate)
             activities.add(activity)
         }
     }

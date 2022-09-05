@@ -6,7 +6,6 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
-
 @Entity
 data class Publication (
         @Id
@@ -21,7 +20,9 @@ data class Publication (
         var publisher : String,
         var authors: String,
         var indexation : String,
-        var conferenceName : String
+        var conferenceName : String,
+        var isbn: String,
+        var journalName : String
 )
 
 enum class PublicationCategory {

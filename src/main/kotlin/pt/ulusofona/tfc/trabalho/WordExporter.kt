@@ -57,13 +57,17 @@ class WordExporter(
             researchTeam.addCarriageReturn()
             researchTeam.setText("Research team: $researchersString")
 
-            val funding = paragrafo1.createRun()
-            funding.addCarriageReturn()
-            funding.setText("Funding:") //TODO
+            if (!project.funding.isNullOrEmpty()) {
+                val funding = paragrafo1.createRun()
+                funding.addCarriageReturn()
+                funding.setText("Funding: ${project.funding}")
+            }
 
-            val partners = paragrafo1.createRun()
-            partners.addCarriageReturn()
-            partners.setText("Partners:") //TODO
+            if (!project.partners.isNullOrEmpty()) {
+                val partners = paragrafo1.createRun()
+                partners.addCarriageReturn()
+                partners.setText("Partners: ${project.partners}")
+            }
 
             val dates = paragrafo1.createRun()
             dates.addCarriageReturn()
@@ -72,9 +76,13 @@ class WordExporter(
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             dates.setText("Dates: ${initialDate.format(formatter)} - ${finalDate?.format(formatter)?.toString().orEmpty()}")
 
-            val abstrato = paragrafo1.createRun()
-            abstrato.addCarriageReturn()
-            abstrato.setText("Abstract:\n${project.abstract}")
+            val abstract = paragrafo1.createRun()
+            abstract.addCarriageReturn()
+            if (!project.abstract.isNullOrEmpty()) {
+                abstract.setText("Abstract:\n${project.abstract}")
+            } else {
+                abstract.setText("Abstract:\n")
+            }
 
             val website = paragrafo1.createRun()
             website.addCarriageReturn()
@@ -133,21 +141,27 @@ class WordExporter(
                     publicacao.addCarriageReturn()
                     publicacao.setText("${publication.authors} (${cal.get(Calendar.YEAR)}). ${publication.title}. ")
 
-                    val revista = paragrafo1.createRun()
-                    revista.setText("Revista, 1, 1-2. ")
-                    revista.isItalic = true
+                    if (!publication.journalName.isNullOrEmpty()) {
+                        val revista = paragrafo1.createRun()
+                        if (!publication.indexation.isNullOrEmpty()) {
+                            revista.setText("${publication.journalName}, ${publication.indexation}. ")
+                        } else {
+                            revista.setText("${publication.journalName}. ")
+                        }
+                        revista.isItalic = true
+                    }
 
-                    if (publication.conferenceName != "" && publication.conferenceName != null) {
+                    if (!publication.conferenceName.isNullOrEmpty()) {
                         val conference = paragrafo1.createRun()
                         conference.setText("${publication.conferenceName}. ")
                     }
 
-                    if (publication.publisher != "" && publication.publisher != null) {
+                    if (!publication.publisher.isNullOrEmpty()) {
                         val publisher = paragrafo1.createRun()
                         publisher.setText("${publication.publisher}. ")
                     }
 
-                    if (publication.descriptor != "" && publication.descriptor != null) {
+                    if (!publication.descriptor.isNullOrEmpty()) {
                         val doi = paragrafo1.createRun()
                         doi.setText("${publication.descriptor}. ")
                     }
