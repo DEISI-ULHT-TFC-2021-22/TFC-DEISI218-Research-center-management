@@ -134,11 +134,13 @@
         let elemDateFrom = document.getElementById("dateFrom");
         let elemDateTo = document.getElementById("dateTo");
         let elemSearch = document.getElementById("search");
+        let elemEntries = document.getElementById("entries");
 
         elemActivityType.value = params.has("activityType") ? params.get("activityType") : 100;
         elemDateFrom.value = params.get("dateFrom");
         elemDateTo.value = params.get("dateTo");
         elemSearch.value = params.get("search");
+        elemEntries.value = params.get("entries");
     }
 
     function clearForm() {
